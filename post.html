@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post - Tanishq Abyss</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Creepster&display=swap');
+
+    body {
+      background: #0a0000;
+      color: #eee;
+      font-family: 'Creepster', sans-serif;
+      margin: 0;
+      padding: 15px;
+      line-height: 1.5;
+    }
+
+    .box {
+      background: #140000;
+      border: 3px solid #a00;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(255,26,46,0.3);
+    }
+
+    h2 { 
+      color: #ff1a2e; 
+      text-align: center; 
+      margin: 10px 0 25px; 
+      font-family: 'Nosifer', cursive;
+      letter-spacing: 4px;
+      font-size: 2.2rem;
+    }
+
+    .main-post .username {
+      color: #ff5555;
+      font-size: 1.45rem;
+      margin-bottom: 10px;
+    }
+
+    .post-content p {
+      word-break: break-word;
+      overflow-wrap: break-word;
+      margin: 12px 0;
+    }
+
+    img, video {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 2px solid #660000;
+      margin: 12px 0;
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 15px;
+      background: #000;
+      color: #ff8888;
+      border: 2px solid #660000;
+      border-radius: 8px;
+      font-family: 'Creepster', sans-serif;
+      min-height: 110px;
+      box-sizing: border-box;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 12px 20px;
+      background: #220000;
+      color: #ffbbbb;
+      border: 2px solid #ff1a2e;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Creepster', sans-serif;
+      margin-top: 10px;
+    }
+
+    .comment {
+      background: #110000;
+      border: 2px solid #550000;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+    }
+
+    .comment .username {
+      color: #ff7777;
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+      text-shadow: 0 0 6px #ff1a2e;
+    }
+
+    .comment p {
+      word-break: break-word;
+      overflow-wrap: break-word;
+      margin: 8px 0;
+    }
+
+    .comment img, .comment video {
+      max-width: 100%;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 2px solid #660000;
+    }
+  </style>
+</head>
+<body>
+
+<h2>POST</h2>
+
+<div id="mainPost" class="box"></div>
+
+<div class="box">
+  <b>ADD COMMENT</b>
+  <textarea id="commentInput" placeholder="Write your whisper..."></textarea>
+  <input type="file" id="commentFile" accept="image/*,video/*">
+  <button onclick="addComment()">POST COMMENT</button>
+</div>
+
+<div id="comments"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyB_rZQ0-PTcw2u--0AjybYOBtWnoh2XxDk",
+  authDomain: "counter-ea7c8.firebaseapp.com",
+  projectId: "counter-ea7c8",
+  storageBucket: "counter-ea7c8.firebasestorage.app"
+});
+
+const db = getFirestore(app);
+const storage = getStorage(app);
+
+const postId = new URLSearchParams(location.search).get("id");
+if (!postId) {
+  document.body.innerHTML = "<h2 style='color:red;text-align:center;'>No post found</h2>";
+}
+
+// Get username from localStorage
+function getUsername() {
+  return localStorage.getItem("username") || "Anonymous";
+}
+
+// Load main post
+async function loadMainPost() {
+  try {
+    const postRef = doc(db, "posts", postId);
+    const postSnap = await getDoc(postRef);
+    
+    if (postSnap.exists()) {
+      const p = postSnap.data();
+      let media = p.fileType?.startsWith("video") 
+        ? `<video src="${p.fileUrl}" controls></video>` 
+        : p.fileUrl ? `<img src="${p.fileUrl}">` : "";
+
+      document.getElementById("mainPost").innerHTML = `
+        <div class="main-post">
+          <div class="username">${p.username}</div>
+          <div class="post-content">
+            <p>${p.content || ""}</p>
+            ${media}
+          </div>
+        </div>
+      `;
+    } else {
+      document.getElementById("mainPost").innerHTML = `<p style="color:#aa0000;">Post not found or deleted.</p>`;
+    }
+  } catch (e) {
+    console.error(e);
+    document.getElementById("mainPost").innerHTML = `<p style="color:#aa0000;">Error loading post.</p>`;
+  }
+}
+
+loadMainPost();
+
+// Add Comment
+window.addComment = async () => {
+  const text = document.getElementById("commentInput").value.trim();
+  const file = document.getElementById("commentFile").files[0];
+  let url = "";
+
+  if (file) {
+    try {
+      const r = ref(storage, `comments/${Date.now()}_${file.name}`);
+      await uploadBytes(r, file);
+      url = await getDownloadURL(r);
+    } catch (e) {
+      alert("Failed to upload file.");
+      return;
+    }
+  }
+
+  if (!text && !url) return alert("Comment can't be empty");
+
+  try {
+    await addDoc(collection(db, "posts", postId, "comments"), {
+      username: getUsername(),
+      text: text,
+      image: url,
+      timestamp: Date.now()
+    });
+
+    document.getElementById("commentInput").value = "";
+    document.getElementById("commentFile").value = "";
+  } catch (e) {
+    alert("Failed to post comment.");
+  }
+};
+
+// Real-time comments
+onSnapshot(collection(db, "posts", postId, "comments"), (snap) => {
+  const container = document.getElementById("comments");
+  container.innerHTML = "";
+
+  if (snap.empty) {
+    container.innerHTML = `<div class="box" style="text-align:center; color:#aa0000;">No comments yet...</div>`;
+    return;
+  }
+
+  snap.forEach(d => {
+    const c = d.data();
+    let media = c.image ? `<img src="${c.image}">` : "";
+
+    container.innerHTML += `
+      <div class="comment">
+        <div class="username">${c.username || "Anonymous"}</div>
+        <p>${c.text || ""}</p>
+        ${media}
+      </div>
+    `;
+  });
+});
+</script>
+</body>
+</html>
