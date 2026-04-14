@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile - Tanishq Abyss</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Creepster&display=swap');
+
+    body {
+      background: #0a0000;
+      color: #eee;
+      font-family: 'Creepster', sans-serif;
+      margin: 0;
+      padding: 15px;
+      line-height: 1.5;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Nosifer', cursive;
+      color: #ff1a2e;
+      text-shadow: 3px 3px 0 #000, -3px -3px 0 #000;
+      letter-spacing: 6px;
+      margin-bottom: 30px;
+    }
+
+    .post {
+      background: #110000;
+      border: 2px solid #550000;
+      padding: 18px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(160, 0, 0, 0.5);
+    }
+
+    .post p {
+      word-break: break-word;
+      overflow-wrap: break-word;
+      margin: 10px 0;
+    }
+
+    img, video {
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 12px 0;
+      border: 2px solid #660000;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<h1 id="profileName">PROFILE</h1>
+<div id="posts"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey: "AIzaSyB_rZQ0-PTcw2u--0AjybYOBtWnoh2XxDk",
+  authDomain: "counter-ea7c8.firebaseapp.com",
+  projectId: "counter-ea7c8",
+  storageBucket: "counter-ea7c8.firebasestorage.app"
+});
+
+const db = getFirestore(app);
+const uid = new URLSearchParams(location.search).get("uid");
+
+let usernameSet = false;
+
+onSnapshot(collection(db, "posts"), (snap) => {
+  const container = document.getElementById("posts");
+  container.innerHTML = "";
+
+  let hasPosts = false;
+
+  snap.forEach(d => {
+    const p = d.data();
+    if (p.ownerId === uid) {
+      hasPosts = true;
+      if (!usernameSet) {
+        document.getElementById("profileName").textContent = (p.username || "User") + "'S SCREAMS";
+        usernameSet = true;
+      }
+
+      let media = p.fileType?.startsWith("video") 
+        ? `<video src="${p.fileUrl}" controls></video>` 
+        : p.fileUrl ? `<img src="${p.fileUrl}">` : "";
+
+      container.innerHTML += `
+        <div class="post">
+          <p>${p.content || ""}</p>
+          ${media}
+        </div>
+      `;
+    }
+  });
+
+  if (!hasPosts) {
+    container.innerHTML = `<div style="text-align:center; color:#aa0000; padding:50px;">No posts from this user yet...</div>`;
+  }
+});
+</script>
+</body>
+</html>
