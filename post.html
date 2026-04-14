@@ -78,6 +78,11 @@
       margin-top: 10px;
     }
 
+    button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
     .comment {
       background: #110000;
       border: 2px solid #550000;
@@ -105,6 +110,27 @@
       border-radius: 8px;
       border: 2px solid #660000;
     }
+
+    /* Loading for comment */
+    .posting-loader {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      color: #ff6666;
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 4px solid #440000;
+      border-top: 4px solid #ff1a2e;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -117,7 +143,12 @@
   <b>ADD COMMENT</b>
   <textarea id="commentInput" placeholder="Write your whisper..."></textarea>
   <input type="file" id="commentFile" accept="image/*,video/*">
-  <button onclick="addComment()">POST COMMENT</button>
+  <button id="commentBtn" onclick="addComment()">POST COMMENT</button>
+  
+  <div id="postingLoader" class="posting-loader">
+    <div class="spinner"></div>
+    <span>Bleeding into the void...</span>
+  </div>
 </div>
 
 <div id="comments"></div>
@@ -142,9 +173,21 @@ if (!postId) {
   document.body.innerHTML = "<h2 style='color:red;text-align:center;'>No post found</h2>";
 }
 
-// Get username from localStorage
 function getUsername() {
   return localStorage.getItem("username") || "Anonymous";
+}
+
+// Show/Hide comment loader
+function showCommentLoader(show) {
+  const loader = document.getElementById("postingLoader");
+  const btn = document.getElementById("commentBtn");
+  if (show) {
+    loader.style.display = "flex";
+    btn.disabled = true;
+  } else {
+    loader.style.display = "none";
+    btn.disabled = false;
+  }
 }
 
 // Load main post
@@ -179,11 +222,13 @@ async function loadMainPost() {
 
 loadMainPost();
 
-// Add Comment
+// Add Comment with loading
 window.addComment = async () => {
   const text = document.getElementById("commentInput").value.trim();
   const file = document.getElementById("commentFile").files[0];
   let url = "";
+
+  showCommentLoader(true);
 
   if (file) {
     try {
@@ -192,11 +237,16 @@ window.addComment = async () => {
       url = await getDownloadURL(r);
     } catch (e) {
       alert("Failed to upload file.");
+      showCommentLoader(false);
       return;
     }
   }
 
-  if (!text && !url) return alert("Comment can't be empty");
+  if (!text && !url) {
+    alert("Comment can't be empty");
+    showCommentLoader(false);
+    return;
+  }
 
   try {
     await addDoc(collection(db, "posts", postId, "comments"), {
@@ -206,10 +256,15 @@ window.addComment = async () => {
       timestamp: Date.now()
     });
 
+    // Clear form
     document.getElementById("commentInput").value = "";
     document.getElementById("commentFile").value = "";
+
+    // Loader will hide automatically when the comment appears via onSnapshot
+
   } catch (e) {
     alert("Failed to post comment.");
+    showCommentLoader(false);
   }
 };
 
@@ -235,6 +290,9 @@ onSnapshot(collection(db, "posts", postId, "comments"), (snap) => {
       </div>
     `;
   });
+
+  // Hide loader when new comment appears
+  showCommentLoader(false);
 });
 </script>
 </body>
