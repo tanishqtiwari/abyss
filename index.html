@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tanishq Abyss 💀</title>
+  
+  <meta property="og:title" content="TANISHQ ABYSS 💀">
+  <meta property="og:description" content="What lurks in your mind? Enter the community void...">
+
+  <meta property="og:type" content="website">
+  
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Creepster&display=swap');
 
@@ -18,60 +25,268 @@
       color: #eee;
       font-family: 'Creepster', system-ui, sans-serif;
       margin: 0;
-      padding: 15px;
+      padding: 105px 15px 15px 15px; /* Added extra padding to clear the dripping text completely */
       line-height: 1.5;
     }
 
-    h1 {
-      text-align: center;
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* --- FIX: RE-DESIGNED CLEAN RE-ALIGNING FIXED HEADER NAVBAR --- */
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 85px; /* Slightly taller to accommodate the dripping font graphics neatly */
+      background: #0f0001;
+      border-bottom: 3px solid var(--deepred);
+      display: grid;
+      grid-template-columns: 60px 1fr 60px; /* Force clean 3-part layout alignment */
+      align-items: center;
+      z-index: 999;
+      box-shadow: 0 4px 20px rgba(255, 26, 46, 0.25);
+      box-sizing: border-box;
+      padding: 0 10px;
+    }
+
+    .drawer-trigger {
+      background: transparent;
+      border: none;
+      color: var(--blood);
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      justify-self: center;
+      transition: transform 0.2s;
+    }
+    .drawer-trigger:hover {
+      transform: scale(1.1);
+      box-shadow: none;
+      background: transparent;
+    }
+
+    .app-header h1 {
+      margin: 0;
       font-family: 'Nosifer', cursive;
-      font-size: 3.6rem;
+      font-size: 2.8rem; /* Normalized baseline container balance */
       color: var(--blood);
       text-shadow: 3px 3px 0 #000, -3px -3px 0 #000;
-      letter-spacing: 8px;
-      margin: 20px 0 35px;
+      letter-spacing: 4px;
       text-transform: uppercase;
-      line-height: 1.05;
+      line-height: 1.1;
+      cursor: pointer;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      .app-header { height: 75px; }
+      .app-header h1 { font-size: 1.6rem; letter-spacing: 2px; }
+      .drawer-trigger { font-size: 1.6rem; }
+      body { padding-top: 95px; }
+    }
+    
+    @media (max-width: 400px) {
+      .app-header h1 { font-size: 1.3rem; letter-spacing: 1px; }
+    }
+
+    /* --- SIDE NAVIGATION DRAWER SYSTEM --- */
+    .drawer-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 10000;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .side-drawer {
+      position: fixed;
+      top: 0;
+      left: -280px; 
+      width: 280px;
+      height: 100%;
+      background: #0f0001;
+      border-right: 3px solid var(--deepred);
+      z-index: 10001;
+      box-sizing: border-box;
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: left 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+      box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px dashed var(--deepred);
+      padding-bottom: 15px;
+    }
+
+    .drawer-title {
+      font-family: 'Nosifer', cursive;
+      color: #fff;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+
+    .drawer-close-btn {
+      background: transparent !important;
+      border: none !important;
+      color: #888 !important;
+      font-size: 1.5rem;
+      padding: 0 !important;
+      margin: 0 !important;
+      cursor: pointer;
+    }
+    .drawer-close-btn:hover { color: var(--blood) !important; }
+
+    .drawer-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .drawer-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #190002;
+      border: 1px solid #440000;
+      color: #ff8888;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .drawer-item:hover {
+      background: var(--blood);
+      color: #000;
+      border-color: var(--blood);
+      box-shadow: 0 0 15px rgba(255,26,46,0.4);
+    }
+
+    /* --- REST OF THE PERSISTENT STYLES --- */
+    .dashboard-grid {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 25px;
+    }
+
+    .dashboard-grid .box {
+      flex: 1;
+      margin-bottom: 0; 
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        flex-direction: column;
+        gap: 15px;
+      }
     }
 
     .box {
       background: #140000;
       border: 3px solid var(--deepred);
-      padding: 22px;
-      margin-bottom: 25px;
+      padding: 16px; 
       border-radius: 12px;
       box-shadow: 0 0 25px rgba(255, 26, 46, 0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .box b {
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      color: #ffaaaa;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .dropdown-trigger-btn {
+      width: 100%;
+      background: #1a0002;
+      border: 2px dashed var(--deepred);
+      color: #ff8888;
+      padding: 12px;
+      font-size: 1.1rem;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .dropdown-trigger-btn:hover {
+      background: #2b0004;
+      border-color: var(--blood);
+    }
+
+    .dropdown-panel-content {
+      display: none; 
+      border-top: 1px dashed #550000;
+      padding-top: 12px;
+      margin-top: 10px;
+    }
+
+    .void-notice-tag {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.85rem;
+      color: #ffaa55;
+      background: rgba(255, 170, 85, 0.1);
+      border-left: 3px solid #ffaa55;
+      padding: 6px 10px;
+      margin: 8px 0;
+      border-radius: 0 6px 6px 0;
     }
 
     input, textarea {
       width: 100%;
-      padding: 15px;
-      margin: 10px 0;
+      padding: 10px 12px; 
+      margin: 6px 0;
       background: #000;
       color: #ff8888;
       border: 2px solid #660000;
       border-radius: 8px;
       font-family: 'Creepster', sans-serif;
-      font-size: 1.1rem;
+      font-size: 1rem;
       box-sizing: border-box;
     }
 
     textarea { 
-      min-height: 130px; 
+      min-height: 76px; 
       resize: vertical; 
       word-break: break-word; 
     }
 
     button {
-      padding: 12px 18px;
+      padding: 8px 14px; 
       background: #220000;
       color: #ffbbbb;
       border: 2px solid var(--blood);
       border-radius: 8px;
       cursor: pointer;
       font-family: 'Creepster', sans-serif;
-      font-size: 1.05rem;
-      margin: 6px 6px 6px 0;
+      font-size: 1rem;
+      margin: 4px 4px 4px 0;
       transition: all 0.3s;
     }
 
@@ -86,17 +301,179 @@
       cursor: not-allowed;
     }
 
-    .row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; }
 
     #currentUser {
-      margin-top: 18px;
-      padding: 14px;
+      margin-top: 10px;
+      padding: 8px;
       background: rgba(30,0,0,0.8);
       border: 2px dashed #880000;
       color: #ff6666;
-      font-size: 1.15rem;
+      font-size: 1rem;
       text-align: center;
       font-family: 'Creepster', sans-serif;
+    }
+
+    .thumb-preview-area {
+      display: none;
+      background: #000;
+      border: 2px dashed #550000;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    .thumb-preview-area video {
+      max-height: 140px;
+      width: auto;
+      margin: 5px auto;
+      display: block;
+      border: 1px solid #440000;
+    }
+
+    .thumb-preview-area span {
+      font-size: 0.85rem;
+      color: #ffaaaa;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .filter-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none; 
+    }
+    .filter-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: #222;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px; 
+      font-size: 1rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab-btn.active {
+      background: #fff;
+      color: #000;
+    }
+
+    #feedGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    #feedList {
+      display: none; 
+    }
+
+    /* --- FIX: STICKY SUB-NAV BAR SETUP --- */
+    .back-nav-bar {
+      position: fixed;
+      top: 85px; /* Sits perfectly beneath fixed header layout */
+      left: 0;
+      width: 100%;
+      z-index: 99;
+      background: #0f0001;
+      padding: 10px 15px;
+      box-sizing: border-box;
+      border-bottom: 2px solid #330000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    }
+
+    #listItemsTarget {
+      padding-top: 55px; /* Offset to prevent sticky navigation from overlapping content feed */
+    }
+
+    @media (max-width: 768px) {
+      .back-nav-bar {
+        top: 75px; /* Adapts to smaller mobile navbar heights */
+      }
+      #listItemsTarget {
+        padding-top: 50px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      #feedGrid { 
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 8px; 
+      }
+    }
+
+    .grid-item {
+      position: relative;
+      width: 100%;
+      padding-top: 100%; 
+      background: #140000;
+      border: 2px solid #440000;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .grid-item:hover {
+      border-color: var(--blood);
+      transform: scale(1.02);
+    }
+
+    .grid-item-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .grid-item img, .grid-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      margin: 0;
+      border: none;
+      border-radius: 0;
+    }
+
+    .grid-text-fallback {
+      padding: 12px;
+      font-size: 1rem;
+      color: #ff8888;
+      text-align: center;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .grid-icon-indicator {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      z-index: 2;
     }
 
     .post {
@@ -107,6 +484,15 @@
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(160, 0, 0, 0.5);
       overflow: hidden;
+      scroll-margin-top: 155px; /* Smooth scroll target visibility balance */
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .username {
@@ -116,8 +502,18 @@
       text-shadow: 0 0 8px var(--blood);
     }
 
+    .post-date {
+      color: #883333;
+      font-size: 0.9rem;
+      font-family: system-ui, -apple-system, sans-serif;
+      letter-spacing: 0.5px;
+    }
+
     img, video {
       max-width: 100%;
+      max-height: 500px; 
+      width: auto;
+      height: auto;
       margin: 12px 0 15px;
       border-radius: 8px;
       border: 2px solid #660000;
@@ -138,24 +534,40 @@
       align-items: center;
     }
 
+    .vote {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .vote button {
       padding: 4px 11px;
       font-size: 1.25rem;
       min-width: 34px;
     }
 
-    .comment-count {
+    .vote span {
+      color: #ff8888;
+      font-size: 1.15rem;
+    }
+
+    .comment-count, .download-btn, .share-btn {
       color: #ff8888;
       font-size: 1.15rem;
       display: flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
+      user-select: none;
+      transition: color 0.2s;
+    }
+
+    .share-btn:hover {
+      color: var(--blood);
     }
 
     .delete { background: #400000; color: #ffaaaa; }
 
-    /* Posting Loader */
     .posting-loader {
       display: none;
       align-items: center;
@@ -181,42 +593,189 @@
       color: #aa0000;
       font-size: 1.4rem;
       padding: 60px 20px;
+      grid-column: 1 / -1;
+    }
+
+    .abyss-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    
+    .abyss-modal-box {
+      background: #140000;
+      border: 3px solid var(--blood);
+      border-radius: 16px;
+      max-width: 450px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 0 35px rgba(255, 26, 46, 0.6);
+      box-sizing: border-box;
+      text-align: center;
+      animation: modalSlidIn 0.25s ease-out;
+    }
+
+    @keyframes modalSlidIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .abyss-modal-title {
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    .abyss-modal-link-display {
+      background: #000;
+      border: 1px solid #550000;
+      color: #ff6666;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: system-ui, sans-serif;
+      word-break: break-all;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .abyss-modal-buttons-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .modal-action-btn {
+      width: 100%;
+      margin: 0;
+      padding: 12px;
+      font-size: 1.1rem;
+    }
+    
+    .modal-close-btn {
+      background: #000;
+      border-color: #555;
+      color: #aaa;
+    }
+    .modal-close-btn:hover {
+      background: #222;
+      color: #fff;
+      box-shadow: none;
     }
   </style>
 </head>
 <body>
 
-<h1>TANISHQ ABYSS</h1>
+<header class="app-header">
+  <button class="drawer-trigger" onclick="openNavDrawer()">☰</button>
+  <h1 onclick="resetToHome()">TANISHQ ABYSS</h1>
+  <div></div> </header>
 
-<div class="box">
-  <b>ENTER THE COMMUNITY</b>
-  <input id="username" placeholder="YOUR NAME (OPTIONAL FOR LOGIN)">
-  <input id="password" type="password" placeholder="PASSWORD">
+<div id="drawerOverlay" class="drawer-overlay" onclick="closeNavDrawer()"></div>
+<aside id="sideDrawer" class="side-drawer">
+  <div class="drawer-header">
+    <div class="drawer-title">NAVIGATION</div>
+    <button class="drawer-close-btn" onclick="closeNavDrawer()">✕</button>
+  </div>
+  <nav class="drawer-nav-list">
+    <div class="drawer-item" onclick="handleDrawerHomeClick()">🏠 HOME FEED</div>
+    <a href="https://tanishqtiwari.site/Payment" target="_blank" class="drawer-item">💰 PAY TO TANISHQ</a>
+  </nav>
+</aside>
 
-  <div class="row">
-    <button onclick="signup()">SIGN UP</button>
-    <button onclick="login()">LOGIN</button>
-    <button onclick="anon()">GO ANONYMOUS</button>
-    <button onclick="logout()">LOGOUT</button>
+<div class="container">
+
+  <div id="topPanel" class="dashboard-grid">
+    
+    <div class="box">
+      <button class="dropdown-trigger-btn" onclick="toggleAuthDropdown()">
+        <span>🔒 ENTER THE COMMUNITY (LOGIN / SIGN UP)</span>
+        <span id="dropdownArrowNode">▼</span>
+      </button>
+
+      <div id="authDropdownPanel" class="dropdown-panel-content">
+        <b>ACCOUNT MANIFESTATION</b>
+        
+        <div class="void-notice-tag">
+          ⚠️ <strong>NO EMAIL REQUIRED:</strong> Simply pick any unique username and a password. We handle the pipeline dynamically.
+        </div>
+
+        <input id="username" placeholder="YOUR NAME (OPTIONAL)">
+        <input id="password" type="password" placeholder="PASSWORD">
+        
+        <div class="row" style="margin-top: 12px;">
+          <button onclick="signup()">SIGN UP</button>
+          <button onclick="login()">LOGIN</button>
+          <button onclick="anon()">ANON</button>
+          <button onclick="logout()">LOGOUT</button>
+        </div>
+      </div>
+
+      <div id="currentUser">YOU ARE: <span id="userDisplay" style="color:#ff4444;">ANONYMOUS</span></div>
+    </div>
+
+    <div class="box">
+      <div>
+        <b>POST SOMETHING</b>
+        <textarea id="postInput" placeholder="What lurks in your mind..."></textarea>
+        <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleFileSelection(this)" style="font-size:0.9rem; padding:6px;">
+        
+        <div id="thumbPreviewArea" class="thumb-preview-area">
+          <span>Video Preview Frame Picker:</span>
+          <video id="previewVideoNode" controls muted playsinline></video>
+          <span>Play/seek video to choose thumbnail frame</span>
+        </div>
+      </div>
+      
+      <div>
+        <button id="postBtn" onclick="createPost()" style="width:100%; margin:4px 0 0 0;">POST TO THE ABYSS</button>
+        <div id="postingLoader" class="posting-loader">
+          <div class="spinner"></div>
+          <span>Bleeding into the void...</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <div id="currentUser">YOU ARE CURRENTLY: <span id="userDisplay" style="color:#ff4444;">ANONYMOUS</span></div>
-</div>
-
-<div class="box">
-  <b>POST SOMETHING</b>
-  <textarea id="postInput" placeholder="What lurks in your mind..."></textarea>
-  <input type="file" id="fileInput" accept="image/*,video/*">
-  <button id="postBtn" onclick="createPost()">POST TO THE ABYSS</button>
-  
-  <div id="postingLoader" class="posting-loader">
-    <div class="spinner"></div>
-    <span>Bleeding into the void...</span>
+  <div class="filter-container">
+    <div class="filter-tabs">
+      <button class="tab-btn active" id="tabAuthor" onclick="switchTab('author')">Author's Posts</button>
+      <button class="tab-btn" id="tabFans" onclick="switchTab('fans')">Fans' Posts</button>
+    </div>
   </div>
+
+  <div id="feedGrid">
+    <div class="loading">Loading screams from the abyss...</div>
+  </div>
+
+  <div id="feedList">
+    <div class="back-nav-bar">
+      <button onclick="switchToGridView()">← BACK TO GRID</button>
+    </div>
+    <div id="listItemsTarget"></div>
+  </div>
+
 </div>
 
-<div id="feed">
-  <div class="loading">Loading screams from the abyss...</div>
+<div id="shareModalOverlay" class="abyss-modal-overlay" onclick="closeShareModal()">
+  <div class="abyss-modal-box" onclick="event.stopPropagation()">
+    <div class="abyss-modal-title">SHARE THIS MEMORY</div>
+    <div id="modalLinkDisplay" class="abyss-modal-link-display">Generating link...</div>
+    
+    <div class="abyss-modal-buttons-row">
+      <button id="modalCopyBtn" class="modal-action-btn" onclick="executeModalCopy()">📋 COPY LINK TO CLIPBOARD</button>
+      <button id="modalSystemBtn" class="modal-action-btn" onclick="executeModalSystemShare()">📱 OPEN SYSTEM SHARE DRAWER</button>
+      <button class="modal-action-btn modal-close-btn" onclick="closeShareModal()">CANCEL</button>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -242,8 +801,12 @@ const auth = getAuth(app);
 
 let currentUser = null;
 let currentUsername = "Anonymous";
+let currentTab = "author"; 
+let currentSnapshotDocs = []; 
+let isInitialDeepLinkProcessed = false;
 
-const emailFromUser = (u) => (u || "anon").trim().toLowerCase() + "@tanishq.app";
+let activeShareUrl = "";
+let activeShareAuthor = "";
 
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
@@ -253,7 +816,44 @@ onAuthStateChanged(auth, (user) => {
 
 function getUsername() { return currentUsername; }
 
-// Loader control
+// --- DRAWER INTERACTION MECHANICS ---
+window.openNavDrawer = function() {
+  const overlay = document.getElementById("drawerOverlay");
+  const drawer = document.getElementById("sideDrawer");
+  overlay.style.display = "block";
+  setTimeout(() => {
+    overlay.style.opacity = "1";
+    drawer.style.left = "0px";
+  }, 10);
+};
+
+window.closeNavDrawer = function() {
+  const overlay = document.getElementById("drawerOverlay");
+  const drawer = document.getElementById("sideDrawer");
+  drawer.style.left = "-280px";
+  overlay.style.opacity = "0";
+  setTimeout(() => {
+    overlay.style.display = "none";
+  }, 300);
+};
+
+window.handleDrawerHomeClick = function() {
+  window.closeNavDrawer();
+  window.resetToHome();
+};
+
+window.toggleAuthDropdown = function() {
+  const panel = document.getElementById("authDropdownPanel");
+  const arrow = document.getElementById("dropdownArrowNode");
+  if (panel.style.display === "block") {
+    panel.style.display = "none";
+    arrow.textContent = "▼";
+  } else {
+    panel.style.display = "block";
+    arrow.textContent = "▲";
+  }
+};
+
 function showPostingLoader(show) {
   const loader = document.getElementById("postingLoader");
   const btn = document.getElementById("postBtn");
@@ -266,6 +866,149 @@ function showPostingLoader(show) {
   }
 }
 
+window.handleFileSelection = (inputElement) => {
+  const file = inputElement.files[0];
+  const previewArea = document.getElementById("thumbPreviewArea");
+  const videoNode = document.getElementById("previewVideoNode");
+  
+  if (file && file.type.startsWith("video")) {
+    previewArea.style.display = "block";
+    videoNode.src = URL.createObjectURL(file);
+    videoNode.load();
+    videoNode.currentTime = 0.5;
+  } else {
+    previewArea.style.display = "none";
+    videoNode.removeAttribute("src");
+    videoNode.load();
+  }
+};
+
+window.switchTab = (tabName) => {
+  currentTab = tabName;
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  
+  if(tabName === 'author') document.getElementById('tabAuthor').classList.add('active');
+  if(tabName === 'fans') document.getElementById('tabFans').classList.add('active');
+  
+  window.switchToGridView();
+  window.refreshFeeds();
+};
+
+window.openPostInList = (postId, updateUrl = true) => {
+  document.getElementById("topPanel").style.display = "none";
+  document.getElementById("feedGrid").style.display = "none";
+  document.getElementById("feedList").style.display = "block";
+  
+  window.scrollTo(0, 0);
+
+  const targetPostElement = document.getElementById(`post-row-${postId}`);
+  if (targetPostElement) {
+    // Add offset math to cleanly account for our newly pinned sub-navigation header
+    const currentHeaderHeight = window.innerWidth <= 768 ? 75 : 85;
+    const elementPosition = targetPostElement.getBoundingClientRect().top + window.scrollY;
+    const offsetPosition = elementPosition - (currentHeaderHeight + 65); 
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'instant'
+    });
+  }
+
+  if (updateUrl) {
+    const newUrl = `${window.location.origin}${window.location.pathname}?view=list&post=${postId}`;
+    window.history.pushState({ postId }, '', newUrl);
+  }
+};
+
+window.switchToGridView = () => {
+  document.getElementById("feedList").style.display = "none";
+  document.getElementById("topPanel").style.display = "flex";
+  document.getElementById("feedGrid").style.display = "grid";
+  
+  const cleanUrl = `${window.location.origin}${window.location.pathname}`;
+  window.history.pushState({}, '', cleanUrl);
+  window.scrollTo(0, 0);
+};
+
+window.resetToHome = () => {
+  window.switchToGridView();
+};
+
+// ==================== SHARE ENGINE ====================
+window.sharePost = function(postId, postAuthor) {
+  activeShareUrl = `${window.location.origin}${window.location.pathname}?view=list&post=${postId}`;
+  activeShareAuthor = postAuthor;
+  
+  document.getElementById("modalLinkDisplay").textContent = activeShareUrl;
+  
+  const systemShareBtn = document.getElementById("modalSystemBtn");
+  if (navigator.share) {
+    systemShareBtn.style.display = "block";
+  } else {
+    systemShareBtn.style.display = "none";
+  }
+  
+  document.getElementById("shareModalOverlay").style.display = "flex";
+};
+
+window.closeShareModal = function() {
+  document.getElementById("shareModalOverlay").style.display = "none";
+  document.getElementById("modalCopyBtn").textContent = "📋 COPY LINK TO CLIPBOARD";
+};
+
+window.executeModalCopy = function() {
+  const btn = document.getElementById("modalCopyBtn");
+  
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(activeShareUrl)
+      .then(() => { handleCopySuccess(btn); })
+      .catch(() => { runHardFallbackCopy(activeShareUrl, btn); });
+  } else {
+    runHardFallbackCopy(activeShareUrl, btn);
+  }
+};
+
+function handleCopySuccess(buttonNode) {
+  buttonNode.textContent = "✅ COPIED SUCCESSFULLY!";
+  setTimeout(() => {
+    window.closeShareModal();
+  }, 900);
+}
+
+function runHardFallbackCopy(text, buttonNode) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      handleCopySuccess(buttonNode);
+    } else {
+      prompt("Copying failed automatically. Copy this link manually:", text);
+    }
+  } catch (err) {
+    prompt("Copying failed automatically. Copy this link manually:", text);
+  }
+  document.body.removeChild(textArea);
+}
+
+window.executeModalSystemShare = function() {
+  if (navigator.share) {
+    navigator.share({
+      title: `Tanishq Abyss - Post by ${activeShareAuthor}`,
+      text: `Look what lurks inside the Abyss...`,
+      url: activeShareUrl
+    })
+    .then(() => window.closeShareModal())
+    .catch((err) => console.log("System Share canceled", err));
+  }
+};
+
 // ==================== AUTH ====================
 window.signup = async () => {
   const name = document.getElementById("username").value.trim();
@@ -277,6 +1020,7 @@ window.signup = async () => {
     currentUsername = name;
     document.getElementById("userDisplay").textContent = name.toUpperCase();
     alert("Welcome to Tanishq Abyss...");
+    window.toggleAuthDropdown(); 
   } catch (e) { alert(e.message); }
 };
 
@@ -289,6 +1033,7 @@ window.login = async () => {
     localStorage.setItem("username", name);
     currentUsername = name;
     document.getElementById("userDisplay").textContent = name.toUpperCase();
+    window.toggleAuthDropdown(); 
   } catch (e) { alert(e.message); }
 };
 
@@ -298,6 +1043,7 @@ window.anon = async () => {
     localStorage.setItem("username", "Anonymous");
     currentUsername = "Anonymous";
     document.getElementById("userDisplay").textContent = "ANONYMOUS";
+    window.toggleAuthDropdown();
   } catch (e) { alert(e.message); }
 };
 
@@ -307,26 +1053,60 @@ window.logout = async () => {
   document.getElementById("userDisplay").textContent = "ANONYMOUS";
 };
 
-// ==================== CREATE POST WITH LOADING ====================
+const emailFromUser = (u) => (u || "anon").trim().toLowerCase() + "@tanishq.app";
+
+const captureFrameFromVideoNode = (videoElement) => {
+  return new Promise((resolve) => {
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = videoElement.videoWidth || 480;
+      canvas.height = videoElement.videoHeight || 480;
+      
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, "image/jpeg", 0.8);
+    } catch(err) {
+      console.error("Frame capture error: ", err);
+      resolve(null);
+    }
+  });
+};
+
+// ==================== CREATE POST ====================
 window.createPost = async () => {
   if (!currentUser) return alert("The abyss requires a presence...");
 
   const content = document.getElementById("postInput").value.trim();
   const file = document.getElementById("fileInput").files[0];
+  const previewVideo = document.getElementById("previewVideoNode");
 
-  let fileUrl = "", fileType = "";
+  let fileUrl = "", fileType = "", thumbnailUrl = "";
 
-  showPostingLoader(true);   // Disable button + show loader
+  showPostingLoader(true);
 
-  // Upload file if any
   if (file) {
     try {
-      const storageRef = ref(storage, `posts/${Date.now()}_${file.name}`);
+      const postTimestamp = Date.now();
+      
+      if (file.type.startsWith("video") && previewVideo.src) {
+        const thumbBlob = await captureFrameFromVideoNode(previewVideo);
+        if (thumbBlob) {
+          const thumbRef = ref(storage, `posts/${postTimestamp}_thumb.jpg`);
+          await uploadBytes(thumbRef, thumbBlob);
+          thumbnailUrl = await getDownloadURL(thumbRef);
+        }
+      }
+
+      const storageRef = ref(storage, `posts/${postTimestamp}_${file.name}`);
       await uploadBytes(storageRef, file);
       fileUrl = await getDownloadURL(storageRef);
       fileType = file.type;
+
     } catch (e) {
-      alert("File upload failed.");
+      alert("File upload into storage bucket failed.");
       showPostingLoader(false);
       return;
     }
@@ -343,83 +1123,211 @@ window.createPost = async () => {
       content,
       fileUrl,
       fileType,
+      thumbnailUrl, 
       username: getUsername(),
       ownerId: currentUser.uid,
-      votesMap: {},
+      votesMap: {},     
+      likesMap: {},     
+      dislikesMap: {},  
       timestamp: Date.now()
     });
 
-    // Clear form immediately
     document.getElementById("postInput").value = "";
     document.getElementById("fileInput").value = "";
-
-    // Loader will be hidden automatically by the onSnapshot below when the post appears
-
+    document.getElementById("thumbPreviewArea").style.display = "none";
+    previewVideo.removeAttribute("src");
+    previewVideo.load();
   } catch (e) {
     alert("Failed to post into the darkness.");
     showPostingLoader(false);
   }
 };
 
-// ==================== REAL-TIME FEED ====================
-onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc"), limit(20)), async (snap) => {
-  const feed = document.getElementById("feed");
-  let html = "";
+// ==================== DOWNLOAD DIRECT UTILITY ====================
+window.downloadMedia = async (url, filename) => {
+  if (!url) return;
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = filename || "abyss_media";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(blobUrl);
+  } catch (err) {
+    alert("Direct download blocked. Opening link in new window instead.");
+    window.open(url, '_blank');
+  }
+};
 
-  if (snap.empty) {
-    html = `<div class="box" style="text-align:center; color:#aa0000;">No posts yet...</div>`;
-  } else {
-    for (const docSnap of snap.docs) {
-      const p = docSnap.data();
-      const postId = docSnap.id;
-      const votes = Object.values(p.votesMap || {}).reduce((a, b) => a + b, 0);
+// ==================== RENDERING FEEDS ====================
+window.refreshFeeds = async () => {
+  const gridContainer = document.getElementById("feedGrid");
+  const listContainer = document.getElementById("listItemsTarget");
+  
+  let gridHtml = "";
+  let listHtml = "";
 
-      let commentCount = 0;
-      try {
-        const countSnap = await getCountFromServer(collection(db, "posts", postId, "comments"));
-        commentCount = countSnap.data().count;
-      } catch (e) {}
+  const filteredDocs = currentSnapshotDocs.filter(docSnap => {
+    const p = docSnap.data();
+    const isAuthorPost = p.username && p.username.trim().toLowerCase() === "tanishqtiwari";
+    
+    if (currentTab === "author") return isAuthorPost;
+    if (currentTab === "fans") return !isAuthorPost;
+    return true; 
+  });
 
-      let media = p.fileType?.startsWith("video") 
-        ? `<video src="${p.fileUrl}" controls></video>` 
-        : p.fileUrl ? `<img src="${p.fileUrl}">` : "";
-
-      const isOwner = currentUser && p.ownerId === currentUser.uid;
-      const delBtn = isOwner ? `<button class="delete" onclick="deletePost('${postId}')">ERASE</button>` : "";
-
-      html += `
-        <div class="post">
-          <div class="username" onclick="openProfile('${p.ownerId}')">${p.username}</div>
-          <p>${p.content || ""}</p>
-          ${media}
-          <div class="actions">
-            <div class="vote">
-              <button onclick="vote('${postId}', 1)">👍</button>
-              <span>${votes}</span>
-              <button onclick="vote('${postId}', -1)">👎</button>
-            </div>
-            <div class="comment-count" onclick="openPost('${postId}')">💬 ${commentCount}</div>
-            ${delBtn}
-          </div>
-        </div>
-      `;
-    }
+  if (filteredDocs.length === 0) {
+    const emptyState = `<div class="box" style="text-align:center; color:#aa0000; width:100%; grid-column: 1/-1;">Nothing found in this layer of the abyss...</div>`;
+    gridContainer.innerHTML = emptyState;
+    listContainer.innerHTML = emptyState;
+    return;
   }
 
-  feed.innerHTML = html;
-  showPostingLoader(false);   // Hide loader + re-enable button when post appears
+  for (const docSnap of filteredDocs) {
+    const p = docSnap.data();
+    const postId = docSnap.id;
+    
+    // --- 1. Grid Mode Builders ---
+    let gridMediaElement = "";
+    let mediaIndicator = "";
+
+    if (p.fileType?.startsWith("video")) {
+      gridMediaElement = p.thumbnailUrl ? `<img src="${p.thumbnailUrl}">` : `<div class="grid-text-fallback" style="color:#ffaa00;">📹 Video File</div>`;
+      mediaIndicator = `<div class="grid-icon-indicator">📹</div>`;
+    } else if (p.fileUrl) {
+      gridMediaElement = `<img src="${p.fileUrl}">`;
+      mediaIndicator = ``;
+    } else {
+      gridMediaElement = `<div class="grid-text-fallback">${p.content || "..."}</div>`;
+    }
+
+    gridHtml += `
+      <div class="grid-item" onclick="openPostInList('${postId}')">
+        ${mediaIndicator}
+        <div class="grid-item-content">
+          ${gridMediaElement}
+        </div>
+      </div>
+    `;
+
+    // --- 2. List Mode Builders ---
+    const legacyLikes = Object.values(p.votesMap || {}).filter(v => v === 1).length;
+    const currentNewLikes = Object.values(p.likesMap || {}).filter(v => v === true).length;
+    const totalLikes = legacyLikes + currentNewLikes;
+    const totalDislikes = Object.values(p.dislikesMap || {}).filter(v => v === true).length;
+
+    let commentCount = 0;
+    try {
+      const countSnap = await getCountFromServer(collection(db, "posts", postId, "comments"));
+      commentCount = countSnap.data().count;
+    } catch (e) {}
+
+    let media = "";
+    if (p.fileType?.startsWith("video")) {
+      const posterAttr = p.thumbnailUrl ? `poster="${p.thumbnailUrl}"` : "";
+      media = `<video src="${p.fileUrl}" ${posterAttr} controls preload="metadata"></video>`;
+    } else if (p.fileUrl) {
+      media = `<img src="${p.fileUrl}">`;
+    }
+
+    let downloadActionButton = p.fileUrl 
+      ? `<div class="download-btn" onclick="downloadMedia('${p.fileUrl}', 'abyss_file_${postId}')" title="Download Media">📥 Download</div>` 
+      : "";
+
+    let formattedDate = "";
+    if (p.timestamp) {
+      const dateObj = new Date(p.timestamp);
+      formattedDate = dateObj.toLocaleString(undefined, {
+        month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    const isOwner = currentUser && p.ownerId === currentUser.uid;
+    const delBtn = isOwner ? `<button class="delete" onclick="deletePost('${postId}')">ERASE</button>` : "";
+
+    listHtml += `
+      <div class="post" id="post-row-${postId}">
+        <div class="post-header">
+          <div class="username" onclick="openProfile('${p.ownerId}')">${p.username}</div>
+          <div class="post-date">${formattedDate}</div>
+        </div>
+        <p>${p.content || ""}</p>
+        ${media}
+        <div class="actions">
+          <div class="vote">
+            <button onclick="handleVote('${postId}', 'like')">👍</button>
+            <span>${totalLikes}</span>
+            <button onclick="handleVote('${postId}', 'dislike')">👎</button>
+            <span>${totalDislikes}</span>
+          </div>
+          <div class="comment-count" onclick="openPostComments('${postId}')">💬 ${commentCount}</div>
+          <div class="share-btn" onclick="sharePost('${postId}', '${(p.username || 'Anonymous').replace(/'/g, "\\'")}')">🔗 Share</div>
+          ${downloadActionButton}
+          ${delBtn}
+        </div>
+      </div>
+    `;
+  }
+
+  gridContainer.innerHTML = gridHtml;
+  listContainer.innerHTML = listHtml;
+  showPostingLoader(false);
+
+  if (!isInitialDeepLinkProcessed && filteredDocs.length > 0) {
+    isInitialDeepLinkProcessed = true;
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewParam = urlParams.get('view');
+    const postParam = urlParams.get('post');
+
+    if (viewParam === 'list' && postParam) {
+      setTimeout(() => {
+        window.openPostInList(postParam, false);
+      }, 400);
+    }
+  }
+};
+
+window.addEventListener('popstate', (event) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const viewParam = urlParams.get('view');
+  if (viewParam !== 'list') {
+    document.getElementById("feedList").style.display = "none";
+    document.getElementById("topPanel").style.display = "flex";
+    document.getElementById("feedGrid").style.display = "grid";
+  }
 });
 
-// Other functions
-window.vote = async (id, val) => {
-  if (!currentUser) return alert("Login or go anonymous to vote");
+onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc"), limit(20)), async (snap) => {
+  currentSnapshotDocs = snap.docs;
+  window.refreshFeeds();
+});
+
+window.handleVote = async (id, type) => {
+  if (!currentUser) return alert("Login or go anonymous to react");
   try {
     const postRef = doc(db, "posts", id);
-    const data = (await getDoc(postRef)).data();
-    const map = data.votesMap || {};
-    map[currentUser.uid] = val;
-    await updateDoc(postRef, { votesMap: map });
-  } catch (e) {}
+    const postSnap = await getDoc(postRef);
+    const data = postSnap.data();
+    
+    let votesMap = data.votesMap || {};
+    let likesMap = data.likesMap || {};
+    let dislikesMap = data.dislikesMap || {};
+    const uid = currentUser.uid;
+
+    if (type === 'like') {
+      if (votesMap[uid]) delete votesMap[uid];
+      if (likesMap[uid]) { delete likesMap[uid]; } else { likesMap[uid] = true; delete dislikesMap[uid]; }
+    } else if (type === 'dislike') {
+      if (votesMap[uid]) delete votesMap[uid];
+      if (dislikesMap[uid]) { delete dislikesMap[uid]; } else { dislikesMap[uid] = true; delete likesMap[uid]; }
+    }
+
+    await updateDoc(postRef, { votesMap, likesMap, dislikesMap });
+  } catch (e) { console.error(e); }
 };
 
 window.deletePost = async (id) => {
@@ -427,7 +1335,7 @@ window.deletePost = async (id) => {
   try { await deleteDoc(doc(db, "posts", id)); } catch (e) {}
 };
 
-window.openPost = (id) => location.href = `post.html?id=${id}`;
+window.openPostComments = (id) => location.href = `post.html?id=${id}`;
 window.openProfile = (uid) => location.href = `profile.html?uid=${uid}`;
 </script>
 </body>
