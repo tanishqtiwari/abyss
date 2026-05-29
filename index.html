@@ -936,18 +936,19 @@ window.resetToHome = () => {
 
 // ==================== SHARE ENGINE ====================
 window.sharePost = function(postId, postAuthor) {
-  activeShareUrl = `${window.location.origin}${window.location.pathname}?view=list&post=${postId}`;
+  activeShareUrl = `${window.location.origin}/post.html?id=${postId}`;
   activeShareAuthor = postAuthor;
-  
+
   document.getElementById("modalLinkDisplay").textContent = activeShareUrl;
-  
+
   const systemShareBtn = document.getElementById("modalSystemBtn");
+
   if (navigator.share) {
     systemShareBtn.style.display = "block";
   } else {
     systemShareBtn.style.display = "none";
   }
-  
+
   document.getElementById("shareModalOverlay").style.display = "flex";
 };
 
