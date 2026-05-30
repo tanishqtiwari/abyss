@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Post - Tanishq Abyss</title>
+  <title>Abyss Resonance Node</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Creepster&display=swap');
 
@@ -16,20 +16,20 @@
     body {
       background: var(--void);
       color: #eee;
-      font-family: 'Creepster', sans-serif;
+      font-family: 'Creepster', system-ui, sans-serif;
       margin: 0;
-      padding: 105px 15px 15px 15px; 
+      padding: 105px 15px 15px 15px;
       line-height: 1.5;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 800px;
       margin: 0 auto;
       width: 100%;
       box-sizing: border-box;
     }
 
-    /* --- FIXED NAVBAR HEADER --- */
+    /* --- FIXED NAVBAR --- */
     .app-header {
       position: fixed;
       top: 0;
@@ -39,7 +39,7 @@
       background: #0f0001;
       border-bottom: 3px solid var(--deepred);
       display: grid;
-      grid-template-columns: 120px 1fr 120px;
+      grid-template-columns: 80px 1fr 80px;
       align-items: center;
       z-index: 999;
       box-shadow: 0 4px 20px rgba(255, 26, 46, 0.25);
@@ -47,22 +47,14 @@
       padding: 0 10px;
     }
 
-    .back-btn {
+    .nav-back-btn {
       background: transparent;
-      border: 2px solid var(--deepred);
+      border: none;
       color: var(--blood);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 1rem;
+      font-size: 1.2rem;
       cursor: pointer;
       font-family: 'Creepster', sans-serif;
-      transition: all 0.2s ease;
-      text-align: center;
-    }
-    .back-btn:hover {
-      background: var(--blood);
-      color: #000;
-      box-shadow: 0 0 10px var(--blood);
+      justify-self: center;
     }
 
     .app-header h1 {
@@ -70,115 +62,255 @@
       font-family: 'Nosifer', cursive;
       font-size: 2.2rem;
       color: var(--blood);
-      text-shadow: 3px 3px 0 #000, -3px -3px 0 #000;
+      text-shadow: 3px 3px 0 #000;
       letter-spacing: 2px;
       text-transform: uppercase;
-      line-height: 1.1;
       text-align: center;
-      white-space: nowrap;
     }
 
     @media (max-width: 768px) {
-      .app-header { height: 75px; grid-template-columns: 90px 1fr 90px; }
-      .app-header h1 { font-size: 1.4rem; letter-spacing: 1px; }
-      .back-btn { font-size: 0.85rem; padding: 4px 8px; }
+      .app-header { height: 75px; }
+      .app-header h1 { font-size: 1.4rem; }
       body { padding-top: 95px; }
     }
 
+    /* --- CONTENT CORE --- */
     .box {
       background: #140000;
       border: 3px solid var(--deepred);
       padding: 20px;
-      margin-bottom: 20px;
       border-radius: 12px;
       box-shadow: 0 0 25px rgba(255, 26, 46, 0.3);
+      margin-bottom: 25px;
     }
 
-    .main-post .username {
+    b {
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+      color: #ffaaaa;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* --- MAIN POST BLOCK --- */
+    .main-post {
+      background: #110000;
+      border: 2px solid #660000;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(160, 0, 0, 0.4);
+    }
+
+    .post-header-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .username {
       color: #ff5555;
-      font-size: 1.45rem;
-      margin-bottom: 5px;
+      font-size: 1.4rem;
       text-shadow: 0 0 8px var(--blood);
     }
 
+    .timestamp-label {
+      color: #883333;
+      font-size: 0.85rem;
+      font-family: system-ui, sans-serif;
+      margin-top: 2px;
+    }
+
     .post-content p {
-      word-break: break-word;
-      overflow-wrap: break-word;
-      margin: 12px 0;
       font-size: 1.2rem;
+      word-break: break-word;
+      margin: 15px 0;
     }
 
     img, video {
       max-width: 100%;
+      max-height: 500px;
       border-radius: 8px;
-      border: 2px solid #660000;
-      margin: 12px 0;
+      border: 2px solid #550000;
       display: block;
+      margin: 15px 0;
     }
 
-    textarea {
-      width: 100%;
-      padding: 15px;
-      background: #000;
-      color: #ff8888;
-      border: 2px solid #660000;
-      border-radius: 8px;
+    /* --- ACTION TOOLBARS --- */
+    .comment-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .reactions-cluster {
+      display: flex;
+      gap: 10px;
+    }
+
+    .react-pill {
+      background: #220000;
+      color: #ffbbbb;
+      border: 2px solid var(--blood);
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
       font-family: 'Creepster', sans-serif;
-      min-height: 80px;
-      box-sizing: border-box;
-      margin-top: 10px;
       font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    input[type="file"] {
-      background: #000;
+    .react-pill:hover {
+      background: var(--blood);
+      color: #000;
+      box-shadow: 0 0 15px #ff1a2e;
+    }
+
+    .action-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    .action-text-btn {
       color: #ff8888;
-      border: 2px dashed #440000;
-      padding: 10px;
-      border-radius: 8px;
-      width: 100%;
-      box-sizing: border-box;
-      margin-top: 10px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      user-select: none;
+    }
+    .action-text-btn:hover { color: var(--blood); }
+
+    .author-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .author-action-btn {
+      background: #220000;
+      border: 1px solid #aa0000;
+      color: #ffaaaa;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      cursor: pointer;
       font-family: 'Creepster', sans-serif;
     }
+    .author-action-btn:hover { background: #440000; }
+    .author-action-btn.delete-btn { border-color: var(--blood); color: var(--blood); }
+    .author-action-btn.delete-btn:hover { background: #330000; }
 
-    button {
-      padding: 10px 18px;
+    /* --- INPUT FIELD WITH EMBEDDED MEDIA ACCESS --- */
+    .input-container-wrapper {
+      position: relative;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .input-container-wrapper textarea {
+      width: 100%;
+      padding: 12px 55px 12px 12px; 
+      background: #000;
+      color: #ff8888;
+      border: 2px solid #560000;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-family: 'Creepster', sans-serif;
+      font-size: 1.05rem;
+      min-height: 80px;
+      resize: vertical;
+      margin: 0;
+    }
+
+    /* BOUNDED BUTTON FOR MEDIA CAPTURES */
+    .media-attach-trigger {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      width: 32px;
+      height: 32px;
+      background: #110000;
+      border: 1.5px solid #560000;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s ease-in-out;
+    }
+    
+    .media-attach-trigger svg {
+      width: 18px;
+      height: 18px;
+      fill: #ffaa55;
+      transition: fill 0.2s;
+    }
+
+    .media-attach-trigger:hover {
+      border-color: var(--blood);
+      background: #220000;
+      transform: scale(1.05);
+    }
+    
+    .media-attach-trigger:hover svg {
+      fill: var(--blood);
+    }
+
+    /* Active loaded verification states */
+    .media-attach-trigger.attached {
+      border-color: #55ff55;
+      background: rgba(85, 255, 85, 0.1);
+      color: #55ff55;
+      font-size: 1.1rem;
+      font-family: system-ui, sans-serif;
+      font-weight: bold;
+      text-shadow: 0 0 6px #55ff55;
+    }
+
+    .hidden-file-input {
+      display: none !important;
+    }
+
+    .action-submit-btn {
       background: #220000;
       color: #ffbbbb;
       border: 2px solid var(--blood);
       border-radius: 8px;
-      cursor: pointer;
+      padding: 10px 20px;
       font-family: 'Creepster', sans-serif;
+      font-size: 1.1rem;
+      cursor: pointer;
       margin-top: 10px;
-      font-size: 1.05rem;
-      transition: all 0.2s;
+      width: 100%;
     }
-    button:hover:not(:disabled) {
+    .action-submit-btn:hover:not(:disabled) {
       background: var(--blood);
       color: #000;
-      box-shadow: 0 0 15px var(--blood);
+      box-shadow: 0 0 20px #ff1a2e;
     }
-    button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
+    .action-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* --- COMMENT TREES LAYER --- */
+    .root-comment-thread-block {
+      background: #0f0001;
+      border-left: 3px solid #550000;
+      margin-bottom: 20px;
+      padding-left: 10px;
+      border-radius: 0 8px 8px 0;
     }
 
-    /* --- TIMESTAMPS --- */
-    .timestamp-label {
-      font-size: 0.85rem;
-      color: #883333;
-      font-family: system-ui, -apple-system, sans-serif;
-      margin-bottom: 6px;
-    }
-
-    /* --- COMMENTS ARCHITECTURE --- */
     .comment {
-      background: #110000;
-      border: 2px solid #550000;
-      padding: 15px;
-      margin-top: 15px;
-      border-radius: 10px;
+      background: #140000;
+      border: 1px solid #330000;
+      padding: 14px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+    .comment.author-highlight {
+      border-color: var(--blood);
+      box-shadow: inset 0 0 10px rgba(255, 26, 46, 0.15);
     }
 
     .comment-header {
@@ -187,177 +319,96 @@
       align-items: flex-start;
     }
 
-    .comment .username {
-      color: #ff7777;
-      font-size: 1.25rem;
-      text-shadow: 0 0 6px var(--blood);
+    .author-badge {
+      background: var(--blood);
+      color: #000;
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
     }
 
-    .comment p {
-      word-break: break-word;
-      overflow-wrap: break-word;
-      margin: 8px 0;
-      font-size: 1.1rem;
+    .replies-branch {
+      margin-left: 30px;
+      border-left: 2px dashed #330000;
+      padding-left: 10px;
     }
 
-    .comment-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .reactions-cluster {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .react-pill {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: transparent;
-      border: 1px dashed #660000;
-      color: #ff8888;
-      padding: 3px 8px;
-      font-size: 0.95rem;
-      margin: 0;
-      border-radius: 6px;
-    }
-    .react-pill:hover {
-      background: #220000;
-    }
-
-    .action-links {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .action-text-btn {
-      color: #ff5555;
-      font-size: 1rem;
-      cursor: pointer;
-      user-select: none;
-    }
-    .action-text-btn:hover {
-      text-shadow: 0 0 5px var(--blood);
-    }
-
-    .delete-btn {
-      background: #400000;
-      color: #ffaaaa;
-      border-color: #800000;
-      padding: 3px 8px;
-      font-size: 0.85rem;
-      margin: 0;
-    }
-
-    /* --- INLINE REPLY FORM --- */
     .reply-form-container {
       display: none;
       margin-top: 12px;
-      border-left: 2px solid var(--blood);
-      padding-left: 12px;
+      padding: 10px;
+      background: #080000;
+      border: 1px dashed #550000;
+      border-radius: 6px;
     }
 
-    /* --- NESTING & INSTAGRAM ALIGNMENTS --- */
-    .replies-branch {
-      margin-left: 25px;
-      border-left: 2px dashed #440000;
-      padding-left: 12px;
-    }
-
-    .author-highlight {
-      border-left: 3px solid #ffaa00 !important;
-      background: #1f0507;
-    }
-    .author-badge {
-      background: #ffaa00;
-      color: #000;
-      font-size: 0.75rem;
-      font-family: system-ui, sans-serif;
-      padding: 1px 5px;
-      border-radius: 4px;
-      margin-left: 6px;
-      vertical-align: middle;
-      font-weight: bold;
-    }
-
-    /* --- THREAD ACCORDIANS --- */
     .thread-toggle-wrapper {
-      margin-left: 25px;
-      margin-top: 10px;
+      margin: 10px 0 5px 30px;
     }
     .thread-toggle-btn {
       background: transparent;
       border: none;
-      color: #ff8888;
-      font-size: 1rem;
+      color: #ffaa55;
       cursor: pointer;
+      font-family: system-ui, sans-serif;
+      font-size: 0.9rem;
       padding: 0;
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 1px;
     }
-    .thread-toggle-btn:hover {
-      color: var(--blood);
-    }
-
-    .thread-content-block {
-      display: none;
-    }
+    .thread-toggle-btn:hover { text-decoration: underline; }
 
     .posting-loader {
       display: none;
       align-items: center;
       gap: 12px;
       color: #ff6666;
-      font-size: 1.1rem;
       margin-top: 10px;
     }
-
     .spinner {
-      width: 24px;
-      height: 24px;
-      border: 4px solid #440000;
-      border-top: 4px solid var(--blood);
+      width: 20px;
+      height: 20px;
+      border: 3px solid #330000;
+      border-top-color: var(--blood);
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.8s linear infinite;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
 <header class="app-header">
-  <button class="back-btn" onclick="goBack()">← BACK</button>
-  <h1>THE ABYSS</h1>
-  <div></div> 
+  <button class="nav-back-btn" onclick="goBack()">← BACK</button>
+  <h1>THE ABYSS NODE</h1>
+  <div></div>
 </header>
 
 <div class="container">
-
-  <div id="mainPost" class="box">
-    <p style="text-align:center; color:#555;">Summoning core post payload matrix...</p>
+  
+  <div id="mainPost" style="margin-bottom: 30px;">
+    <p style="text-align:center; color:#555;">Connecting to core data node stream...</p>
   </div>
 
   <div class="box">
-    <b>ADD WHISPER COMMENT</b>
-    <textarea id="commentInput" placeholder="Write your whisper into the dark..."></textarea>
-    <input type="file" id="commentFile" accept="image/*,video/*">
-    <button id="commentBtn" onclick="addComment('', 'primary')">POST COMMENT</button>
+    <b>MANIFEST A REFLECTION IN THIS LAYER</b>
+    <div class="input-container-wrapper">
+      <textarea id="commentInput" placeholder="Drop your phrase payload into the echo chain..."></textarea>
+      <input type="file" id="commentFile" class="hidden-file-input" accept="image/*,video/*" onchange="updateMediaIconState('', this)">
+      <button class="media-attach-trigger" id="mediaTrigger-" title="Attach Media Image/Video" onclick="triggerNativeFileInput('')">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+      </button>
+    </div>
+    
+    <button id="commentBtn" class="action-submit-btn" onclick="addComment('', 'primary')">ECHO INTO VOID</button>
     
     <div id="postingLoader" class="posting-loader">
       <div class="spinner"></div>
-      <span>Bleeding into the void...</span>
+      <span>Securing payload parameters...</span>
     </div>
   </div>
 
+  <b>CORRESPONDING ECHO THREAD LAYERS</b>
   <div id="comments"></div>
 
 </div>
@@ -391,10 +442,13 @@ let currentUser = null;
 let currentUsername = "Anonymous";
 let parentPostOwnerId = ""; 
 
+let commentsFlatList = [];
+let expandedThreadsState = {}; 
+
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   currentUsername = localStorage.getItem("username") || "Anonymous";
-  window.renderCommentsTree();
+  setupMainPostListener(); 
 });
 
 window.goBack = () => {
@@ -424,15 +478,88 @@ function parseFormattedDate(timestampMillis) {
   });
 }
 
-// Memory Cache maps 
-let commentsFlatList = [];
-let expandedThreadsState = {}; 
+window.triggerNativeFileInput = (idSuffix) => {
+  const targetInput = document.getElementById(`commentFile${idSuffix ? '-' + idSuffix : ''}`);
+  if (targetInput) targetInput.click();
+};
 
-async function loadMainPost() {
+window.updateMediaIconState = (idSuffix, element) => {
+  const triggerBtn = document.getElementById(`mediaTrigger-${idSuffix}`);
+  if (!triggerBtn) return;
+  if (element.files && element.files.length > 0) {
+    triggerBtn.classList.add("attached");
+    triggerBtn.innerHTML = "✓";
+  } else {
+    triggerBtn.classList.remove("attached");
+    triggerBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>`;
+  }
+};
+
+window.handlePostVote = async (voteType) => {
+  if (!currentUser) return alert("Presence signature initialization missing.");
   try {
     const postRef = doc(db, "posts", postId);
     const postSnap = await getDoc(postRef);
+    if (!postSnap.exists()) return;
     
+    const data = postSnap.data();
+    let votesMap = data.votesMap || {};
+    let likesMap = data.likesMap || {};
+    let dislikesMap = data.dislikesMap || {};
+    const uid = currentUser.uid;
+
+    if (voteType === 'like') {
+      if (votesMap[uid]) delete votesMap[uid];
+      if (likesMap[uid]) { 
+        delete likesMap[uid]; 
+      } else { 
+        likesMap[uid] = true; 
+        delete dislikesMap[uid]; 
+      }
+    } else {
+      if (votesMap[uid]) delete votesMap[uid];
+      if (dislikesMap[uid]) { 
+        delete dislikesMap[uid]; 
+      } else { 
+        dislikesMap[uid] = true; 
+        delete likesMap[uid]; 
+      }
+    }
+    
+    await updateDoc(postRef, { votesMap, likesMap, dislikesMap });
+  } catch (err) { console.error(err); }
+};
+
+window.sharePost = () => {
+  navigator.clipboard.writeText(window.location.href);
+  alert("Abyss connection coordinates linked to clip matrix!");
+};
+
+window.downloadPostMedia = (url) => {
+  if (!url) return alert("No media matrix discovered.");
+  window.open(url, '_blank');
+};
+
+window.editPostContent = async () => {
+  const newText = prompt("Mutate payload content sequence:");
+  if (newText === null) return;
+  try {
+    await updateDoc(doc(db, "posts", postId), { content: newText });
+  } catch (err) { alert("Mutation fault execution error."); }
+};
+
+window.erasePostEntirely = async () => {
+  if (!confirm("Banish this main core node post entirely?")) return;
+  try {
+    await deleteDoc(doc(db, "posts", postId));
+    location.href = "index.html";
+  } catch (err) { alert("Purge system constraint violation."); }
+};
+
+function setupMainPostListener() {
+  const postRef = doc(db, "posts", postId);
+  
+  onSnapshot(postRef, (postSnap) => {
     if (postSnap.exists()) {
       const p = postSnap.data();
       parentPostOwnerId = p.ownerId || ""; 
@@ -444,29 +571,57 @@ async function loadMainPost() {
         media = `<img src="${p.fileUrl}">`;
       }
 
+      const legacyLikes = Object.values(p.votesMap || {}).filter(v => v === 1).length;
+      const currentNewLikes = Object.values(p.likesMap || {}).filter(v => v === true).length;
+      const totalLikes = legacyLikes + currentNewLikes;
+      
+      const totalDislikes = Object.values(p.dislikesMap || {}).filter(v => v === true).length;
+      const isOwner = currentUser && parentPostOwnerId === currentUser.uid;
+
+      let managementMarkup = isOwner ? `
+        <div class="author-controls">
+          <button class="author-action-btn" onclick="editPostContent()">EDIT</button>
+          <button class="author-action-btn delete-btn" onclick="erasePostEntirely()">ERASE</button>
+        </div>
+      ` : "";
+
       document.getElementById("mainPost").innerHTML = `
         <div class="main-post">
-          <div class="username">${p.username}</div>
-          <div class="timestamp-label">${parseFormattedDate(p.timestamp)}</div>
+          <div class="post-header-wrapper">
+            <div>
+              <div class="username">${p.username || "Anonymous"}</div>
+              <div class="timestamp-label">${parseFormattedDate(p.timestamp)}</div>
+            </div>
+            ${managementMarkup}
+          </div>
           <div class="post-content">
             <p>${p.content || ""}</p>
             ${media}
           </div>
+          <div class="comment-toolbar" style="margin-top:15px; border-top:1px solid #330000; padding-top:10px;">
+            <div class="reactions-cluster">
+              <button class="react-pill" onclick="handlePostVote('like')">👍 <span>${totalLikes}</span></button>
+              <button class="react-pill" onclick="handlePostVote('dislike')">👎 <span>${totalDislikes}</span></button>
+            </div>
+            <div class="action-links">
+              <span class="action-text-btn" onclick="sharePost()">🔗 SHARE</span>
+              ${p.fileUrl ? `<span class="action-text-btn" onclick="downloadPostMedia('${p.fileUrl}')">💾 DOWNLOAD</span>` : ''}
+            </div>
+          </div>
         </div>
       `;
+      
+      window.renderCommentsTree();
     } else {
       document.getElementById("mainPost").innerHTML = `<p style="color:#aa0000; text-align:center;">Post missing.</p>`;
     }
-  } catch (e) {
-    console.error(e);
-  }
+  }, (err) => {
+    console.error("Main post pipeline failure: ", err);
+  });
 }
 
-loadMainPost();
-
-// Unified entry adding script supporting sub-nest allocation properties
 window.addComment = async (parentId = "", executionContext = "primary") => {
-  let text, fileInput, loaderElement, postButton;
+  let text, fileInput, postButton;
   
   if (executionContext === 'primary') {
     text = document.getElementById("commentInput").value.trim();
@@ -474,7 +629,7 @@ window.addComment = async (parentId = "", executionContext = "primary") => {
     showCommentLoader(true);
   } else {
     text = document.getElementById(`replyInput-${parentId}`).value.trim();
-    fileInput = document.getElementById(`replyFile-${parentId}`);
+    fileInput = document.getElementById(`commentFile-${parentId}`);
     postButton = document.getElementById(`replyBtn-${parentId}`);
     if (postButton) postButton.disabled = true;
   }
@@ -517,7 +672,17 @@ window.addComment = async (parentId = "", executionContext = "primary") => {
     if (executionContext === 'primary') {
       document.getElementById("commentInput").value = "";
       document.getElementById("commentFile").value = "";
+      window.updateMediaIconState('', document.getElementById("commentFile"));
     } else {
+      document.getElementById(`replyInput-${parentId}`).value = "";
+      if (document.getElementById(`replyFile-${parentId}`)) {
+        document.getElementById(`replyFile-${parentId}`).value = "";
+      }
+      const refFileInput = document.getElementById(`commentFile-${parentId}`);
+      if (refFileInput) {
+        refFileInput.value = "";
+        window.updateMediaIconState(parentId, refFileInput);
+      }
       window.toggleReplyForm(parentId);
     }
   } catch (e) {
@@ -527,10 +692,24 @@ window.addComment = async (parentId = "", executionContext = "primary") => {
   }
 };
 
-window.toggleReplyForm = (commentId) => {
-  const form = document.getElementById(`replyForm-${commentId}`);
-  if (form) {
-    form.style.display = (form.style.display === "block") ? "none" : "block";
+window.toggleReplyForm = (rootCommentId, targetUsername = null) => {
+  const form = document.getElementById(`replyForm-${rootCommentId}`);
+  const input = document.getElementById(`replyInput-${rootCommentId}`);
+  
+  if (!form || !input) return;
+
+  if (form.style.display === "block" && !targetUsername) {
+    form.style.display = "none";
+  } else {
+    form.style.display = "block";
+    
+    if (targetUsername) {
+      const formattedMention = `@${targetUsername} `;
+      if (!input.value.includes(formattedMention)) {
+        input.value = formattedMention + input.value.replace(/^@\S+\s*/, "");
+      }
+    }
+    input.focus();
   }
 };
 
@@ -584,7 +763,6 @@ window.deleteComment = async (commentId) => {
   if (!confirm("Banish this record completely? All matching sub-threads drop out of scope layout view paths.")) return;
   try {
     await deleteDoc(doc(db, "posts", postId, "comments", commentId));
-    // Cascade delete any child components instantly bound locally tracking indices
     const children = commentsFlatList.filter(d => d.data().parentId === commentId);
     for (const child of children) {
       await deleteDoc(doc(db, "posts", postId, "comments", child.id));
@@ -594,14 +772,17 @@ window.deleteComment = async (commentId) => {
   }
 };
 
-// Generates structural template rows
-function compileSingleCommentHtml(docObj, isNestedReply = false) {
+function compileSingleCommentHtml(docObj, isNestedReply = false, rootId = null) {
   const c = docObj.data();
   const id = docObj.id;
   
   let media = c.image ? `<img src="${c.image}">` : "";
-  const totalLikes = Object.values(c.likesMap || {}).filter(v => v === true).length;
-  const totalDislikes = Object.values(c.dislikesMap || {}).filter(v => v === true).length;
+  
+  const targetLikesMap = c.likesMap || {};
+  const targetDislikesMap = c.dislikesMap || {};
+  
+  const totalLikes = Object.values(targetLikesMap).filter(v => v === true).length;
+  const totalDislikes = Object.values(targetDislikesMap).filter(v => v === true).length;
 
   const isCommentOwner = currentUser && c.ownerId === currentUser.uid;
   const isParentPostOwner = currentUser && parentPostOwnerId && parentPostOwnerId === currentUser.uid;
@@ -610,10 +791,12 @@ function compileSingleCommentHtml(docObj, isNestedReply = false) {
     ? `<button class="delete-btn" onclick="deleteComment('${id}')">ERASE</button>` 
     : "";
 
-  // Check if original author of post
   const isAuthorIdentity = parentPostOwnerId && c.ownerId === parentPostOwnerId;
   const authorBadge = isAuthorIdentity ? `<span class="author-badge">AUTHOR</span>` : "";
   const alignmentClass = isAuthorIdentity ? "author-highlight" : "";
+
+  const clickId = isNestedReply ? rootId : id;
+  const targetUserArgument = isNestedReply ? `'${c.username}'` : 'null';
 
   return `
     <div class="comment ${alignmentClass}" id="commentNode-${id}">
@@ -633,20 +816,26 @@ function compileSingleCommentHtml(docObj, isNestedReply = false) {
           <button class="react-pill" onclick="handleCommentVote('${id}', 'dislike')">👎 <span>${totalDislikes}</span></button>
         </div>
         <div class="action-links">
-          <span class="action-text-btn" onclick="toggleReplyForm('${id}')">REPLY</span>
+          <span class="action-text-btn" onclick="toggleReplyForm('${clickId}', ${targetUserArgument})">REPLY</span>
         </div>
       </div>
 
+      ${!isNestedReply ? `
       <div class="reply-form-container" id="replyForm-${id}">
-        <textarea id="replyInput-${id}" placeholder="Reply to this thread level..."></textarea>
-        <input type="file" id="replyFile-${id}" accept="image/*,video/*" style="font-size:0.85rem; padding:4px;">
-        <button id="replyBtn-${id}" onclick="addComment('${id}', 'reply')" style="padding:6px 12px; font-size:0.95rem;">REPLY</button>
+        <div class="input-container-wrapper">
+          <textarea id="replyInput-${id}" placeholder="Reply to this thread level..."></textarea>
+          <input type="file" id="commentFile-${id}" class="hidden-file-input" accept="image/*,video/*" onchange="updateMediaIconState('${id}', this)">
+          <button class="media-attach-trigger" id="mediaTrigger-${id}" title="Attach Media Image/Video" onclick="triggerNativeFileInput('${id}')">
+            <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+          </button>
+        </div>
+        <button id="replyBtn-${id}" class="action-submit-btn" onclick="addComment('${id}', 'reply')" style="padding:6px 12px; font-size:0.95rem; width:auto; margin-top:5px;">REPLY</button>
       </div>
+      ` : ""}
     </div>
   `;
 }
 
-// Tree Parsing Engine
 window.renderCommentsTree = () => {
   const container = document.getElementById("comments");
   container.innerHTML = "";
@@ -656,7 +845,6 @@ window.renderCommentsTree = () => {
     return;
   }
 
-  // Segment top-level roots from sub-replies
   const rootComments = commentsFlatList.filter(d => !d.data().parentId);
   const repliesPool = commentsFlatList.filter(d => d.data().parentId);
 
@@ -664,20 +852,16 @@ window.renderCommentsTree = () => {
     let threadHtml = `<div class="root-comment-thread-block">`;
     threadHtml += compileSingleCommentHtml(rootDoc, false);
 
-    // Filter direct sub-elements matching this identifier route
     const directReplies = repliesPool.filter(r => r.data().parentId === rootDoc.id);
 
     if (directReplies.length > 0) {
-      // Split authors from fan replies for prioritized nesting tracking loops
       const authorReplies = directReplies.filter(r => parentPostOwnerId && r.data().ownerId === parentPostOwnerId);
       const regularReplies = directReplies.filter(r => !parentPostOwnerId || r.data().ownerId !== parentPostOwnerId);
 
-      // Render author responses inline immediately
       authorReplies.forEach(authReply => {
-        threadHtml += `<div class="replies-branch">${compileSingleCommentHtml(authReply, true)}</div>`;
+        threadHtml += `<div class="replies-branch">${compileSingleCommentHtml(authReply, true, rootDoc.id)}</div>`;
       });
 
-      // Render general fan replies behind an interactive accordian thread
       if (regularReplies.length > 0) {
         const totalRegularCount = regularReplies.length;
         const isCurrentlyExpanded = expandedThreadsState[rootDoc.id] || false;
@@ -696,20 +880,18 @@ window.renderCommentsTree = () => {
           <div id="threadBlock-${rootDoc.id}" class="thread-content-block" style="${blockStyle}">
         `;
 
-        // Render loop with a localized cutoff threshold at 10 items
         regularReplies.forEach((fanReply, index) => {
           if (index === 10) {
-            // Append explicit context indicator markup break line properties
             threadHtml += `
               <div id="extendedCutoffBlock-${rootDoc.id}" class="extended-cutoff-notice" style="padding:10px 0 10px 25px; color:#ffaa55; font-family:system-ui,sans-serif; font-size:0.9rem;">
                 📊 View ${totalRegularCount - 10} more replies below...
               </div>
             `;
           }
-          threadHtml += `<div class="replies-branch">${compileSingleCommentHtml(fanReply, true)}</div>`;
+          threadHtml += `<div class="replies-branch">${compileSingleCommentHtml(fanReply, true, rootDoc.id)}</div>`;
         });
 
-        threadHtml += `</div>`; // Close accordian block wrapper
+        threadHtml += `</div>`; 
       }
     }
 
