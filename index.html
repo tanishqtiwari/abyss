@@ -7,9 +7,7 @@
   
   <meta property="og:title" content="TANISHQ ABYSS">
   <meta property="og:description" content="What lurks in your mind? Enter the community void...">
-
   <meta property="og:type" content="website">
-  
 
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Creepster&display=swap');
@@ -25,7 +23,7 @@
       color: #eee;
       font-family: 'Creepster', system-ui, sans-serif;
       margin: 0;
-      padding: 105px 15px 15px 15px; /* Added extra padding to clear the dripping text completely */
+      padding: 105px 15px 15px 15px; 
       line-height: 1.5;
     }
 
@@ -36,17 +34,17 @@
       box-sizing: border-box;
     }
 
-    /* --- FIX: RE-DESIGNED CLEAN RE-ALIGNING FIXED HEADER NAVBAR --- */
+    /* --- FIXED HEADER NAVBAR --- */
     .app-header {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 85px; /* Slightly taller to accommodate the dripping font graphics neatly */
+      height: 85px; 
       background: #0f0001;
       border-bottom: 3px solid var(--deepred);
       display: grid;
-      grid-template-columns: 60px 1fr 60px; /* Force clean 3-part layout alignment */
+      grid-template-columns: 60px 1fr 60px; 
       align-items: center;
       z-index: 999;
       box-shadow: 0 4px 20px rgba(255, 26, 46, 0.25);
@@ -67,14 +65,13 @@
     }
     .drawer-trigger:hover {
       transform: scale(1.1);
-      box-shadow: none;
       background: transparent;
     }
 
     .app-header h1 {
       margin: 0;
       font-family: 'Nosifer', cursive;
-      font-size: 2.8rem; /* Normalized baseline container balance */
+      font-size: 2.8rem; 
       color: var(--blood);
       text-shadow: 3px 3px 0 #000, -3px -3px 0 #000;
       letter-spacing: 4px;
@@ -182,7 +179,7 @@
       box-shadow: 0 0 15px rgba(255,26,46,0.4);
     }
 
-    /* --- REST OF THE PERSISTENT STYLES --- */
+    /* --- LAYOUT CONFIG --- */
     .dashboard-grid {
       display: flex;
       gap: 20px;
@@ -314,6 +311,32 @@
       font-family: 'Creepster', sans-serif;
     }
 
+    /* --- ACTION WRAPPER BOX WITH EMBEDDED BUTTONS --- */
+    .creation-action-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .action-post-btn {
+      flex: 1;
+      margin: 0 !important;
+    }
+    .action-media-btn {
+      background: #000;
+      border-color: #550000;
+      color: #ff8888;
+      font-size: 1.1rem;
+      padding: 8px 16px;
+      margin: 0 !important;
+      white-space: nowrap;
+    }
+    .action-media-btn:hover {
+      background: #1a0002;
+      border-color: var(--blood);
+      color: #fff;
+    }
+
+    /* --- COMPACT LIVE MEDIA PREVIEW NOTIFIER --- */
     .thumb-preview-area {
       display: none;
       background: #000;
@@ -323,15 +346,14 @@
       margin: 10px 0;
       text-align: center;
     }
-
-    .thumb-preview-area video {
-      max-height: 140px;
+    .thumb-preview-area img, .thumb-preview-area video {
+      max-height: 120px;
+      max-width: 100%;
       width: auto;
       margin: 5px auto;
       display: block;
       border: 1px solid #440000;
     }
-
     .thumb-preview-area span {
       font-size: 0.85rem;
       color: #ffaaaa;
@@ -378,14 +400,12 @@
       gap: 12px;
     }
 
-    #feedList {
-      display: none; 
-    }
+    #feedList { display: none; }
 
-    /* --- FIX: STICKY SUB-NAV BAR SETUP --- */
+    /* --- STICKY SUB-NAV BAR --- */
     .back-nav-bar {
       position: fixed;
-      top: 85px; /* Sits perfectly beneath fixed header layout */
+      top: 85px; 
       left: 0;
       width: 100%;
       z-index: 99;
@@ -397,16 +417,12 @@
     }
 
     #listItemsTarget {
-      padding-top: 55px; /* Offset to prevent sticky navigation from overlapping content feed */
+      padding-top: 55px; 
     }
 
     @media (max-width: 768px) {
-      .back-nav-bar {
-        top: 75px; /* Adapts to smaller mobile navbar heights */
-      }
-      #listItemsTarget {
-        padding-top: 50px;
-      }
+      .back-nav-bar { top: 75px; }
+      #listItemsTarget { padding-top: 50px; }
     }
 
     @media (max-width: 600px) {
@@ -427,7 +443,6 @@
       cursor: pointer;
       transition: border-color 0.2s, transform 0.2s;
     }
-
     .grid-item:hover {
       border-color: var(--blood);
       transform: scale(1.02);
@@ -435,22 +450,11 @@
 
     .grid-item-content {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
     }
-
     .grid-item img, .grid-item video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      margin: 0;
-      border: none;
-      border-radius: 0;
+      width: 100%; height: 100%; object-fit: cover; margin: 0; border: none; border-radius: 0;
     }
 
     .grid-text-fallback {
@@ -467,13 +471,9 @@
 
     .grid-icon-indicator {
       position: absolute;
-      top: 8px;
-      right: 8px;
+      top: 8px; right: 8px;
       background: rgba(0, 0, 0, 0.7);
-      padding: 3px 6px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      z-index: 2;
+      padding: 3px 6px; border-radius: 4px; font-size: 0.8rem; z-index: 2;
     }
 
     .post {
@@ -484,7 +484,7 @@
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(160, 0, 0, 0.5);
       overflow: hidden;
-      scroll-margin-top: 155px; /* Smooth scroll target visibility balance */
+      scroll-margin-top: 155px; 
     }
 
     .post-header {
@@ -512,8 +512,7 @@
     img, video {
       max-width: 100%;
       max-height: 500px; 
-      width: auto;
-      height: auto;
+      width: auto; height: auto;
       margin: 12px 0 15px;
       border-radius: 8px;
       border: 2px solid #660000;
@@ -527,147 +526,60 @@
     }
 
     .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-top: 15px;
-      align-items: center;
+      display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; align-items: center;
     }
 
-    .vote {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .vote button {
-      padding: 4px 11px;
-      font-size: 1.25rem;
-      min-width: 34px;
-    }
-
-    .vote span {
-      color: #ff8888;
-      font-size: 1.15rem;
-    }
+    .vote { display: flex; align-items: center; gap: 8px; }
+    .vote button { padding: 4px 11px; font-size: 1.25rem; min-width: 34px; }
+    .vote span { color: #ff8888; font-size: 1.15rem; }
 
     .comment-count, .download-btn, .share-btn {
-      color: #ff8888;
-      font-size: 1.15rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      user-select: none;
-      transition: color 0.2s;
+      color: #ff8888; font-size: 1.15rem; display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;
     }
-
-    .share-btn:hover {
-      color: var(--blood);
-    }
-
+    .share-btn:hover { color: var(--blood); }
     .delete { background: #400000; color: #ffaaaa; }
 
     .posting-loader {
-      display: none;
-      align-items: center;
-      gap: 12px;
-      color: #ff6666;
-      font-size: 1.1rem;
-      margin-top: 10px;
+      display: none; align-items: center; gap: 12px; color: #ff6666; font-size: 1.1rem; margin-top: 10px;
     }
-
     .spinner {
-      width: 24px;
-      height: 24px;
-      border: 4px solid #440000;
-      border-top: 4px solid #ff1a2e;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+      width: 24px; height: 24px; border: 4px solid #440000; border-top: 4px solid #ff1a2e; border-radius: 50%; animation: spin 1s linear infinite;
     }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .loading {
-      text-align: center;
-      color: #aa0000;
-      font-size: 1.4rem;
-      padding: 60px 20px;
-      grid-column: 1 / -1;
+      text-align: center; color: #aa0000; font-size: 1.4rem; padding: 60px 20px; grid-column: 1 / -1;
     }
 
+    /* --- MODERN SHARE MODAL SYSTEM --- */
     .abyss-modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      box-sizing: border-box;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 1000; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
     }
-    
     .abyss-modal-box {
-      background: #140000;
-      border: 3px solid var(--blood);
-      border-radius: 16px;
-      max-width: 450px;
-      width: 100%;
-      padding: 24px;
-      box-shadow: 0 0 35px rgba(255, 26, 46, 0.6);
-      box-sizing: border-box;
-      text-align: center;
-      animation: modalSlidIn 0.25s ease-out;
+      background: #140000; border: 3px solid var(--blood); border-radius: 16px; max-width: 450px; width: 100%; padding: 24px; box-shadow: 0 0 35px rgba(255, 26, 46, 0.6); box-sizing: border-box; text-align: center; animation: modalSlidIn 0.25s ease-out;
     }
-
     @keyframes modalSlidIn {
       from { transform: scale(0.9); opacity: 0; }
       to { transform: scale(1); opacity: 1; }
     }
-
-    .abyss-modal-title {
-      font-size: 1.5rem;
-      color: #fff;
-      margin-bottom: 15px;
-      letter-spacing: 1px;
-    }
-
+    .abyss-modal-title { font-size: 1.5rem; color: #fff; margin-bottom: 15px; letter-spacing: 1px; }
     .abyss-modal-link-display {
-      background: #000;
-      border: 1px solid #550000;
-      color: #ff6666;
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-family: system-ui, sans-serif;
-      word-break: break-all;
-      margin-bottom: 20px;
-      text-align: left;
+      background: #000; border: 1px solid #550000; color: #ff6666; padding: 10px; border-radius: 8px; font-size: 0.9rem; font-family: system-ui, sans-serif; word-break: break-all; margin-bottom: 20px; text-align: left;
     }
-
-    .abyss-modal-buttons-row {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .modal-action-btn {
-      width: 100%;
-      margin: 0;
-      padding: 12px;
-      font-size: 1.1rem;
-    }
+    .abyss-modal-buttons-row { display: flex; flex-direction: column; gap: 12px; }
+    .modal-action-btn { width: 100%; margin: 0; padding: 12px; font-size: 1.1rem; }
+    .modal-close-btn { background: #000; border-color: #555; color: #aaa; }
+    .modal-close-btn:hover { background: #222; color: #fff; box-shadow: none; }
     
-    .modal-close-btn {
-      background: #000;
-      border-color: #555;
-      color: #aaa;
+    /* --- AUTHOR DIRECTION SWITCHES --- */
+    .author-creation-panel {
+      display: flex; gap: 16px; margin: 0 0 10px 2px; padding: 6px; border-bottom: 1px dashed #3a0002;
     }
-    .modal-close-btn:hover {
-      background: #222;
-      color: #fff;
-      box-shadow: none;
+    .author-creation-panel label {
+      display: flex; align-items: center; gap: 8px; color: #ffa0a0; font-size: 1.1rem; cursor: pointer; user-select: none;
+    }
+    .author-creation-panel input[type="radio"] {
+      width: auto; margin: 0; accent-color: var(--blood); transform: scale(1.15);
     }
   </style>
 </head>
@@ -676,7 +588,8 @@
 <header class="app-header">
   <button class="drawer-trigger" onclick="openNavDrawer()">☰</button>
   <h1 onclick="resetToHome()">TANISHQ ABYSS</h1>
-  <div></div> </header>
+  <div></div>
+</header>
 
 <div id="drawerOverlay" class="drawer-overlay" onclick="closeNavDrawer()"></div>
 <aside id="sideDrawer" class="side-drawer">
@@ -702,14 +615,11 @@
 
       <div id="authDropdownPanel" class="dropdown-panel-content">
         <b>ACCOUNT MANIFESTATION</b>
-        
         <div class="void-notice-tag">
           ⚠️ <strong>NO EMAIL REQUIRED:</strong> Simply pick any unique username and a password. We handle the pipeline dynamically.
         </div>
-
         <input id="username" placeholder="YOUR NAME (OPTIONAL)">
         <input id="password" type="password" placeholder="PASSWORD">
-        
         <div class="row" style="margin-top: 12px;">
           <button onclick="signup()">SIGN UP</button>
           <button onclick="login()">LOGIN</button>
@@ -717,25 +627,37 @@
           <button onclick="logout()">LOGOUT</button>
         </div>
       </div>
-
       <div id="currentUser">YOU ARE: <span id="userDisplay" style="color:#ff4444;">ANONYMOUS</span></div>
     </div>
 
     <div class="box">
       <div>
         <b>POST SOMETHING</b>
-        <textarea id="postInput" placeholder="What lurks in your mind..."></textarea>
-        <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleFileSelection(this)" style="font-size:0.9rem; padding:6px;">
         
+        <!-- Destination Toggles for Author -->
+        <div id="authorDestinationToggle" class="author-creation-panel" style="display: none;">
+          <label><input type="radio" name="postDest" value="feed" checked> Main Feed</label>
+          <label><input type="radio" name="postDest" value="story"> Stories Section</label>
+        </div>
+
+        <textarea id="postInput" placeholder="What lurks in your mind..."></textarea>
+        
+        <!-- Invisible Native Input Triggered Programmatically via Button -->
+        <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleFileSelection(this)" style="display: none;">
+        
+        <!-- Live Dynamic Preview Container -->
         <div id="thumbPreviewArea" class="thumb-preview-area">
-          <span>Video Preview Frame Picker:</span>
-          <video id="previewVideoNode" controls muted playsinline></video>
-          <span>Play/seek video to choose thumbnail frame</span>
+          <div id="previewMediaContainer"></div>
+          <span id="previewMetaLabel">File Loaded</span>
         </div>
       </div>
       
       <div>
-        <button id="postBtn" onclick="createPost()" style="width:100%; margin:4px 0 0 0;">POST TO THE ABYSS</button>
+        <div class="creation-action-row">
+          <!-- Trigger Native Input File Finder Click -->
+          <button class="action-media-btn" onclick="document.getElementById('fileInput').click()">📁 ADD MEDIA</button>
+          <button id="postBtn" class="action-post-btn" onclick="createPost()">POST TO THE ABYSS</button>
+        </div>
         <div id="postingLoader" class="posting-loader">
           <div class="spinner"></div>
           <span>Bleeding into the void...</span>
@@ -770,7 +692,6 @@
   <div class="abyss-modal-box" onclick="event.stopPropagation()">
     <div class="abyss-modal-title">SHARE THIS MEMORY</div>
     <div id="modalLinkDisplay" class="abyss-modal-link-display">Generating link...</div>
-    
     <div class="abyss-modal-buttons-row">
       <button id="modalCopyBtn" class="modal-action-btn" onclick="executeModalCopy()">📋 COPY LINK TO CLIPBOARD</button>
       <button id="modalSystemBtn" class="modal-action-btn" onclick="executeModalSystemShare()">📱 OPEN SYSTEM SHARE DRAWER</button>
@@ -805,7 +726,6 @@ let currentUsername = "Anonymous";
 let currentTab = "author"; 
 let currentSnapshotDocs = []; 
 let isInitialDeepLinkProcessed = false;
-
 let activeShareUrl = "";
 let activeShareAuthor = "";
 
@@ -813,11 +733,17 @@ onAuthStateChanged(auth, (user) => {
   currentUser = user;
   currentUsername = localStorage.getItem("username") || "Anonymous";
   document.getElementById("userDisplay").textContent = currentUsername.toUpperCase();
+  
+  const destToggle = document.getElementById("authorDestinationToggle");
+  if (currentUsername.trim().toLowerCase() === "tanishqtiwari") {
+    destToggle.style.display = "flex";
+  } else {
+    destToggle.style.display = "none";
+  }
 });
 
 function getUsername() { return currentUsername; }
 
-// --- DRAWER INTERACTION MECHANICS ---
 window.openNavDrawer = function() {
   const overlay = document.getElementById("drawerOverlay");
   const drawer = document.getElementById("sideDrawer");
@@ -833,9 +759,7 @@ window.closeNavDrawer = function() {
   const drawer = document.getElementById("sideDrawer");
   drawer.style.left = "-280px";
   overlay.style.opacity = "0";
-  setTimeout(() => {
-    overlay.style.display = "none";
-  }, 300);
+  setTimeout(() => { overlay.style.display = "none"; }, 300);
 };
 
 window.handleDrawerHomeClick = function() {
@@ -870,17 +794,33 @@ function showPostingLoader(show) {
 window.handleFileSelection = (inputElement) => {
   const file = inputElement.files[0];
   const previewArea = document.getElementById("thumbPreviewArea");
-  const videoNode = document.getElementById("previewVideoNode");
+  const mediaContainer = document.getElementById("previewMediaContainer");
+  const metaLabel = document.getElementById("previewMetaLabel");
   
-  if (file && file.type.startsWith("video")) {
-    previewArea.style.display = "block";
-    videoNode.src = URL.createObjectURL(file);
-    videoNode.load();
-    videoNode.currentTime = 0.5;
-  } else {
+  mediaContainer.innerHTML = ""; 
+  
+  if (!file) {
     previewArea.style.display = "none";
-    videoNode.removeAttribute("src");
-    videoNode.load();
+    return;
+  }
+
+  previewArea.style.display = "block";
+  const objectUrl = URL.createObjectURL(file);
+
+  if (file.type.startsWith("video")) {
+    const video = document.createElement("video");
+    video.src = objectUrl;
+    video.controls = true;
+    video.muted = true;
+    video.playsInline = true;
+    mediaContainer.appendChild(video);
+    metaLabel.textContent = "Seek through the timeline to capture custom thumbnail snapshot frame";
+    video.addEventListener('loadeddata', () => { video.currentTime = 0.5; });
+  } else if (file.type.startsWith("image")) {
+    const img = document.createElement("img");
+    img.src = objectUrl;
+    mediaContainer.appendChild(img);
+    metaLabel.textContent = "Image loaded successfully";
   }
 };
 
@@ -900,20 +840,14 @@ window.openPostInList = (postId, updateUrl = true) => {
   document.getElementById("topPanel").style.display = "none";
   document.getElementById("feedGrid").style.display = "none";
   document.getElementById("feedList").style.display = "block";
-  
   window.scrollTo(0, 0);
 
   const targetPostElement = document.getElementById(`post-row-${postId}`);
   if (targetPostElement) {
-    // Add offset math to cleanly account for our newly pinned sub-navigation header
     const currentHeaderHeight = window.innerWidth <= 768 ? 75 : 85;
     const elementPosition = targetPostElement.getBoundingClientRect().top + window.scrollY;
     const offsetPosition = elementPosition - (currentHeaderHeight + 65); 
-
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'instant'
-    });
+    window.scrollTo({ top: offsetPosition, behavior: 'instant' });
   }
 
   if (updateUrl) {
@@ -926,31 +860,19 @@ window.switchToGridView = () => {
   document.getElementById("feedList").style.display = "none";
   document.getElementById("topPanel").style.display = "flex";
   document.getElementById("feedGrid").style.display = "grid";
-  
   const cleanUrl = `${window.location.origin}${window.location.pathname}`;
   window.history.pushState({}, '', cleanUrl);
   window.scrollTo(0, 0);
 };
 
-window.resetToHome = () => {
-  window.switchToGridView();
-};
+window.resetToHome = () => { window.switchToGridView(); };
 
-// ==================== SHARE ENGINE ====================
 window.sharePost = function(postId, postAuthor) {
   activeShareUrl = `${window.location.origin}/abyss/post.html?id=${postId}`;
   activeShareAuthor = postAuthor;
-
   document.getElementById("modalLinkDisplay").textContent = activeShareUrl;
-
   const systemShareBtn = document.getElementById("modalSystemBtn");
-
-  if (navigator.share) {
-    systemShareBtn.style.display = "block";
-  } else {
-    systemShareBtn.style.display = "none";
-  }
-
+  if (navigator.share) { systemShareBtn.style.display = "block"; } else { systemShareBtn.style.display = "none"; }
   document.getElementById("shareModalOverlay").style.display = "flex";
 };
 
@@ -961,7 +883,6 @@ window.closeShareModal = function() {
 
 window.executeModalCopy = function() {
   const btn = document.getElementById("modalCopyBtn");
-  
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(activeShareUrl)
       .then(() => { handleCopySuccess(btn); })
@@ -973,30 +894,18 @@ window.executeModalCopy = function() {
 
 function handleCopySuccess(buttonNode) {
   buttonNode.textContent = "✅ COPIED SUCCESSFULLY!";
-  setTimeout(() => {
-    window.closeShareModal();
-  }, 900);
+  setTimeout(() => { window.closeShareModal(); }, 900);
 }
 
 function runHardFallbackCopy(text, buttonNode) {
   const textArea = document.createElement("textarea");
   textArea.value = text;
-  textArea.style.position = "fixed";
-  textArea.style.opacity = "0";
+  textArea.style.position = "fixed"; textArea.style.opacity = "0";
   document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
-  
+  textArea.focus(); textArea.select();
   try {
-    const successful = document.execCommand('copy');
-    if (successful) {
-      handleCopySuccess(buttonNode);
-    } else {
-      prompt("Copying failed automatically. Copy this link manually:", text);
-    }
-  } catch (err) {
-    prompt("Copying failed automatically. Copy this link manually:", text);
-  }
+    if (document.execCommand('copy')) { handleCopySuccess(buttonNode); } else { prompt("Copy manually:", text); }
+  } catch (err) { prompt("Copy manually:", text); }
   document.body.removeChild(textArea);
 }
 
@@ -1006,13 +915,10 @@ window.executeModalSystemShare = function() {
       title: `Tanishq Abyss - Post by ${activeShareAuthor}`,
       text: `Look what lurks inside the Abyss...`,
       url: activeShareUrl
-    })
-    .then(() => window.closeShareModal())
-    .catch((err) => console.log("System Share canceled", err));
+    }).then(() => window.closeShareModal()).catch((err) => console.log(err));
   }
 };
 
-// ==================== AUTH ====================
 window.signup = async () => {
   const name = document.getElementById("username").value.trim();
   const pass = document.getElementById("password").value;
@@ -1054,6 +960,7 @@ window.logout = async () => {
   await signOut(auth);
   currentUsername = "Anonymous";
   document.getElementById("userDisplay").textContent = "ANONYMOUS";
+  document.getElementById("authorDestinationToggle").style.display = "none";
 };
 
 const emailFromUser = (u) => (u || "anon").trim().toLowerCase() + "@tanishq.app";
@@ -1064,37 +971,35 @@ const captureFrameFromVideoNode = (videoElement) => {
       const canvas = document.createElement("canvas");
       canvas.width = videoElement.videoWidth || 480;
       canvas.height = videoElement.videoHeight || 480;
-      
       const ctx = canvas.getContext("2d");
       ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-      
-      canvas.toBlob((blob) => {
-        resolve(blob);
-      }, "image/jpeg", 0.8);
+      canvas.toBlob((blob) => { resolve(blob); }, "image/jpeg", 0.8);
     } catch(err) {
-      console.error("Frame capture error: ", err);
-      resolve(null);
+      console.error(err); resolve(null);
     }
   });
 };
 
-// ==================== CREATE POST ====================
 window.createPost = async () => {
   if (!currentUser) return alert("The abyss requires a presence...");
 
   const content = document.getElementById("postInput").value.trim();
   const file = document.getElementById("fileInput").files[0];
-  const previewVideo = document.getElementById("previewVideoNode");
+  const previewVideo = document.querySelector("#previewMediaContainer video");
+
+  let postType = "feed";
+  if (getUsername().trim().toLowerCase() === "tanishqtiwari") {
+    const checkedRadio = document.querySelector('input[name="postDest"]:checked');
+    if (checkedRadio) postType = checkedRadio.value;
+  }
 
   let fileUrl = "", fileType = "", thumbnailUrl = "";
-
   showPostingLoader(true);
 
   if (file) {
     try {
       const postTimestamp = Date.now();
-      
-      if (file.type.startsWith("video") && previewVideo.src) {
+      if (file.type.startsWith("video") && previewVideo) {
         const thumbBlob = await captureFrameFromVideoNode(previewVideo);
         if (thumbBlob) {
           const thumbRef = ref(storage, `posts/${postTimestamp}_thumb.jpg`);
@@ -1102,14 +1007,12 @@ window.createPost = async () => {
           thumbnailUrl = await getDownloadURL(thumbRef);
         }
       }
-
       const storageRef = ref(storage, `posts/${postTimestamp}_${file.name}`);
       await uploadBytes(storageRef, file);
       fileUrl = await getDownloadURL(storageRef);
       fileType = file.type;
-
     } catch (e) {
-      alert("File upload into storage bucket failed.");
+      alert("File upload failed.");
       showPostingLoader(false);
       return;
     }
@@ -1123,30 +1026,23 @@ window.createPost = async () => {
 
   try {
     await addDoc(collection(db, "posts"), {
-      content,
-      fileUrl,
-      fileType,
-      thumbnailUrl, 
+      content, fileUrl, fileType, thumbnailUrl, postType,
       username: getUsername(),
       ownerId: currentUser.uid,
-      votesMap: {},     
-      likesMap: {},     
-      dislikesMap: {},  
+      votesMap: {}, likesMap: {}, dislikesMap: {},
       timestamp: Date.now()
     });
 
     document.getElementById("postInput").value = "";
     document.getElementById("fileInput").value = "";
     document.getElementById("thumbPreviewArea").style.display = "none";
-    previewVideo.removeAttribute("src");
-    previewVideo.load();
+    document.getElementById("previewMediaContainer").innerHTML = "";
   } catch (e) {
-    alert("Failed to post into the darkness.");
+    alert("Failed to post.");
     showPostingLoader(false);
   }
 };
 
-// ==================== DOWNLOAD DIRECT UTILITY ====================
 window.downloadMedia = async (url, filename) => {
   if (!url) return;
   try {
@@ -1160,26 +1056,22 @@ window.downloadMedia = async (url, filename) => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(blobUrl);
-  } catch (err) {
-    alert("Direct download blocked. Opening link in new window instead.");
-    window.open(url, '_blank');
-  }
+  } catch (err) { window.open(url, '_blank'); }
 };
 
-// ==================== RENDERING FEEDS ====================
 window.refreshFeeds = async () => {
   const gridContainer = document.getElementById("feedGrid");
   const listContainer = document.getElementById("listItemsTarget");
-  
   let gridHtml = "";
   let listHtml = "";
 
   const filteredDocs = currentSnapshotDocs.filter(docSnap => {
     const p = docSnap.data();
     const isAuthorPost = p.username && p.username.trim().toLowerCase() === "tanishqtiwari";
-    
-    if (currentTab === "author") return isAuthorPost;
-    if (currentTab === "stories") return isAuthorPost;
+    const explicitType = p.postType || "feed";
+
+    if (currentTab === "author") return isAuthorPost && explicitType === "feed";
+    if (currentTab === "stories") return isAuthorPost && explicitType === "story";
     if (currentTab === "fans") return !isAuthorPost;
     return true; 
   });
@@ -1194,8 +1086,6 @@ window.refreshFeeds = async () => {
   for (const docSnap of filteredDocs) {
     const p = docSnap.data();
     const postId = docSnap.id;
-    
-    // --- 1. Grid Mode Builders ---
     let gridMediaElement = "";
     let mediaIndicator = "";
 
@@ -1204,7 +1094,6 @@ window.refreshFeeds = async () => {
       mediaIndicator = `<div class="grid-icon-indicator">📹</div>`;
     } else if (p.fileUrl) {
       gridMediaElement = `<img src="${p.fileUrl}">`;
-      mediaIndicator = ``;
     } else {
       gridMediaElement = `<div class="grid-text-fallback">${p.content || "..."}</div>`;
     }
@@ -1212,13 +1101,10 @@ window.refreshFeeds = async () => {
     gridHtml += `
       <div class="grid-item" onclick="openPostInList('${postId}')">
         ${mediaIndicator}
-        <div class="grid-item-content">
-          ${gridMediaElement}
-        </div>
+        <div class="grid-item-content">${gridMediaElement}</div>
       </div>
     `;
 
-    // --- 2. List Mode Builders ---
     const legacyLikes = Object.values(p.votesMap || {}).filter(v => v === 1).length;
     const currentNewLikes = Object.values(p.likesMap || {}).filter(v => v === true).length;
     const totalLikes = legacyLikes + currentNewLikes;
@@ -1284,28 +1170,22 @@ window.refreshFeeds = async () => {
   if (!isInitialDeepLinkProcessed && filteredDocs.length > 0) {
     isInitialDeepLinkProcessed = true;
     const urlParams = new URLSearchParams(window.location.search);
-    const viewParam = urlParams.get('view');
-    const postParam = urlParams.get('post');
-
-    if (viewParam === 'list' && postParam) {
-      setTimeout(() => {
-        window.openPostInList(postParam, false);
-      }, 400);
+    if (urlParams.get('view') === 'list' && urlParams.get('post')) {
+      setTimeout(() => { window.openPostInList(urlParams.get('post'), false); }, 400);
     }
   }
 };
 
-window.addEventListener('popstate', (event) => {
+window.addEventListener('popstate', () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const viewParam = urlParams.get('view');
-  if (viewParam !== 'list') {
+  if (urlParams.get('view') !== 'list') {
     document.getElementById("feedList").style.display = "none";
     document.getElementById("topPanel").style.display = "flex";
     document.getElementById("feedGrid").style.display = "grid";
   }
 });
 
-onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc"), limit(20)), async (snap) => {
+onSnapshot(query(collection(db, "posts"), orderBy("timestamp", "desc"), limit(50)), async (snap) => {
   currentSnapshotDocs = snap.docs;
   window.refreshFeeds();
 });
@@ -1316,27 +1196,25 @@ window.handleVote = async (id, type) => {
     const postRef = doc(db, "posts", id);
     const postSnap = await getDoc(postRef);
     const data = postSnap.data();
-    
     let votesMap = data.votesMap || {};
     let likesMap = data.likesMap || {};
     let dislikesMap = data.dislikesMap || {};
     const uid = currentUser.uid;
 
     if (type === 'like') {
-      if (votesMap[uid]) delete votesMap[uid];
+      delete votesMap[uid];
       if (likesMap[uid]) { delete likesMap[uid]; } else { likesMap[uid] = true; delete dislikesMap[uid]; }
     } else if (type === 'dislike') {
-      if (votesMap[uid]) delete votesMap[uid];
+      delete votesMap[uid];
       if (dislikesMap[uid]) { delete dislikesMap[uid]; } else { dislikesMap[uid] = true; delete likesMap[uid]; }
     }
-
     await updateDoc(postRef, { votesMap, likesMap, dislikesMap });
   } catch (e) { console.error(e); }
 };
 
 window.deletePost = async (id) => {
   if (!confirm("Erase this forever?")) return;
-  try { await deleteDoc(doc(doc, "posts", id)); } catch (e) {}
+  try { await deleteDoc(doc(db, "posts", id)); } catch (e) {}
 };
 
 window.openPostComments = (id) => location.href = `post.html?id=${id}`;
