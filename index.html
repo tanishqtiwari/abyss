@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tanishq Abyss</title>
   
-  <meta property="og:title" content="TANISHQ ABYSS 💀">
+  <meta property="og:title" content="TANISHQ ABYSS">
   <meta property="og:description" content="What lurks in your mind? Enter the community void...">
 
   <meta property="og:type" content="website">
@@ -749,6 +749,7 @@
     <div class="filter-tabs">
       <button class="tab-btn active" id="tabAuthor" onclick="switchTab('author')">Author's Posts</button>
       <button class="tab-btn" id="tabFans" onclick="switchTab('fans')">Fans' Posts</button>
+      <button class="tab-btn" id="tabStories" onclick="switchTab('stories')">Stories</button>
     </div>
   </div>
 
@@ -889,6 +890,7 @@ window.switchTab = (tabName) => {
   
   if(tabName === 'author') document.getElementById('tabAuthor').classList.add('active');
   if(tabName === 'fans') document.getElementById('tabFans').classList.add('active');
+  if(tabName === 'stories') document.getElementById('tabStories').classList.add('active');
   
   window.switchToGridView();
   window.refreshFeeds();
@@ -1177,6 +1179,7 @@ window.refreshFeeds = async () => {
     const isAuthorPost = p.username && p.username.trim().toLowerCase() === "tanishqtiwari";
     
     if (currentTab === "author") return isAuthorPost;
+    if (currentTab === "stories") return isAuthorPost;
     if (currentTab === "fans") return !isAuthorPost;
     return true; 
   });
@@ -1333,7 +1336,7 @@ window.handleVote = async (id, type) => {
 
 window.deletePost = async (id) => {
   if (!confirm("Erase this forever?")) return;
-  try { await deleteDoc(doc(db, "posts", id)); } catch (e) {}
+  try { await deleteDoc(doc(doc, "posts", id)); } catch (e) {}
 };
 
 window.openPostComments = (id) => location.href = `post.html?id=${id}`;
