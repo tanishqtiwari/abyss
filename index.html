@@ -14,8 +14,9 @@
 
     :root {
       --blood: #ff1a2e;
-      --deepred: #a00;
+      --deepred: #aa0000;
       --void: #0a0000;
+      --panel-bg: #140000;
     }
 
     body {
@@ -61,11 +62,11 @@
       padding: 0;
       margin: 0;
       justify-self: center;
-      transition: transform 0.2s;
+      transition: transform 0.2s ease;
     }
+    
     .drawer-trigger:hover {
       transform: scale(1.1);
-      background: transparent;
     }
 
     .app-header h1 {
@@ -80,6 +81,11 @@
       cursor: pointer;
       text-align: center;
       white-space: nowrap;
+      transition: color 0.3s ease;
+    }
+
+    .app-header h1:hover {
+      color: #ff4d5a;
     }
 
     @media (max-width: 768px) {
@@ -148,8 +154,12 @@
       padding: 0 !important;
       margin: 0 !important;
       cursor: pointer;
+      transition: color 0.2s ease;
     }
-    .drawer-close-btn:hover { color: var(--blood) !important; }
+    
+    .drawer-close-btn:hover { 
+      color: var(--blood) !important; 
+    }
 
     .drawer-nav-list {
       display: flex;
@@ -172,6 +182,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
+    
     .drawer-item:hover {
       background: var(--blood);
       color: #000;
@@ -199,11 +210,11 @@
     }
 
     .box {
-      background: #140000;
+      background: var(--panel-bg);
       border: 3px solid var(--deepred);
       padding: 16px; 
       border-radius: 12px;
-      box-shadow: 0 0 25px rgba(255, 26, 46, 0.3);
+      box-shadow: 0 0 25px rgba(255, 26, 46, 0.15);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -230,6 +241,7 @@
       align-items: center;
       border-radius: 8px;
       margin-bottom: 8px;
+      transition: all 0.2s ease;
     }
     
     .dropdown-trigger-btn:hover {
@@ -266,6 +278,13 @@
       font-family: 'Creepster', sans-serif;
       font-size: 1rem;
       box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--blood);
+      box-shadow: 0 0 10px rgba(255, 26, 46, 0.3);
     }
 
     textarea { 
@@ -392,6 +411,7 @@
     .tab-btn.active {
       background: #fff;
       color: #000;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
     }
 
     #feedGrid {
@@ -436,7 +456,7 @@
       position: relative;
       width: 100%;
       padding-top: 100%; 
-      background: #140000;
+      background: var(--panel-bg);
       border: 2px solid #440000;
       border-radius: 8px;
       overflow: hidden;
@@ -446,6 +466,7 @@
     .grid-item:hover {
       border-color: var(--blood);
       transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(255, 26, 46, 0.5);
     }
 
     .grid-item-content {
@@ -482,9 +503,14 @@
       padding: 18px;
       margin-bottom: 25px;
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(160, 0, 0, 0.5);
+      box-shadow: 0 0 20px rgba(160, 0, 0, 0.3);
       overflow: hidden;
       scroll-margin-top: 155px; 
+      transition: box-shadow 0.3s ease;
+    }
+    
+    .post:hover {
+      box-shadow: 0 0 30px rgba(160, 0, 0, 0.6);
     }
 
     .post-header {
@@ -500,6 +526,11 @@
       font-size: 1.35rem;
       cursor: pointer;
       text-shadow: 0 0 8px var(--blood);
+      transition: color 0.2s ease;
+    }
+    
+    .username:hover {
+      color: #fff;
     }
 
     .post-date {
@@ -535,15 +566,17 @@
 
     .comment-count, .download-btn, .share-btn {
       color: #ff8888; font-size: 1.15rem; display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;
+      transition: color 0.2s ease;
     }
-    .share-btn:hover { color: var(--blood); }
-    .delete { background: #400000; color: #ffaaaa; }
+    .share-btn:hover, .comment-count:hover, .download-btn:hover { color: var(--blood); }
+    .delete { background: #400000; color: #ffaaaa; border-color: #ff4444;}
+    .delete:hover { background: #ff1a2e; color: #fff;}
 
     .posting-loader {
       display: none; align-items: center; gap: 12px; color: #ff6666; font-size: 1.1rem; margin-top: 10px;
     }
     .spinner {
-      width: 24px; height: 24px; border: 4px solid #440000; border-top: 4px solid #ff1a2e; border-radius: 50%; animation: spin 1s linear infinite;
+      width: 24px; height: 24px; border: 4px solid #440000; border-top: 4px solid var(--blood); border-radius: 50%; animation: spin 1s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -586,7 +619,7 @@
 <body>
 
 <header class="app-header">
-  <button class="drawer-trigger" onclick="openNavDrawer()">☰</button>
+  <button class="drawer-trigger" onclick="openNavDrawer()" aria-label="Open Navigation">☰</button>
   <h1 onclick="resetToHome()">TANISHQ ABYSS</h1>
   <div></div>
 </header>
@@ -595,7 +628,7 @@
 <aside id="sideDrawer" class="side-drawer">
   <div class="drawer-header">
     <div class="drawer-title">NAVIGATION</div>
-    <button class="drawer-close-btn" onclick="closeNavDrawer()">✕</button>
+    <button class="drawer-close-btn" onclick="closeNavDrawer()" aria-label="Close Navigation">✕</button>
   </div>
   <nav class="drawer-nav-list">
     <div class="drawer-item" onclick="handleDrawerHomeClick()">🏠 HOME FEED</div>
@@ -609,7 +642,7 @@
     
     <div class="box">
       <button class="dropdown-trigger-btn" onclick="toggleAuthDropdown()">
-        <span>🔒 ENTER THE COMMUNITY (LOGIN / SIGN UP)</span>
+        <span>🔒 ENTER THE COMMUNITY</span>
         <span id="dropdownArrowNode">▼</span>
       </button>
 
@@ -634,7 +667,6 @@
       <div>
         <b>POST SOMETHING</b>
         
-        <!-- Destination Toggles for Author -->
         <div id="authorDestinationToggle" class="author-creation-panel" style="display: none;">
           <label><input type="radio" name="postDest" value="feed" checked> Main Feed</label>
           <label><input type="radio" name="postDest" value="story"> Stories Section</label>
@@ -642,10 +674,8 @@
 
         <textarea id="postInput" placeholder="What lurks in your mind..."></textarea>
         
-        <!-- Invisible Native Input Triggered Programmatically via Button -->
         <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleFileSelection(this)" style="display: none;">
         
-        <!-- Live Dynamic Preview Container -->
         <div id="thumbPreviewArea" class="thumb-preview-area">
           <div id="previewMediaContainer"></div>
           <span id="previewMetaLabel">File Loaded</span>
@@ -654,7 +684,6 @@
       
       <div>
         <div class="creation-action-row">
-          <!-- Trigger Native Input File Finder Click -->
           <button class="action-media-btn" onclick="document.getElementById('fileInput').click()">📁 ADD MEDIA</button>
           <button id="postBtn" class="action-post-btn" onclick="createPost()">POST TO THE ABYSS</button>
         </div>
@@ -729,6 +758,9 @@ let isInitialDeepLinkProcessed = false;
 let activeShareUrl = "";
 let activeShareAuthor = "";
 
+// Keep track of object URLs to prevent memory leaks
+let activeMediaObjectUrl = null;
+
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   currentUsername = localStorage.getItem("username") || "Anonymous";
@@ -799,26 +831,38 @@ window.handleFileSelection = (inputElement) => {
   
   mediaContainer.innerHTML = ""; 
   
+  // Clean up previous blob URL to free memory
+  if (activeMediaObjectUrl) {
+    URL.revokeObjectURL(activeMediaObjectUrl);
+    activeMediaObjectUrl = null;
+  }
+  
   if (!file) {
     previewArea.style.display = "none";
     return;
   }
 
   previewArea.style.display = "block";
-  const objectUrl = URL.createObjectURL(file);
+  activeMediaObjectUrl = URL.createObjectURL(file);
 
   if (file.type.startsWith("video")) {
     const video = document.createElement("video");
-    video.src = objectUrl;
+    video.src = activeMediaObjectUrl;
     video.controls = true;
     video.muted = true;
     video.playsInline = true;
     mediaContainer.appendChild(video);
     metaLabel.textContent = "Seek through the timeline to capture custom thumbnail snapshot frame";
-    video.addEventListener('loadeddata', () => { video.currentTime = 0.5; });
+    
+    // Ensure video seeks to 0.5s when metadata is loaded
+    video.addEventListener('loadedmetadata', () => { 
+      if(video.duration >= 0.5) {
+        video.currentTime = 0.5; 
+      }
+    });
   } else if (file.type.startsWith("image")) {
     const img = document.createElement("img");
-    img.src = objectUrl;
+    img.src = activeMediaObjectUrl;
     mediaContainer.appendChild(img);
     metaLabel.textContent = "Image loaded successfully";
   }
@@ -842,13 +886,16 @@ window.openPostInList = (postId, updateUrl = true) => {
   document.getElementById("feedList").style.display = "block";
   window.scrollTo(0, 0);
 
-  const targetPostElement = document.getElementById(`post-row-${postId}`);
-  if (targetPostElement) {
-    const currentHeaderHeight = window.innerWidth <= 768 ? 75 : 85;
-    const elementPosition = targetPostElement.getBoundingClientRect().top + window.scrollY;
-    const offsetPosition = elementPosition - (currentHeaderHeight + 65); 
-    window.scrollTo({ top: offsetPosition, behavior: 'instant' });
-  }
+  // Allow DOM to update before calculating position
+  setTimeout(() => {
+    const targetPostElement = document.getElementById(`post-row-${postId}`);
+    if (targetPostElement) {
+      const currentHeaderHeight = window.innerWidth <= 768 ? 75 : 85;
+      const elementPosition = targetPostElement.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - (currentHeaderHeight + 65); 
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }
+  }, 50);
 
   if (updateUrl) {
     const newUrl = `${window.location.origin}${window.location.pathname}?view=list&post=${postId}`;
@@ -957,10 +1004,12 @@ window.anon = async () => {
 };
 
 window.logout = async () => {
-  await signOut(auth);
-  currentUsername = "Anonymous";
-  document.getElementById("userDisplay").textContent = "ANONYMOUS";
-  document.getElementById("authorDestinationToggle").style.display = "none";
+  try {
+    await signOut(auth);
+    currentUsername = "Anonymous";
+    document.getElementById("userDisplay").textContent = "ANONYMOUS";
+    document.getElementById("authorDestinationToggle").style.display = "none";
+  } catch (e) { console.error("Error logging out", e); }
 };
 
 const emailFromUser = (u) => (u || "anon").trim().toLowerCase() + "@tanishq.app";
@@ -1037,8 +1086,15 @@ window.createPost = async () => {
     document.getElementById("fileInput").value = "";
     document.getElementById("thumbPreviewArea").style.display = "none";
     document.getElementById("previewMediaContainer").innerHTML = "";
+    
+    if (activeMediaObjectUrl) {
+      URL.revokeObjectURL(activeMediaObjectUrl);
+      activeMediaObjectUrl = null;
+    }
   } catch (e) {
     alert("Failed to post.");
+    console.error(e);
+  } finally {
     showPostingLoader(false);
   }
 };
@@ -1090,10 +1146,10 @@ window.refreshFeeds = async () => {
     let mediaIndicator = "";
 
     if (p.fileType?.startsWith("video")) {
-      gridMediaElement = p.thumbnailUrl ? `<img src="${p.thumbnailUrl}">` : `<div class="grid-text-fallback" style="color:#ffaa00;">📹 Video File</div>`;
+      gridMediaElement = p.thumbnailUrl ? `<img src="${p.thumbnailUrl}" loading="lazy">` : `<div class="grid-text-fallback" style="color:#ffaa00;">📹 Video File</div>`;
       mediaIndicator = `<div class="grid-icon-indicator">📹</div>`;
     } else if (p.fileUrl) {
-      gridMediaElement = `<img src="${p.fileUrl}">`;
+      gridMediaElement = `<img src="${p.fileUrl}" loading="lazy">`;
     } else {
       gridMediaElement = `<div class="grid-text-fallback">${p.content || "..."}</div>`;
     }
@@ -1121,7 +1177,7 @@ window.refreshFeeds = async () => {
       const posterAttr = p.thumbnailUrl ? `poster="${p.thumbnailUrl}"` : "";
       media = `<video src="${p.fileUrl}" ${posterAttr} controls preload="metadata"></video>`;
     } else if (p.fileUrl) {
-      media = `<img src="${p.fileUrl}">`;
+      media = `<img src="${p.fileUrl}" loading="lazy">`;
     }
 
     let downloadActionButton = p.fileUrl 
@@ -1195,6 +1251,7 @@ window.handleVote = async (id, type) => {
   try {
     const postRef = doc(db, "posts", id);
     const postSnap = await getDoc(postRef);
+    if (!postSnap.exists()) return;
     const data = postSnap.data();
     let votesMap = data.votesMap || {};
     let likesMap = data.likesMap || {};
@@ -1214,7 +1271,7 @@ window.handleVote = async (id, type) => {
 
 window.deletePost = async (id) => {
   if (!confirm("Erase this forever?")) return;
-  try { await deleteDoc(doc(db, "posts", id)); } catch (e) {}
+  try { await deleteDoc(doc(db, "posts", id)); } catch (e) { console.error(e); }
 };
 
 window.openPostComments = (id) => location.href = `post.html?id=${id}`;
