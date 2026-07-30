@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay</title>
+
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #160000, #000 85%);
+  font-family: 'VT323', monospace;
+  color: #f2dede;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MAIN CARD */
+.pay-box {
+  width: 100%;
+  max-width: 390px;
+  background: linear-gradient(180deg, #140000, #060000);
+  border: 2px solid #3a0000;
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+}
+
+/* CAUTION */
+.caution-box {
+  border: 2px solid #550000;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 18px;
+  background: linear-gradient(180deg, #120000, #050000);
+}
+
+.caution-title {
+  font-size: 22px;
+  color: #ff2a2a;
+  margin-bottom: 8px;
+  animation: glitch 3s infinite;
+}
+
+@keyframes glitch {
+  0% { transform: none; }
+  2% { transform: translate(-1px,1px); }
+  4% { transform: translate(1px,-1px); }
+  6% { transform: none; }
+  100% { transform: none; }
+}
+
+.caution-text {
+  font-size: 15px;
+  color: #bb7777;
+  line-height: 1.6;
+}
+
+/* QR */
+.qr {
+  width: 220px;
+  display: block;
+  margin: 18px auto 12px;
+  border-radius: 10px;
+}
+
+/* UPI ID */
+.upi-id {
+  font-size: 16px;
+  color: #ff6a6a;
+  margin: 10px 0 6px;
+  cursor: pointer;
+}
+
+.copied {
+  font-size: 13px;
+  color: #66ff66;
+  display: none;
+  margin-bottom: 10px;
+}
+
+/* BUTTONS */
+.pay-btn {
+  display: block;
+  padding: 14px;
+  margin-top: 12px;
+  background: linear-gradient(180deg, #b30000, #5a0000);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 12px;
+  border: 1px solid #ff0000;
+  font-size: 18px;
+}
+
+/* FOOT */
+.note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: #996666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="pay-box">
+
+  <div class="caution-box">
+    <div class="caution-title">CAUTION</div>
+    <div class="caution-text">
+      Pay only if you know what you are paying for.<br><br>
+      Pay the <strong>exact agreed amount</strong>.<br><br>
+      For physical items, our team will contact you on the
+      <strong>number associated with your payment</strong>
+      to confirm your address.
+    </div>
+  </div>
+
+  <!-- CLEAN QR -->
+  <img src="https://i.ibb.co/vvz7qSty/IMG-8571.jpg" class="qr">
+
+  <!-- CLICK TO COPY -->
+  <div class="upi-id" onclick="copyUPI()">
+    8827514415@idfcfirst (tap to copy)
+  </div>
+  <div class="copied" id="copiedText">UPI ID copied</div>
+
+  <!-- APP DEEPLINKS ONLY -->
+  <a class="pay-btn"
+     href="gpay://">
+     PAY WITH GOOGLE PAY
+  </a>
+
+  <a class="pay-btn"
+     href="phonepe://">
+     PAY WITH PHONEPE
+  </a>
+
+  <a class="pay-btn"
+     href="paytmmp://">
+     PAY WITH PAYTM
+  </a>
+
+  <!-- PAYPAL -->
+  <a class="pay-btn"
+     href="https://www.paypal.com/paypalme/TanishqTiwari20"
+     target="_blank">
+     PAY WITH PAYPAL (INTERNATIONAL)
+  </a>
+
+  <div class="note">
+    Wrong amount = ignored payment<br>
+    No confirmations · No refunds
+  </div>
+
+</div>
+
+<script>
+function copyUPI() {
+  navigator.clipboard.writeText("8827514415@idfcfirst");
+  const msg = document.getElementById("copiedText");
+  msg.style.display = "block";
+  setTimeout(() => msg.style.display = "none", 1500);
+}
+</script>
+
+</body>
+</html>
