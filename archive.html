@@ -1,0 +1,803 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEDIA_ARCHIVE ♡ (⁠⊙⁠_⁠☉⁠)</title>
+  <style>
+    :root {
+      --bg: #0b0813;
+      --card-bg: #151022;
+      --panel-bg: #1a142b;
+      --pastel-pink: #ffb7c5;
+      --pastel-yellow: #fff3a7;
+      --pastel-purple: #d8b4fe;
+      --toxic-green: #a3ff00;
+      --blood-magenta: #ff0055;
+      --text-main: #f5f3ff;
+      --text-muted: #a098b5;
+      --text-dark: #0f091a;
+      --border-color: rgba(255, 183, 197, 0.25);
+      --border-glow: #ffb7c5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(255, 183, 197, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(163, 255, 0, 0.05) 0%, transparent 40%),
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 1px, transparent 1px, transparent 3px);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      padding: 2rem 1.5rem 5rem 1.5rem;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Top Navigation Header */
+    header {
+      background: rgba(26, 20, 43, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 183, 197, 0.1);
+      text-align: center;
+    }
+
+    .brand-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: var(--pastel-pink);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-shadow: 0 0 12px rgba(255, 183, 197, 0.4);
+    }
+
+    h1 .heart {
+      color: var(--blood-magenta);
+      font-size: 1.3rem;
+      animation: heartbeat 1.8s infinite ease-in-out;
+    }
+
+    .sub-tag {
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--pastel-yellow);
+      border: 1px solid rgba(255, 243, 167, 0.3);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-family: monospace;
+      letter-spacing: 0.5px;
+      animation: pulseCreepy 3s infinite alternate;
+    }
+
+    /* Clean & Well-Spaced Control Deck Card */
+    .control-card {
+      background: rgba(21, 16, 34, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1.5px solid var(--border-color);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 15px rgba(216, 180, 254, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .control-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mascot-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 183, 197, 0.3);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.25s ease;
+    }
+
+    .mascot-badge:hover {
+      border-color: var(--pastel-pink);
+      background: rgba(255, 183, 197, 0.12);
+      box-shadow: 0 0 12px rgba(255, 183, 197, 0.2);
+    }
+
+    .mascot-face {
+      font-weight: bold;
+      color: var(--pastel-pink);
+      font-size: 1rem;
+    }
+
+    .mascot-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .pill-badge {
+      font-size: 0.78rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 14px;
+      background: rgba(216, 180, 254, 0.12);
+      color: var(--pastel-purple);
+      border: 1px solid rgba(216, 180, 254, 0.35);
+      font-family: monospace;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .search-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon-left {
+      position: absolute;
+      left: 1.1rem;
+      font-size: 1rem;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(11, 8, 19, 0.85);
+      border: 1.5px solid var(--border-color);
+      border-radius: 14px;
+      padding: 0.8rem 2.8rem 0.8rem 2.8rem;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-input:focus {
+      border-color: var(--pastel-pink);
+      box-shadow: 0 0 18px rgba(255, 183, 197, 0.3);
+      background: rgba(11, 8, 19, 0.95);
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 50%;
+      display: none;
+    }
+
+    .search-clear-btn:hover {
+      color: var(--pastel-pink);
+    }
+
+    /* Buttons with Clean Glowing Highlights */
+    .btn {
+      background: var(--pastel-pink);
+      color: var(--text-dark);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 12px;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 0.65rem 1.4rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(255, 183, 197, 0.25);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn:hover {
+      background: var(--toxic-green);
+      color: var(--text-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(163, 255, 0, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 243, 167, 0.12);
+      color: var(--pastel-yellow);
+      border: 1.5px solid rgba(255, 243, 167, 0.35);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: var(--pastel-yellow);
+      color: var(--text-dark);
+      box-shadow: 0 6px 20px rgba(255, 243, 167, 0.35);
+    }
+
+    .btn-danger {
+      background: rgba(255, 0, 85, 0.15);
+      color: var(--blood-magenta);
+      border: 1px solid rgba(255, 0, 85, 0.4);
+      font-size: 0.78rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      box-shadow: none;
+    }
+
+    .btn-danger:hover {
+      background: var(--blood-magenta);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(255, 0, 85, 0.5);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 2rem;
+    }
+
+    /* Video Cards with Elevated Highlights */
+    .video-card {
+      background-color: var(--card-bg);
+      border: 1.5px solid var(--border-color);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      transition: all 0.25s ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--pastel-pink);
+      box-shadow: 0 16px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 183, 197, 0.2);
+    }
+
+    .video-card.highlighted {
+      animation: flashBorder 1.5s ease;
+      border-color: var(--toxic-green);
+    }
+
+    .embed-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-bottom: 1.5px solid var(--border-color);
+    }
+
+    .embed-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .card-body {
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--panel-bg);
+      gap: 0.5rem;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-title::before {
+      content: "♡ ";
+      color: var(--pastel-pink);
+    }
+
+    /* FAB */
+    .fab {
+      position: fixed;
+      bottom: 2.5rem;
+      right: 2.5rem;
+      width: 60px;
+      height: 60px;
+      background: var(--pastel-pink);
+      color: var(--text-dark);
+      font-size: 2rem;
+      font-weight: 300;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 8px 25px rgba(255, 183, 197, 0.4);
+      cursor: pointer;
+      z-index: 50;
+      transition: all 0.25s ease;
+    }
+
+    .fab:hover {
+      background: var(--toxic-green);
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 10px 30px rgba(163, 255, 0, 0.5);
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(11, 8, 19, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .modal {
+      background: var(--panel-bg);
+      color: var(--text-main);
+      border: 1.5px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 183, 197, 0.15);
+    }
+
+    .modal h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--pastel-pink);
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.35);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--pastel-pink);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .modal-actions .btn-cancel {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      box-shadow: none;
+    }
+
+    .modal-actions .btn-cancel:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    .empty-state {
+      text-align: center;
+      grid-column: 1 / -1;
+      padding: 5rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Floating FX */
+    .floating-heart {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.2rem;
+      color: var(--pastel-pink);
+      animation: floatUp 1s forwards ease-out;
+      z-index: 999;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-40px) scale(1.4); }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.18); }
+    }
+
+    @keyframes flashBorder {
+      0% { box-shadow: 0 0 30px var(--toxic-green); transform: scale(1.02); }
+      100% { box-shadow: 0 0 0 transparent; transform: scale(1); }
+    }
+
+    @keyframes pulseCreepy {
+      0% { color: var(--pastel-yellow); border-color: rgba(255, 243, 167, 0.3); }
+      50% { color: var(--blood-magenta); border-color: rgba(255, 0, 85, 0.4); }
+      100% { color: var(--toxic-green); border-color: rgba(163, 255, 0, 0.4); }
+    }
+
+    @media (max-width: 650px) {
+      .search-row {
+        flex-direction: column;
+      }
+      .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <!-- Top Navigation Header (Centered Layout) -->
+  <header>
+    <div class="brand-group">
+      <h1>media_archive <span class="heart">♡</span></h1>
+      <span class="sub-tag">(⁠⊙⁠_⁠☉⁠) watching...</span>
+    </div>
+    <button id="auth-btn" class="btn" onclick="openLoginModal()">ADMIN_LOGIN</button>
+  </header>
+
+  <main class="container">
+    
+    <!-- Clean Control Deck Card -->
+    <div class="control-card">
+      <div class="control-top-row">
+        <div class="mascot-badge" onclick="pokeMascot(event)" title="poke me!">
+          <span class="mascot-face" id="mascot">(⁠⊙⁠_⁠☉⁠)</span>
+          <span class="mascot-hint">tape indexer ✨</span>
+        </div>
+        <span class="pill-badge">📼 <span id="tape-count">0</span> tapes archived</span>
+      </div>
+
+      <div class="search-row">
+        <div class="search-input-wrapper">
+          <span class="search-icon-left">🔍</span>
+          <input 
+            type="text" 
+            id="search-input" 
+            class="search-input" 
+            placeholder="search tape titles... (⁠✿⁠◠⁠‿⁠◠⁠)" 
+            oninput="handleSearchInput()" 
+          />
+          <button id="search-clear" class="search-clear-btn" onclick="clearSearch()">✕</button>
+        </div>
+        <button class="btn btn-secondary" onclick="pickRandomVideo()">🎲 surprise tape!</button>
+      </div>
+    </div>
+
+    <!-- Video Grid -->
+    <div id="video-grid" class="grid">
+      <div class="empty-state">♡ [ Wake up... connecting to database ] ♡</div>
+    </div>
+  </main>
+
+  <button id="add-btn" class="fab" onclick="openAddModal()" title="feed me links">+</button>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal-overlay">
+    <div class="modal">
+      <h2>secret passage 🗝️</h2>
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>who are you?</label>
+          <input type="text" id="username" placeholder="user_id..." required>
+        </div>
+        <div class="form-group">
+          <label>whisper password...</label>
+          <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" onclick="closeModal('login-modal')">run away</button>
+          <button type="submit" class="btn">enter</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Link Modal -->
+  <div id="add-modal" class="modal-overlay">
+    <div class="modal">
+      <h2>feed a new tape 📼</h2>
+      <form onsubmit="handleAddVideo(event)">
+        <div class="form-group">
+          <label>tape label (title)</label>
+          <input type="text" id="video-title" placeholder="Cute little title..." required>
+        </div>
+        <div class="form-group">
+          <label>embed snippet / peerTube link</label>
+          <textarea id="video-input" rows="4" placeholder="Paste <iframe> or link here..." required></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-cancel" onclick="closeModal('add-modal')">nevermind</button>
+          <button type="submit" class="btn">stitch it in</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_rZQ0-PTcw2u--0AjybYOBtWnoh2XxDk",
+      authDomain: "counter-ea7c8.firebaseapp.com",
+      projectId: "counter-ea7c8",
+      storageBucket: "counter-ea7c8.firebasestorage.app",
+      messagingSenderId: "976604631332",
+      appId: "1:976604631332:web:fc0929d3231ac63a67a3b1"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let isAdmin = false;
+    let videos = [];
+
+    // Mascot facial expressions
+    const faces = ['(⁠⊙⁠_⁠☉⁠)', '(⁠>⁠<⁠)', '(⁠✿⁠◠⁠‿⁠◠⁠)', '(⁠★⁠ω⁠★⁠)', '(⁠⁠;⁠;⁠;⁠_⁠_⁠_⁠;⁠)', '(⁠•⁠-⁠•⁠)'];
+    let faceIdx = 0;
+
+    db.collection("videos").orderBy("createdAt", "desc").onSnapshot(
+      (snapshot) => {
+        videos = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        document.getElementById('tape-count').innerText = videos.length;
+        renderGrid();
+      },
+      (error) => {
+        document.getElementById('video-grid').innerHTML = `<div class="empty-state">(⁠⁠;⁠;⁠;⁠_⁠_⁠_⁠;⁠) ERROR: ${error.message}</div>`;
+      }
+    );
+
+    function renderGrid() {
+      const grid = document.getElementById('video-grid');
+      const authBtn = document.getElementById('auth-btn');
+      const addBtn = document.getElementById('add-btn');
+      const searchInput = document.getElementById('search-input');
+      const searchQuery = (searchInput?.value || '').trim().toLowerCase();
+
+      // Admin Controls Toggle
+      if (isAdmin) {
+        authBtn.innerText = 'LOGOUT ♡';
+        authBtn.onclick = handleLogout;
+        addBtn.style.display = 'flex';
+      } else {
+        authBtn.innerText = 'ADMIN_LOGIN';
+        authBtn.onclick = openLoginModal;
+        addBtn.style.display = 'none';
+      }
+
+      if (videos.length === 0) {
+        grid.innerHTML = `<div class="empty-state">(⁠°⁠~⁠°⁠) NO TAPES FOUND YET...</div>`;
+        return;
+      }
+
+      // Filter videos by title
+      const filteredVideos = searchQuery 
+        ? videos.filter(v => (v.title || '').toLowerCase().includes(searchQuery))
+        : videos;
+
+      if (filteredVideos.length === 0) {
+        grid.innerHTML = `<div class="empty-state">(⁠°⁠~⁠°⁠) NO TAPES MATCH "${escapeHtml(searchQuery)}"...</div>`;
+        return;
+      }
+
+      grid.innerHTML = filteredVideos.map(v => {
+        return `
+          <div class="video-card" id="card-${v.id}">
+            <div class="embed-wrapper">
+              ${renderEmbed(v.rawInput)}
+            </div>
+            <div class="card-body">
+              <span class="card-title" title="${escapeHtml(v.title || '')}">${escapeHtml(v.title || 'untitled_tape')}</span>
+              ${isAdmin ? `<button class="btn btn-danger" onclick="deleteVideo('${v.id}')">cut ✂</button>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderEmbed(input) {
+      if (!input) return '';
+      const str = input.trim();
+      
+      if (str.toLowerCase().startsWith('<iframe')) {
+        return str;
+      }
+      
+      return `<iframe src="${str}" allow="fullscreen" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>`;
+    }
+
+    /* Search Bar Utilities */
+    function handleSearchInput() {
+      const val = document.getElementById('search-input').value;
+      const clearBtn = document.getElementById('search-clear');
+      clearBtn.style.display = val ? 'block' : 'none';
+      renderGrid();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('search-input');
+      input.value = '';
+      document.getElementById('search-clear').style.display = 'none';
+      renderGrid();
+    }
+
+    /* Interactive Mascot Poke */
+    function pokeMascot(e) {
+      faceIdx = (faceIdx + 1) % faces.length;
+      document.getElementById('mascot').innerText = faces[faceIdx];
+      spawnFloatingHeart(e.clientX, e.clientY);
+    }
+
+    /* Surprise Tape Selector */
+    function pickRandomVideo() {
+      if (videos.length === 0) return;
+      const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+      
+      clearSearch();
+      
+      setTimeout(() => {
+        const card = document.getElementById(`card-${randomVideo.id}`);
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.classList.add('highlighted');
+          setTimeout(() => card.classList.remove('highlighted'), 1600);
+        }
+      }, 100);
+    }
+
+    /* Floating FX */
+    function spawnFloatingHeart(x, y) {
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.innerText = ['♡', '✨', '💖', '🎀'][Math.floor(Math.random() * 4)];
+      heart.style.left = `${x}px`;
+      heart.style.top = `${y}px`;
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1000);
+    }
+
+    /* Auth & Firestore Handlers */
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+
+      if (u === 'tanishqtiwari' && p === 'ssssss') {
+        isAdmin = true;
+        closeModal('login-modal');
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        renderGrid();
+      } else {
+        alert('wrong secret... (⁠•⁠-⁠•⁠)');
+      }
+    }
+
+    function handleLogout() {
+      isAdmin = false;
+      renderGrid();
+    }
+
+    async function handleAddVideo(e) {
+      e.preventDefault();
+      const title = document.getElementById('video-title').value;
+      const rawInput = document.getElementById('video-input').value;
+
+      try {
+        await db.collection("videos").add({
+          title: title,
+          rawInput: rawInput,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        closeModal('add-modal');
+        document.getElementById('video-title').value = '';
+        document.getElementById('video-input').value = '';
+      } catch (err) {
+        alert("oopsie! save failed: " + err.message);
+      }
+    }
+
+    async function deleteVideo(id) {
+      if (confirm("Destroy this forever? (⁠⊙⁠_⁠☉⁠)")) {
+        try {
+          await db.collection("videos").doc(id).delete();
+        } catch (err) {
+          alert("Couldn't destroy: " + err.message);
+        }
+      }
+    }
+
+    function openLoginModal() { document.getElementById('login-modal').style.display = 'flex'; }
+    function openAddModal() { document.getElementById('add-modal').style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+  </script>
+</body>
+</html>
