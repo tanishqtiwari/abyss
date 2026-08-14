@@ -1,48 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>MEDIA_ARCHIVE ♡ WATCH</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
 <style>
 
 /* =========================================================
-   VARIABLES
+   ROOT
 ========================================================= */
 
 :root {
 
     --bg: #08070d;
     --bg2: #0e0a14;
-
     --panel: #15101c;
     --panel2: #1d1423;
 
     --pink: #ffb7d5;
     --hotpink: #ff4f91;
-
     --purple: #d9b7ff;
     --yellow: #fff0a6;
-
     --green: #b8ff68;
     --red: #ff4269;
 
     --white: #fff8fc;
     --muted: #a99caf;
 
-    --border:
-        rgba(255,183,213,.20);
+    --border: rgba(255,183,213,.20);
 
 }
 
@@ -145,11 +139,10 @@ body::after {
 
 .container {
 
-    width:
-        min(
-            1050px,
-            calc(100% - 24px)
-        );
+    width: min(
+        1050px,
+        calc(100% - 28px)
+    );
 
     margin: auto;
 
@@ -170,34 +163,31 @@ body::after {
 
     padding-top: 18px;
 
+    padding-bottom: 14px;
+
 }
 
 
-.back-button {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 7px;
+.back-btn {
 
     border:
         1px solid
         rgba(255,183,213,.20);
 
     background:
-        rgba(255,183,213,.055);
+        rgba(255,183,213,.06);
 
     color: var(--pink);
 
     border-radius: 9px;
 
     padding:
-        9px 12px;
+        9px
+        13px;
 
     font-family: monospace;
 
-    font-size: 9px;
+    font-size: 10px;
 
     cursor: pointer;
 
@@ -206,112 +196,99 @@ body::after {
 }
 
 
-.back-button:hover {
+.back-btn:hover {
 
     background: var(--pink);
 
     color: #120b12;
 
-    transform:
-        translateX(-2px);
-
 }
 
 
 /* =========================================================
-   WATCH SECTION
+   VIDEO PANEL
 ========================================================= */
 
-.watch-section {
-
-    margin-top: 15px;
-
-}
-
-
-/* =========================================================
-   PLAYER CARD
-========================================================= */
-
-.player-card {
+.video-panel {
 
     background:
 
         linear-gradient(
             145deg,
-            #1c1221,
-            #0e0a13
+            rgba(31,20,36,.96),
+            rgba(12,9,16,.96)
         );
 
     border:
         1px solid
-        rgba(255,183,213,.16);
+        var(--border);
 
     border-radius: 18px;
 
-    padding: 14px;
+    overflow: hidden;
 
     box-shadow:
-
-        0 18px 45px
-        rgba(0,0,0,.55);
+        0 18px 50px rgba(0,0,0,.55);
 
 }
 
 
 /* =========================================================
-   PLAYER
+   VIDEO
 ========================================================= */
 
-.player {
+.video-container {
 
     width: 100%;
-
-    aspect-ratio: 16 / 9;
 
     background: #000;
 
-    border-radius: 13px;
+    position: relative;
 
-    overflow: hidden;
+    display: flex;
 
-    border:
-        1px solid
-        rgba(255,183,213,.12);
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 250px;
 
 }
 
 
-.player iframe {
+/*
+   The iframe inserted here is the ORIGINAL iframe
+   stored in Firestore.
+
+   We don't modify its URL.
+*/
+
+.video-container iframe {
 
     width: 100%;
 
-    height: 100%;
+    max-width: 100%;
 
-    display: block;
+    aspect-ratio: 16 / 9;
+
+    min-height: 300px;
 
     border: 0;
+
+    display: block;
 
 }
 
 
 /* =========================================================
-   LOADING
+   VIDEO LOADING
 ========================================================= */
 
-.loading {
+.video-loading {
 
-    height: 100%;
+    padding: 80px 20px;
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    flex-direction: column;
-
-    gap: 10px;
+    text-align: center;
 
     color: var(--muted);
 
@@ -324,56 +301,31 @@ body::after {
 
 .loading-face {
 
-    font-size: 25px;
+    font-size: 26px;
 
-    color: var(--pink);
-
-}
-
-
-/* =========================================================
-   ERROR
-========================================================= */
-
-.error-box {
-
-    padding: 50px 20px;
-
-    text-align: center;
-
-    color: var(--red);
-
-    font-family: monospace;
-
-    font-size: 10px;
-
-}
-
-
-.error-box small {
-
-    display: block;
-
-    margin-top: 10px;
-
-    color: var(--muted);
+    margin-bottom: 12px;
 
 }
 
 
 /* =========================================================
-   VIDEO TITLE
+   VIDEO INFORMATION
 ========================================================= */
+
+.video-info {
+
+    padding: 20px;
+
+}
+
 
 .video-title {
 
-    margin-top: 17px;
+    color: var(--pink);
 
     font-size: 20px;
 
     font-weight: 800;
-
-    color: var(--white);
 
     line-height: 1.35;
 
@@ -384,16 +336,16 @@ body::after {
 
     content: "♡ ";
 
-    color: var(--pink);
+    color: var(--purple);
 
 }
 
 
 .video-meta {
 
-    margin-top: 7px;
+    margin-top: 8px;
 
-    color: #756b7b;
+    color: #766b7b;
 
     font-family: monospace;
 
@@ -403,37 +355,38 @@ body::after {
 
 
 /* =========================================================
-   ACTION BAR
+   ACTIONS
 ========================================================= */
 
-.action-bar {
-
-    margin-top: 17px;
+.actions {
 
     display: flex;
 
+    flex-wrap: wrap;
+
     gap: 8px;
 
-    flex-wrap: wrap;
+    margin-top: 17px;
 
 }
 
 
-.action-button {
+.action-btn {
 
     border:
         1px solid
-        rgba(255,183,213,.17);
+        rgba(255,183,213,.18);
 
     background:
         rgba(255,255,255,.035);
 
-    color: var(--muted);
+    color: #cfc5d1;
 
-    border-radius: 10px;
+    border-radius: 9px;
 
     padding:
-        9px 13px;
+        9px
+        12px;
 
     font-family: monospace;
 
@@ -446,55 +399,48 @@ body::after {
 }
 
 
-.action-button:hover {
-
-    color: var(--pink);
-
-    border-color:
-        rgba(255,183,213,.4);
-
-    transform:
-        translateY(-1px);
-
-}
-
-
-.action-button.active-like {
+.action-btn:hover {
 
     color: var(--pink);
 
     border-color: var(--pink);
 
-    background:
-        rgba(255,183,213,.10);
+    transform: translateY(-1px);
 
 }
 
 
-.action-button.active-dislike {
+.action-btn.active-like {
+
+    color: var(--green);
+
+    border-color:
+        rgba(184,255,104,.4);
+
+    background:
+        rgba(184,255,104,.06);
+
+}
+
+
+.action-btn.active-dislike {
 
     color: var(--red);
 
-    border-color: var(--red);
+    border-color:
+        rgba(255,66,105,.4);
 
     background:
-        rgba(255,66,105,.08);
-
-}
-
-
-.action-button.share {
-
-    color: var(--purple);
+        rgba(255,66,105,.06);
 
 }
 
 
 /* =========================================================
-   COMMENTS CARD
+   COMMENTS PANEL
 ========================================================= */
 
-.comments-card {
+.comments-panel {
 
     margin-top: 20px;
 
@@ -502,21 +448,20 @@ body::after {
 
         linear-gradient(
             145deg,
-            rgba(29,20,35,.96),
-            rgba(13,9,18,.96)
+            rgba(31,20,36,.96),
+            rgba(12,9,16,.96)
         );
 
     border:
         1px solid
-        rgba(255,183,213,.16);
+        var(--border);
 
     border-radius: 18px;
 
-    padding: 18px;
+    padding: 20px;
 
     box-shadow:
-        0 15px 40px
-        rgba(0,0,0,.45);
+        0 18px 45px rgba(0,0,0,.45);
 
 }
 
@@ -525,7 +470,7 @@ body::after {
 
     color: var(--pink);
 
-    font-size: 13px;
+    font-size: 14px;
 
     font-weight: 900;
 
@@ -536,9 +481,9 @@ body::after {
 
 .comments-subtitle {
 
-    margin-top: 4px;
+    margin-top: 5px;
 
-    color: #716777;
+    color: #756a79;
 
     font-family: monospace;
 
@@ -553,29 +498,64 @@ body::after {
 
 .comment-form {
 
-    margin-top: 16px;
-
-    display: flex;
-
-    gap: 8px;
+    margin-top: 18px;
 
 }
 
 
 .comment-input {
 
-    flex: 1;
+    width: 100%;
 
-    min-width: 0;
+    min-height: 85px;
 
-    padding:
-        11px 12px;
+    resize: vertical;
+
+    padding: 12px;
 
     border-radius: 10px;
 
     border:
         1px solid
-        rgba(255,183,213,.16);
+        rgba(255,183,213,.18);
+
+    background: #0b0810;
+
+    color: white;
+
+    outline: none;
+
+    font-family: monospace;
+
+    font-size: 11px;
+
+}
+
+
+.comment-input:focus {
+
+    border-color: var(--pink);
+
+    box-shadow:
+        0 0 18px
+        rgba(255,183,213,.08);
+
+}
+
+
+.comment-name {
+
+    margin-top: 8px;
+
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(255,183,213,.18);
 
     background: #0b0810;
 
@@ -590,36 +570,31 @@ body::after {
 }
 
 
-.comment-input:focus {
+.comment-name:focus {
 
-    border-color:
-        var(--pink);
-
-}
-
-
-.comment-input::placeholder {
-
-    color: #655b69;
+    border-color: var(--pink);
 
 }
 
 
 .comment-submit {
 
+    margin-top: 8px;
+
     border:
         1px solid
-        rgba(255,183,213,.25);
+        rgba(255,183,213,.22);
 
     background:
-        rgba(255,183,213,.08);
+        rgba(255,183,213,.07);
 
     color: var(--pink);
 
-    border-radius: 10px;
+    border-radius: 9px;
 
     padding:
-        10px 13px;
+        9px
+        13px;
 
     font-family: monospace;
 
@@ -627,15 +602,12 @@ body::after {
 
     cursor: pointer;
 
-    white-space: nowrap;
-
 }
 
 
 .comment-submit:hover {
 
-    background:
-        var(--pink);
+    background: var(--pink);
 
     color: #120b12;
 
@@ -643,43 +615,45 @@ body::after {
 
 
 /* =========================================================
-   COMMENT LIST
+   COMMENTS LIST
 ========================================================= */
 
-.comment-list {
+.comments-list {
 
-    margin-top: 18px;
+    margin-top: 24px;
 
     display: flex;
 
     flex-direction: column;
 
-    gap: 9px;
+    gap: 10px;
 
 }
 
 
 .comment {
 
-    padding: 12px;
-
-    border-radius: 11px;
-
     background:
         rgba(255,255,255,.025);
 
     border:
         1px solid
-        rgba(255,183,213,.08);
+        rgba(255,183,213,.10);
+
+    border-radius: 11px;
+
+    padding: 12px;
 
 }
 
 
-.comment-header {
+.comment-top {
 
     display: flex;
 
     justify-content: space-between;
+
+    align-items: center;
 
     gap: 10px;
 
@@ -688,109 +662,102 @@ body::after {
 
 .comment-user {
 
-    color: var(--yellow);
+    color: var(--purple);
 
     font-family: monospace;
 
     font-size: 9px;
 
-    font-weight: 700;
+    font-weight: 800;
 
 }
 
 
-.comment-time {
+.comment-date {
 
-    color: #5f5665;
+    color: #665c6c;
 
     font-family: monospace;
 
-    font-size: 8px;
+    font-size: 7px;
 
 }
 
 
 .comment-text {
 
-    margin-top: 7px;
+    margin-top: 8px;
 
-    color: #cfc7d1;
+    color: #ddd4df;
 
     font-size: 11px;
 
-    line-height: 1.5;
+    line-height: 1.55;
+
+    white-space: pre-wrap;
 
     word-break: break-word;
 
 }
 
 
-.no-comments {
+.comment-actions {
 
-    padding: 25px;
+    margin-top: 9px;
 
-    text-align: center;
+    display: flex;
 
-    color: #625968;
-
-    font-family: monospace;
-
-    font-size: 9px;
+    gap: 6px;
 
 }
 
 
-/* =========================================================
-   SHARE MESSAGE
-========================================================= */
-
-.share-message {
-
-    position: fixed;
-
-    left: 50%;
-
-    bottom: 25px;
-
-    transform:
-        translateX(-50%)
-        translateY(20px);
-
-    opacity: 0;
-
-    pointer-events: none;
-
-    z-index: 20000;
-
-    background: #1d1423;
+.comment-delete {
 
     border:
         1px solid
-        rgba(255,183,213,.3);
+        rgba(255,66,105,.25);
 
-    color: var(--pink);
+    background:
+        rgba(255,66,105,.04);
+
+    color: var(--red);
+
+    border-radius: 7px;
 
     padding:
-        10px 15px;
-
-    border-radius: 10px;
+        5px
+        8px;
 
     font-family: monospace;
 
-    font-size: 9px;
+    font-size: 8px;
 
-    transition: .25s;
+    cursor: pointer;
 
 }
 
 
-.share-message.show {
+.comment-delete:hover {
 
-    opacity: 1;
+    background: var(--red);
 
-    transform:
-        translateX(-50%)
-        translateY(0);
+    color: white;
+
+}
+
+
+.no-comments {
+
+    padding: 40px 10px;
+
+    text-align: center;
+
+    color: #756a79;
+
+    font-family: monospace;
+
+    font-size: 9px;
 
 }
 
@@ -826,7 +793,7 @@ footer strong {
 
 
 /* =========================================================
-   MOBILE
+   RESPONSIVE
 ========================================================= */
 
 @media(max-width:650px) {
@@ -834,7 +801,7 @@ footer strong {
     .container {
 
         width:
-            calc(100% - 14px);
+            calc(100% - 16px);
 
     }
 
@@ -844,35 +811,86 @@ footer strong {
 
     }
 
-    .player-card {
-
-        padding: 9px;
-
-    }
-
     .video-title {
 
         font-size: 17px;
 
     }
 
-    .comment-form {
+    .video-container iframe {
 
-        flex-direction: column;
-
-    }
-
-    .comment-submit {
-
-        width: 100%;
+        min-height: 220px;
 
     }
 
-    .action-button {
+    .video-info {
 
-        flex: 1;
+        padding: 16px;
 
     }
+
+    .comments-panel {
+
+        padding: 16px;
+
+    }
+
+}
+
+
+/* =========================================================
+   SHARE MESSAGE
+========================================================= */
+
+.share-message {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 25px;
+
+    transform:
+        translateX(-50%)
+        translateY(20px);
+
+    background:
+        #1d1423;
+
+    border:
+        1px solid
+        rgba(255,183,213,.25);
+
+    color: var(--pink);
+
+    padding:
+        10px
+        14px;
+
+    border-radius: 9px;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: .25s;
+
+    z-index: 20000;
+
+}
+
+
+.share-message.show {
+
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
 
 }
 
@@ -880,48 +898,44 @@ footer strong {
 
 </head>
 
+
 <body>
 
 
 <div class="container">
 
 
-<!-- =====================================================
-     BACK
-===================================================== -->
+    <!-- =====================================================
+         BACK
+    ===================================================== -->
 
-<div class="back-area">
+    <div class="back-area">
 
-    <button
-        class="back-button"
-        onclick="goBack()"
-    >
-        ← BACK TO ARCHIVE
-    </button>
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← BACK TO ARCHIVE
+        </button>
 
-</div>
-
-
-<!-- =====================================================
-     WATCH
-===================================================== -->
-
-<section class="watch-section">
-
-    <div class="player-card">
+    </div>
 
 
-        <!-- PLAYER -->
+    <!-- =====================================================
+         VIDEO
+    ===================================================== -->
+
+    <section class="video-panel">
 
         <div
-            id="player"
-            class="player"
+            id="videoContainer"
+            class="video-container"
         >
 
-            <div class="loading">
+            <div class="video-loading">
 
                 <div class="loading-face">
-                    ♡
+                    (⁠⊙⁠_⁠☉⁠)
                 </div>
 
                 loading tape...
@@ -931,189 +945,153 @@ footer strong {
         </div>
 
 
-        <!-- TITLE -->
+        <div class="video-info">
 
-        <div
-            id="videoTitle"
-            class="video-title"
-        >
-            loading...
+            <h1
+                id="videoTitle"
+                class="video-title"
+            >
+                loading...
+            </h1>
+
+
+            <div
+                id="videoMeta"
+                class="video-meta"
+            >
+                MEDIA_ARCHIVE // TAPE
+            </div>
+
+
+            <div class="actions">
+
+
+                <button
+                    id="likeButton"
+                    class="action-btn"
+                    onclick="likeVideo()"
+                >
+                    ♡ LIKE
+                    <span id="likeCount">0</span>
+                </button>
+
+
+                <button
+                    id="dislikeButton"
+                    class="action-btn"
+                    onclick="dislikeVideo()"
+                >
+                    ♢ DISLIKE
+                    <span id="dislikeCount">0</span>
+                </button>
+
+
+                <button
+                    class="action-btn"
+                    onclick="shareVideo()"
+                >
+                    ↗ SHARE
+                </button>
+
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         COMMENTS
+    ===================================================== -->
+
+    <section class="comments-panel">
+
+
+        <div class="comments-title">
+            💬 COMMENTS
+        </div>
+
+
+        <div class="comments-subtitle">
+            leave something behind in the archive...
+        </div>
+
+
+        <div class="comment-form">
+
+
+            <textarea
+                id="commentInput"
+                class="comment-input"
+                placeholder="write a comment..."
+            ></textarea>
+
+
+            <input
+                id="commentName"
+                class="comment-name"
+                type="text"
+                maxlength="40"
+                placeholder="your name..."
+            >
+
+
+            <button
+                class="comment-submit"
+                onclick="addComment()"
+            >
+                POST COMMENT
+            </button>
+
+
         </div>
 
 
         <div
-            id="videoMeta"
-            class="video-meta"
+            id="commentsList"
+            class="comments-list"
         >
-            📼 TAPE &nbsp; // &nbsp; LOADING
+
+            <div class="no-comments">
+                loading comments...
+            </div>
 
         </div>
 
 
-        <!-- ACTIONS -->
-
-        <div class="action-bar">
+    </section>
 
 
-            <button
-                id="likeButton"
-                class="action-button"
-                onclick="toggleLike()"
-            >
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
 
-                ♡ LIKE
-                <span id="likeCount">
-                    0
-                </span>
+    <footer>
 
-            </button>
+        <strong>
+            ♡ かわいいけど、ちょっと変 ♡
+        </strong>
 
+        <br>
 
-            <button
-                id="dislikeButton"
-                class="action-button"
-                onclick="toggleDislike()"
-            >
+        MEDIA_ARCHIVE // 秘密のアーカイブ
 
-                ♢ DISLIKE
-                <span id="dislikeCount">
-                    0
-                </span>
+        <br>
 
-            </button>
+        [ tape index online ] [ system stable ]
 
-
-            <button
-                class="action-button share"
-                onclick="shareVideo()"
-            >
-
-                ↗ SHARE
-
-            </button>
-
-
-            <button
-                class="action-button"
-                onclick="scrollToComments()"
-            >
-
-                💬 COMMENTS
-                <span id="commentCount">
-                    0
-                </span>
-
-            </button>
-
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-<!-- =====================================================
-     COMMENTS
-===================================================== -->
-
-<section
-    id="commentsSection"
-    class="comments-card"
->
-
-
-    <div class="comments-title">
-
-        💬 COMMENTS
-
-    </div>
-
-
-    <div class="comments-subtitle">
-
-        leave a little note in the archive...
-
-    </div>
-
-
-    <div class="comment-form">
-
-
-        <input
-            id="commentInput"
-            class="comment-input"
-            type="text"
-            maxlength="500"
-            placeholder="write something..."
-            autocomplete="off"
-        >
-
-
-        <button
-            class="comment-submit"
-            onclick="addComment()"
-        >
-
-            POST ♡
-
-        </button>
-
-
-    </div>
-
-
-    <div
-        id="commentList"
-        class="comment-list"
-    >
-
-        <div class="no-comments">
-
-            loading comments...
-
-        </div>
-
-    </div>
-
-
-</section>
-
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
-
-<footer>
-
-    <strong>
-        ♡ かわいいけど、ちょっと変 ♡
-    </strong>
-
-    <br>
-
-    MEDIA_ARCHIVE // 秘密のアーカイブ
-
-    <br>
-
-    [ tape index online ] [ system stable ]
-
-</footer>
+    </footer>
 
 
 </div>
 
 
-<!-- SHARE TOAST -->
-
 <div
     id="shareMessage"
     class="share-message"
 >
-
     ♡ link copied
-
 </div>
 
 
@@ -1146,9 +1124,7 @@ const firebaseConfig = {
 };
 
 
-firebase.initializeApp(
-    firebaseConfig
-);
+firebase.initializeApp(firebaseConfig);
 
 
 const db =
@@ -1156,7 +1132,18 @@ const db =
 
 
 /* =========================================================
-   GET VIDEO ID
+   ADMIN
+========================================================= */
+
+let isAdmin = false;
+
+const ADMIN_USERNAME = "tanishq";
+
+const ADMIN_PASSWORD = "ssssss";
+
+
+/* =========================================================
+   VIDEO ID
 ========================================================= */
 
 const urlParams =
@@ -1169,28 +1156,82 @@ const videoId =
     urlParams.get("id");
 
 
-/* =========================================================
-   STATE
-========================================================= */
-
 let currentVideo = null;
 
-let liked = false;
 
-let disliked = false;
+/* =========================================================
+   SIMPLE USER ID
+========================================================= */
 
-let commentsUnsubscribe = null;
+/*
+   We don't use Firebase Authentication for now.
+
+   A random ID is stored in localStorage.
+
+   This lets the same browser recognize
+   which comments belong to the current user.
+*/
+
+let currentUserId =
+    localStorage.getItem(
+        "mediaArchiveUserId"
+    );
+
+
+if (!currentUserId) {
+
+    currentUserId =
+        "user_" +
+        Math.random()
+            .toString(36)
+            .substring(2, 12) +
+        "_" +
+        Date.now();
+
+    localStorage.setItem(
+        "mediaArchiveUserId",
+        currentUserId
+    );
+
+}
 
 
 /* =========================================================
-   CHECK ID
+   REACTION USER ID
+========================================================= */
+
+let reactionUserId =
+    localStorage.getItem(
+        "mediaArchiveReactionId"
+    );
+
+
+if (!reactionUserId) {
+
+    reactionUserId =
+        "reaction_" +
+        Math.random()
+            .toString(36)
+            .substring(2, 14) +
+        "_" +
+        Date.now();
+
+    localStorage.setItem(
+        "mediaArchiveReactionId",
+        reactionUserId
+    );
+
+}
+
+
+/* =========================================================
+   LOAD VIDEO
 ========================================================= */
 
 if (!videoId) {
 
     showError(
-        "NO TAPE ID",
-        "This watch page does not contain a video ID."
+        "No video ID was provided."
     );
 
 }
@@ -1220,8 +1261,7 @@ async function loadVideo() {
         if (!doc.exists) {
 
             showError(
-                "TAPE NOT FOUND",
-                "This video no longer exists in the archive."
+                "Tape not found in the archive."
             );
 
             return;
@@ -1238,13 +1278,52 @@ async function loadVideo() {
         };
 
 
-        renderVideo();
+        document.title =
+            "MEDIA_ARCHIVE ♡ " +
+            (
+                currentVideo.title ||
+                "WATCH"
+            );
 
 
-        loadReactions();
+        document.getElementById(
+            "videoTitle"
+        ).textContent =
+            currentVideo.title ||
+            "untitled tape";
+
+
+        document.getElementById(
+            "videoMeta"
+        ).textContent =
+            "MEDIA_ARCHIVE // TAPE_" +
+            videoId;
+
+
+        /*
+           IMPORTANT:
+
+           We use the original rawInput.
+
+           We do NOT add:
+           - privacy settings
+           - title settings
+           - warning settings
+           - autoplay
+           - query parameters
+
+           The embed remains exactly as saved.
+        */
+
+        loadOriginalEmbed(
+            currentVideo.rawInput
+        );
+
+
+        loadReactionCounts();
+
 
         loadComments();
-
 
     }
 
@@ -1255,9 +1334,8 @@ async function loadVideo() {
             error
         );
 
-
         showError(
-            "ARCHIVE CONNECTION FAILED",
+            "Could not load this tape.\n\n" +
             error.message
         );
 
@@ -1267,61 +1345,24 @@ async function loadVideo() {
 
 
 /* =========================================================
-   RENDER VIDEO
+   ORIGINAL EMBED
 ========================================================= */
 
-function renderVideo() {
+function loadOriginalEmbed(
+    rawInput
+) {
 
-    const title =
-        currentVideo.title ||
-        "untitled tape";
-
-
-    document.getElementById(
-        "videoTitle"
-    ).textContent =
-        title;
-
-
-    document.getElementById(
-        "videoMeta"
-    ).textContent =
-        "📼 TAPE_" +
-        videoId.slice(0,8) +
-        " // ARCHIVED";
-
-
-    const player =
+    const container =
         document.getElementById(
-            "player"
+            "videoContainer"
         );
 
 
-    const rawInput =
-        currentVideo.rawInput;
+    if (!rawInput) {
 
-
-    const embedURL =
-        extractVideoURL(
-            rawInput
+        showError(
+            "This tape has no embed code."
         );
-
-
-    if (!embedURL) {
-
-        player.innerHTML = `
-
-            <div class="error-box">
-
-                EMBED CODE INVALID
-
-                <small>
-                    No usable video URL was found.
-                </small>
-
-            </div>
-
-        `;
 
         return;
 
@@ -1329,39 +1370,114 @@ function renderVideo() {
 
 
     /*
-       We generate the iframe ourselves
-       from the stored URL.
+       If rawInput is an iframe,
+       extract the iframe HTML itself.
 
-       This avoids putting arbitrary
-       HTML directly into the page.
+       We intentionally don't modify
+       its src or query parameters.
     */
 
-    player.innerHTML = `
+    const iframeMatch =
+        rawInput.match(
+            /<iframe[\s\S]*?<\/iframe>/i
+        );
 
-        <iframe
 
-            src="${escapeHTML(
-                embedURL
-            )}"
+    if (iframeMatch) {
 
-            title="${escapeHTML(
-                title
-            )}"
+        container.innerHTML =
+            iframeMatch[0];
 
-            allow="fullscreen"
+        return;
 
-            sandbox="
-                allow-same-origin
-                allow-scripts
-                allow-popups
-                allow-forms
-            "
+    }
 
-            style="
-                border:0;
-            "
 
-        ></iframe>
+    /*
+       If only a URL was saved,
+       create a basic iframe.
+
+       This is only the fallback.
+    */
+
+    const trimmed =
+        rawInput.trim();
+
+
+    if (
+        trimmed.startsWith(
+            "https://"
+        ) ||
+        trimmed.startsWith(
+            "http://"
+        )
+    ) {
+
+        const iframe =
+            document.createElement(
+                "iframe"
+            );
+
+
+        iframe.src =
+            trimmed;
+
+
+        iframe.allow =
+            "fullscreen";
+
+
+        iframe.style.border =
+            "0";
+
+
+        iframe.setAttribute(
+            "allowfullscreen",
+            ""
+        );
+
+
+        container.innerHTML = "";
+
+
+        container.appendChild(
+            iframe
+        );
+
+
+        return;
+
+    }
+
+
+    showError(
+        "Invalid embed code."
+    );
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showError(
+    message
+) {
+
+    document.getElementById(
+        "videoContainer"
+    ).innerHTML = `
+
+        <div class="video-loading">
+
+            <div class="loading-face">
+                (⁠;⁠_⁠;⁠)
+            </div>
+
+            ${escapeHTML(message)}
+
+        </div>
 
     `;
 
@@ -1369,125 +1485,293 @@ function renderVideo() {
 
 
 /* =========================================================
-   EXTRACT VIDEO URL
+   BACK
 ========================================================= */
 
-function extractVideoURL(
-    rawInput
-) {
+function goBack() {
 
-    if (!rawInput) {
-
-        return null;
-
-    }
-
-
-    const input =
-        rawInput.trim();
-
-
-    /*
-       If an iframe was saved,
-       extract src.
-    */
-
-    if (
-        input
-            .toLowerCase()
-            .startsWith("<iframe")
-    ) {
-
-        const match =
-            input.match(
-                /src\s*=\s*["']([^"']+)["']/i
-            );
-
-
-        if (match) {
-
-            return match[1];
-
-        }
-
-    }
-
-
-    /*
-       Otherwise assume
-       the field contains a URL.
-    */
-
-    if (
-        input.startsWith(
-            "https://"
-        ) ||
-        input.startsWith(
-            "http://"
-        )
-    ) {
-
-        return input;
-
-    }
-
-
-    return null;
+    window.location.href =
+        "archive.html";
 
 }
 
 
 /* =========================================================
-   REACTIONS
+   REACTION DOCUMENT ID
 ========================================================= */
 
-async function loadReactions() {
+function reactionDocId() {
+
+    return (
+        videoId +
+        "_" +
+        reactionUserId
+    );
+
+}
+
+
+/* =========================================================
+   LIKE VIDEO
+========================================================= */
+
+async function likeVideo() {
+
+    if (!videoId) {
+        return;
+    }
+
+
+    const ref =
+        db
+            .collection("videoReactions")
+            .doc(
+                reactionDocId()
+            );
+
 
     try {
 
-        const reactionRef =
-            db
-                .collection("videos")
-                .doc(videoId)
-                .collection("stats")
-                .doc("reactions");
+        const existing =
+            await ref.get();
 
 
-        const doc =
-            await reactionRef.get();
+        if (
+            existing.exists &&
+            existing.data().reaction ===
+                "like"
+        ) {
 
+            await ref.delete();
 
-        if (!doc.exists) {
+        }
 
-            document.getElementById(
-                "likeCount"
-            ).textContent = "0";
+        else {
 
+            await ref.set({
 
-            document.getElementById(
-                "dislikeCount"
-            ).textContent = "0";
+                videoId:
+                    videoId,
 
+                userId:
+                    reactionUserId,
 
-            return;
+                reaction:
+                    "like",
+
+                updatedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
 
         }
 
 
-        const data =
-            doc.data();
+        loadReactionCounts();
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "LIKE ERROR:",
+            error
+        );
+
+        alert(
+            "Could not like this video:\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DISLIKE VIDEO
+========================================================= */
+
+async function dislikeVideo() {
+
+    if (!videoId) {
+        return;
+    }
+
+
+    const ref =
+        db
+            .collection("videoReactions")
+            .doc(
+                reactionDocId()
+            );
+
+
+    try {
+
+        const existing =
+            await ref.get();
+
+
+        if (
+            existing.exists &&
+            existing.data().reaction ===
+                "dislike"
+        ) {
+
+            await ref.delete();
+
+        }
+
+        else {
+
+            await ref.set({
+
+                videoId:
+                    videoId,
+
+                userId:
+                    reactionUserId,
+
+                reaction:
+                    "dislike",
+
+                updatedAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+        }
+
+
+        loadReactionCounts();
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "DISLIKE ERROR:",
+            error
+        );
+
+        alert(
+            "Could not dislike this video:\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD REACTION COUNTS
+========================================================= */
+
+async function loadReactionCounts() {
+
+    try {
+
+        const snapshot =
+            await db
+                .collection(
+                    "videoReactions"
+                )
+                .where(
+                    "videoId",
+                    "==",
+                    videoId
+                )
+                .get();
+
+
+        let likes = 0;
+
+        let dislikes = 0;
+
+        let myReaction = null;
+
+
+        snapshot.forEach(
+            doc => {
+
+                const data =
+                    doc.data();
+
+
+                if (
+                    data.reaction ===
+                    "like"
+                ) {
+
+                    likes++;
+
+                }
+
+
+                if (
+                    data.reaction ===
+                    "dislike"
+                ) {
+
+                    dislikes++;
+
+                }
+
+
+                if (
+                    data.userId ===
+                    reactionUserId
+                ) {
+
+                    myReaction =
+                        data.reaction;
+
+                }
+
+            }
+        );
 
 
         document.getElementById(
             "likeCount"
         ).textContent =
-            data.likes || 0;
+            likes;
 
 
         document.getElementById(
             "dislikeCount"
         ).textContent =
-            data.dislikes || 0;
+            dislikes;
+
+
+        const likeButton =
+            document.getElementById(
+                "likeButton"
+            );
+
+
+        const dislikeButton =
+            document.getElementById(
+                "dislikeButton"
+            );
+
+
+        likeButton.classList.toggle(
+            "active-like",
+            myReaction === "like"
+        );
+
+
+        dislikeButton.classList.toggle(
+            "active-dislike",
+            myReaction === "dislike"
+        );
 
     }
 
@@ -1504,623 +1788,12 @@ async function loadReactions() {
 
 
 /* =========================================================
-   LIKE
-========================================================= */
-
-async function toggleLike() {
-
-    if (!videoId) {
-        return;
-    }
-
-
-    const ref =
-        db
-            .collection("videos")
-            .doc(videoId)
-            .collection("stats")
-            .doc("reactions");
-
-
-    try {
-
-        await db.runTransaction(
-            async transaction => {
-
-                const doc =
-                    await transaction.get(
-                        ref
-                    );
-
-
-                const data =
-                    doc.exists
-                        ?
-                    doc.data()
-                        :
-                    {
-                        likes: 0,
-                        dislikes: 0
-                    };
-
-
-                let likes =
-                    Number(
-                        data.likes || 0
-                    );
-
-
-                let dislikes =
-                    Number(
-                        data.dislikes || 0
-                    );
-
-
-                if (!liked) {
-
-                    likes++;
-
-                    liked = true;
-
-
-                    if (disliked) {
-
-                        dislikes =
-                            Math.max(
-                                0,
-                                dislikes - 1
-                            );
-
-                        disliked = false;
-
-                    }
-
-                }
-
-                else {
-
-                    likes =
-                        Math.max(
-                            0,
-                            likes - 1
-                        );
-
-                    liked = false;
-
-                }
-
-
-                transaction.set(
-                    ref,
-                    {
-                        likes: likes,
-                        dislikes: dislikes
-                    },
-                    {
-                        merge: true
-                    }
-                );
-
-            }
-        );
-
-
-        updateReactionUI();
-
-        loadReactions();
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "LIKE ERROR:",
-            error
-        );
-
-
-        alert(
-            "Could not save like:\n" +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   DISLIKE
-========================================================= */
-
-async function toggleDislike() {
-
-    if (!videoId) {
-        return;
-    }
-
-
-    const ref =
-        db
-            .collection("videos")
-            .doc(videoId)
-            .collection("stats")
-            .doc("reactions");
-
-
-    try {
-
-        await db.runTransaction(
-            async transaction => {
-
-                const doc =
-                    await transaction.get(
-                        ref
-                    );
-
-
-                const data =
-                    doc.exists
-                        ?
-                    doc.data()
-                        :
-                    {
-                        likes: 0,
-                        dislikes: 0
-                    };
-
-
-                let likes =
-                    Number(
-                        data.likes || 0
-                    );
-
-
-                let dislikes =
-                    Number(
-                        data.dislikes || 0
-                    );
-
-
-                if (!disliked) {
-
-                    dislikes++;
-
-                    disliked = true;
-
-
-                    if (liked) {
-
-                        likes =
-                            Math.max(
-                                0,
-                                likes - 1
-                            );
-
-                        liked = false;
-
-                    }
-
-                }
-
-                else {
-
-                    dislikes =
-                        Math.max(
-                            0,
-                            dislikes - 1
-                        );
-
-                    disliked = false;
-
-                }
-
-
-                transaction.set(
-                    ref,
-                    {
-                        likes: likes,
-                        dislikes: dislikes
-                    },
-                    {
-                        merge: true
-                    }
-                );
-
-            }
-        );
-
-
-        updateReactionUI();
-
-        loadReactions();
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "DISLIKE ERROR:",
-            error
-        );
-
-
-        alert(
-            "Could not save dislike:\n" +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   REACTION UI
-========================================================= */
-
-function updateReactionUI() {
-
-    const likeButton =
-        document.getElementById(
-            "likeButton"
-        );
-
-
-    const dislikeButton =
-        document.getElementById(
-            "dislikeButton"
-        );
-
-
-    likeButton.classList.toggle(
-        "active-like",
-        liked
-    );
-
-
-    dislikeButton.classList.toggle(
-        "active-dislike",
-        disliked
-    );
-
-}
-
-
-/* =========================================================
-   COMMENTS
-========================================================= */
-
-function loadComments() {
-
-    if (
-        commentsUnsubscribe
-    ) {
-
-        commentsUnsubscribe();
-
-    }
-
-
-    commentsUnsubscribe =
-        db
-            .collection("comments")
-            .where(
-                "videoId",
-                "==",
-                videoId
-            )
-            .onSnapshot(
-
-                snapshot => {
-
-                    const comments =
-                        snapshot.docs
-                            .map(
-                                doc => ({
-
-                                    id:
-                                        doc.id,
-
-                                    ...doc.data()
-
-                                })
-                            );
-
-
-                    comments.sort(
-                        (
-                            a,
-                            b
-                        ) => {
-
-                            const aTime =
-                                a.createdAt
-                                    ?
-                                a.createdAt
-                                    .toMillis()
-                                    :
-                                0;
-
-
-                            const bTime =
-                                b.createdAt
-                                    ?
-                                b.createdAt
-                                    .toMillis()
-                                    :
-                                0;
-
-
-                            return (
-                                bTime -
-                                aTime
-                            );
-
-                        }
-                    );
-
-
-                    renderComments(
-                        comments
-                    );
-
-                },
-
-                error => {
-
-                    console.error(
-                        "COMMENTS ERROR:",
-                        error
-                    );
-
-
-                    document.getElementById(
-                        "commentList"
-                    ).innerHTML = `
-
-                        <div class="no-comments">
-
-                            comments unavailable
-
-                        </div>
-
-                    `;
-
-                }
-
-            );
-
-}
-
-
-/* =========================================================
-   RENDER COMMENTS
-========================================================= */
-
-function renderComments(
-    comments
-) {
-
-    document.getElementById(
-        "commentCount"
-    ).textContent =
-        comments.length;
-
-
-    const list =
-        document.getElementById(
-            "commentList"
-        );
-
-
-    if (!comments.length) {
-
-        list.innerHTML = `
-
-            <div class="no-comments">
-
-                (⁠｡⁠•́⁠︿⁠•̀⁠｡⁠)
-
-                <br><br>
-
-                no comments yet...
-
-                <br>
-
-                be the first little archivist ♡
-
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    list.innerHTML =
-        comments
-            .map(
-                comment => `
-
-                    <div
-                        class="comment"
-                    >
-
-                        <div
-                            class="comment-header"
-                        >
-
-                            <span
-                                class="comment-user"
-                            >
-
-                                ${escapeHTML(
-                                    comment.username ||
-                                    "anonymous"
-                                )}
-
-                            </span>
-
-
-                            <span
-                                class="comment-time"
-                            >
-
-                                ${formatTimestamp(
-                                    comment.createdAt
-                                )}
-
-                            </span>
-
-                        </div>
-
-
-                        <div
-                            class="comment-text"
-                        >
-
-                            ${escapeHTML(
-                                comment.text ||
-                                ""
-                            )}
-
-                        </div>
-
-                    </div>
-
-                `
-            )
-            .join("");
-
-}
-
-
-/* =========================================================
-   ADD COMMENT
-========================================================= */
-
-async function addComment() {
-
-    const input =
-        document.getElementById(
-            "commentInput"
-        );
-
-
-    const text =
-        input.value.trim();
-
-
-    if (!text) {
-
-        return;
-
-    }
-
-
-    if (!videoId) {
-
-        return;
-
-    }
-
-
-    const button =
-        document.querySelector(
-            ".comment-submit"
-        );
-
-
-    button.disabled = true;
-
-
-    try {
-
-        await db
-            .collection("comments")
-            .add({
-
-                videoId:
-                    videoId,
-
-                username:
-                    "anonymous",
-
-                text:
-                    text,
-
-                createdAt:
-                    firebase.firestore
-                        .FieldValue
-                        .serverTimestamp()
-
-            });
-
-
-        input.value = "";
-
-    }
-
-    catch(error) {
-
-        console.error(
-            "COMMENT ERROR:",
-            error
-        );
-
-
-        alert(
-            "Could not post comment:\n" +
-            error.message
-        );
-
-    }
-
-    finally {
-
-        button.disabled = false;
-
-    }
-
-}
-
-
-/* =========================================================
-   ENTER TO COMMENT
-========================================================= */
-
-document
-    .getElementById(
-        "commentInput"
-    )
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key ===
-                "Enter"
-            ) {
-
-                event.preventDefault();
-
-                addComment();
-
-            }
-
-        }
-    );
-
-
-/* =========================================================
    SHARE
 ========================================================= */
 
 async function shareVideo() {
 
-    const url =
+    const shareURL =
         window.location.href;
 
 
@@ -2133,51 +1806,68 @@ async function shareVideo() {
             await navigator.share({
 
                 title:
-                    currentVideo
-                        ?.title ||
+                    currentVideo?.title ||
                     "MEDIA_ARCHIVE",
 
-                text:
-                    "Check out this tape",
-
                 url:
-                    url
+                    shareURL
 
             });
 
-        }
-
-        else if (
-            navigator.clipboard
-        ) {
-
-            await navigator
-                .clipboard
-                .writeText(
-                    url
-                );
-
-
-            showShareMessage();
+            return;
 
         }
 
-        else {
 
-            prompt(
-                "Copy this link:",
-                url
-            );
+        await navigator.clipboard.writeText(
+            shareURL
+        );
 
-        }
+
+        showShareMessage(
+            "♡ link copied"
+        );
 
     }
 
     catch(error) {
 
-        console.log(
-            "Share cancelled"
-        );
+        /*
+           User cancelled native share.
+           Don't show an error.
+        */
+
+        if (
+            error &&
+            error.name ===
+                "AbortError"
+        ) {
+
+            return;
+
+        }
+
+
+        try {
+
+            await navigator.clipboard.writeText(
+                shareURL
+            );
+
+            showShareMessage(
+                "♡ link copied"
+            );
+
+        }
+
+        catch(copyError) {
+
+            prompt(
+                "Copy this link:",
+                shareURL
+            );
+
+        }
 
     }
 
@@ -2185,15 +1875,21 @@ async function shareVideo() {
 
 
 /* =========================================================
-   SHARE TOAST
+   SHARE MESSAGE
 ========================================================= */
 
-function showShareMessage() {
+function showShareMessage(
+    text
+) {
 
     const message =
         document.getElementById(
             "shareMessage"
         );
+
+
+    message.textContent =
+        text;
 
 
     message.classList.add(
@@ -2209,128 +1905,511 @@ function showShareMessage() {
             );
 
         },
-        1800
+        2000
     );
 
 }
 
 
 /* =========================================================
-   SCROLL COMMENTS
+   ADD COMMENT
 ========================================================= */
 
-function scrollToComments() {
+async function addComment() {
 
-    document
-        .getElementById(
-            "commentsSection"
-        )
-        .scrollIntoView({
-
-            behavior:
-                "smooth"
-
-        });
-
-}
+    if (!videoId) {
+        return;
+    }
 
 
-/* =========================================================
-   BACK
-========================================================= */
+    const text =
+        document.getElementById(
+            "commentInput"
+        ).value.trim();
 
-function goBack() {
 
-    if (
-        document.referrer &&
-        document.referrer
-            .includes(
-                window.location.hostname
-            )
-    ) {
+    const username =
+        document.getElementById(
+            "commentName"
+        ).value.trim();
 
-        history.back();
+
+    if (!username) {
+
+        alert(
+            "Please enter your name."
+        );
+
+        return;
 
     }
 
-    else {
 
-        window.location.href =
-            "index.html";
+    if (!text) {
+
+        alert(
+            "Please write a comment."
+        );
+
+        return;
 
     }
 
-}
 
+    if (text.length > 1000) {
 
-/* =========================================================
-   ERROR
-========================================================= */
+        alert(
+            "Comment is too long."
+        );
 
-function showError(
-    title,
-    message
-) {
-
-    document.getElementById(
-        "player"
-    ).innerHTML = `
-
-        <div class="error-box">
-
-            ${escapeHTML(
-                title
-            )}
-
-            <small>
-
-                ${escapeHTML(
-                    message
-                )}
-
-            </small>
-
-        </div>
-
-    `;
-
-
-    document.getElementById(
-        "videoTitle"
-    ).textContent =
-        "Tape unavailable";
-
-}
-
-
-/* =========================================================
-   FORMAT TIMESTAMP
-========================================================= */
-
-function formatTimestamp(
-    timestamp
-) {
-
-    if (!timestamp) {
-
-        return "just now";
+        return;
 
     }
 
 
     try {
 
-        return timestamp
-            .toDate()
-            .toLocaleString();
+        await db
+            .collection("comments")
+            .add({
+
+                videoId:
+                    videoId,
+
+                text:
+                    text,
+
+                username:
+                    username,
+
+                userId:
+                    currentUserId,
+
+                createdAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        document.getElementById(
+            "commentInput"
+        ).value = "";
+
+
+        showShareMessage(
+            "♡ comment posted"
+        );
 
     }
 
     catch(error) {
 
-        return "archived";
+        console.error(
+            "COMMENT ERROR:",
+            error
+        );
+
+        alert(
+            "Could not post comment:\n" +
+            error.message
+        );
 
     }
+
+}
+
+
+/* =========================================================
+   LOAD COMMENTS
+========================================================= */
+
+function loadComments() {
+
+    db
+        .collection("comments")
+        .where(
+            "videoId",
+            "==",
+            videoId
+        )
+        .onSnapshot(
+
+            snapshot => {
+
+                const comments =
+                    snapshot.docs.map(
+                        doc => ({
+
+                            id:
+                                doc.id,
+
+                            ...doc.data()
+
+                        })
+                    );
+
+
+                comments.sort(
+                    (
+                        a,
+                        b
+                    ) => {
+
+                        const aTime =
+                            a.createdAt &&
+                            a.createdAt.toMillis
+                                ? a.createdAt.toMillis()
+                                : 0;
+
+
+                        const bTime =
+                            b.createdAt &&
+                            b.createdAt.toMillis
+                                ? b.createdAt.toMillis()
+                                : 0;
+
+
+                        return (
+                            bTime -
+                            aTime
+                        );
+
+                    }
+                );
+
+
+                renderComments(
+                    comments
+                );
+
+            },
+
+            error => {
+
+                console.error(
+                    "COMMENTS ERROR:",
+                    error
+                );
+
+
+                document.getElementById(
+                    "commentsList"
+                ).innerHTML = `
+
+                    <div class="no-comments">
+
+                        Comments unavailable.
+
+                        <br><br>
+
+                        ${escapeHTML(
+                            error.message
+                        )}
+
+                    </div>
+
+                `;
+
+            }
+
+        );
+
+}
+
+
+/* =========================================================
+   RENDER COMMENTS
+========================================================= */
+
+function renderComments(
+    comments
+) {
+
+    const list =
+        document.getElementById(
+            "commentsList"
+        );
+
+
+    if (!comments.length) {
+
+        list.innerHTML = `
+
+            <div class="no-comments">
+
+                (⁠｡⁠•́⁠︿⁠•̀⁠｡⁠)
+
+                <br><br>
+
+                no comments yet...
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        comments
+            .map(
+                comment => {
+
+                    const canDelete =
+                        isAdmin ||
+                        comment.userId ===
+                            currentUserId;
+
+
+                    return `
+
+                        <div
+                            class="comment"
+                            id="comment-${escapeHTML(
+                                comment.id
+                            )}"
+                        >
+
+                            <div class="comment-top">
+
+                                <div class="comment-user">
+
+                                    ♡ ${escapeHTML(
+                                        comment.username ||
+                                        "anonymous"
+                                    )}
+
+                                </div>
+
+
+                                <div class="comment-date">
+
+                                    ${formatDate(
+                                        comment.createdAt
+                                    )}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="comment-text">
+
+                                ${escapeHTML(
+                                    comment.text ||
+                                    ""
+                                )}
+
+                            </div>
+
+
+                            ${
+                                canDelete
+                                    ?
+                                `
+
+                                    <div class="comment-actions">
+
+                                        <button
+                                            class="comment-delete"
+                                            onclick="deleteComment('${escapeJS(
+                                                comment.id
+                                            )}')"
+                                        >
+                                            ✕ DELETE
+                                        </button>
+
+                                    </div>
+
+                                `
+                                    :
+                                ""
+                            }
+
+                        </div>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   DELETE COMMENT
+========================================================= */
+
+async function deleteComment(
+    commentId
+) {
+
+    try {
+
+        const commentRef =
+            db
+                .collection("comments")
+                .doc(commentId);
+
+
+        const commentDoc =
+            await commentRef.get();
+
+
+        if (!commentDoc.exists) {
+
+            return;
+
+        }
+
+
+        const comment =
+            commentDoc.data();
+
+
+        /*
+           Admin can delete anything.
+
+           Normal user can only delete
+           comments belonging to their
+           local user ID.
+        */
+
+        if (
+            !isAdmin &&
+            comment.userId !==
+                currentUserId
+        ) {
+
+            alert(
+                "You can only delete your own comments."
+            );
+
+            return;
+
+        }
+
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to delete this comment?"
+            );
+
+
+        if (!confirmed) {
+
+            return;
+
+        }
+
+
+        await commentRef.delete();
+
+
+        showShareMessage(
+            "♡ comment deleted"
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "DELETE COMMENT ERROR:",
+            error
+        );
+
+        alert(
+            "Could not delete comment:\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SIMPLE ADMIN LOGIN
+========================================================= */
+
+/*
+   For now this is intentionally simple
+   and matches archive.html.
+
+   Add ?admin=login to the URL to expose
+   the small admin prompt.
+
+   Example:
+
+   watch.html?id=VIDEO_ID&admin=login
+*/
+
+
+const adminParameter =
+    urlParams.get("admin");
+
+
+if (
+    adminParameter === "login"
+) {
+
+    const username =
+        prompt(
+            "ADMIN USERNAME"
+        );
+
+
+    const password =
+        prompt(
+            "ADMIN PASSWORD"
+        );
+
+
+    if (
+        username ===
+            ADMIN_USERNAME &&
+        password ===
+            ADMIN_PASSWORD
+    ) {
+
+        isAdmin = true;
+
+        loadComments();
+
+    }
+
+}
+
+
+/* =========================================================
+   FORMAT DATE
+========================================================= */
+
+function formatDate(
+    timestamp
+) {
+
+    if (
+        !timestamp ||
+        !timestamp.toDate
+    ) {
+
+        return "just now";
+
+    }
+
+
+    const date =
+        timestamp.toDate();
+
+
+    return date.toLocaleString();
 
 }
 
@@ -2343,18 +2422,63 @@ function escapeHTML(
     value
 ) {
 
-    return String(value)
+    return String(
+        value
+    ).replace(
+        /[&<>"']/g,
+        character => ({
+
+            "&":
+                "&amp;",
+
+            "<":
+                "&lt;",
+
+            ">":
+                "&gt;",
+
+            '"':
+                "&quot;",
+
+            "'":
+                "&#039;"
+
+        }[character])
+    );
+
+}
+
+
+/* =========================================================
+   ESCAPE JS
+========================================================= */
+
+function escapeJS(
+    value
+) {
+
+    return String(
+        value
+    )
         .replace(
-            /[&<>"']/g,
-            character => ({
-
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
-
-            }[character])
+            /\\/g,
+            "\\\\"
+        )
+        .replace(
+            /'/g,
+            "\\'"
+        )
+        .replace(
+            /"/g,
+            '\\"'
+        )
+        .replace(
+            /\n/g,
+            "\\n"
+        )
+        .replace(
+            /\r/g,
+            "\\r"
         );
 
 }
@@ -2362,4 +2486,5 @@ function escapeHTML(
 </script>
 
 </body>
+
 </html>
