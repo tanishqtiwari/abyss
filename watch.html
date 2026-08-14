@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>MEDIA_ARCHIVE ♡ WATCH</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<style>
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+:root {
+
+    --bg: #08070d;
+    --bg2: #0e0a14;
+
+    --panel: #15101c;
+    --panel2: #1d1423;
+
+    --pink: #ffb7d5;
+    --hotpink: #ff4f91;
+
+    --purple: #d9b7ff;
+    --yellow: #fff0a6;
+
+    --green: #b8ff68;
+    --red: #ff4269;
+
+    --white: #fff8fc;
+    --muted: #a99caf;
+
+    --border:
+        rgba(255,183,213,.20);
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+
+    box-sizing: border-box;
+
+    margin: 0;
+
+    padding: 0;
+
+}
+
+
+html {
+
+    scroll-behavior: smooth;
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background-color: var(--bg);
+
+    background-image:
+
+        radial-gradient(
+            circle at 10% 5%,
+            rgba(255,79,145,.11),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 90% 25%,
+            rgba(217,183,255,.08),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(184,255,104,.045),
+            transparent 35%
+        ),
+
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,.012) 0px,
+            rgba(255,255,255,.012) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+
+    color: var(--white);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    overflow-x: hidden;
+
+}
+
+
+body::after {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 9999;
+
+    background:
+
+        radial-gradient(
+            ellipse at center,
+            transparent 50%,
+            rgba(0,0,0,.42) 100%
+        );
+
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+
+    width:
+        min(
+            1050px,
+            calc(100% - 24px)
+        );
+
+    margin: auto;
+
+    position: relative;
+
+    z-index: 5;
+
+    padding-bottom: 100px;
+
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.back-area {
+
+    padding-top: 18px;
+
+}
+
+
+.back-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    border:
+        1px solid
+        rgba(255,183,213,.20);
+
+    background:
+        rgba(255,183,213,.055);
+
+    color: var(--pink);
+
+    border-radius: 9px;
+
+    padding:
+        9px 12px;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.back-button:hover {
+
+    background: var(--pink);
+
+    color: #120b12;
+
+    transform:
+        translateX(-2px);
+
+}
+
+
+/* =========================================================
+   WATCH SECTION
+========================================================= */
+
+.watch-section {
+
+    margin-top: 15px;
+
+}
+
+
+/* =========================================================
+   PLAYER CARD
+========================================================= */
+
+.player-card {
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #1c1221,
+            #0e0a13
+        );
+
+    border:
+        1px solid
+        rgba(255,183,213,.16);
+
+    border-radius: 18px;
+
+    padding: 14px;
+
+    box-shadow:
+
+        0 18px 45px
+        rgba(0,0,0,.55);
+
+}
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+.player {
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    background: #000;
+
+    border-radius: 13px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(255,183,213,.12);
+
+}
+
+
+.player iframe {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    border: 0;
+
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading {
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    color: var(--muted);
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+}
+
+
+.loading-face {
+
+    font-size: 25px;
+
+    color: var(--pink);
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error-box {
+
+    padding: 50px 20px;
+
+    text-align: center;
+
+    color: var(--red);
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+}
+
+
+.error-box small {
+
+    display: block;
+
+    margin-top: 10px;
+
+    color: var(--muted);
+
+}
+
+
+/* =========================================================
+   VIDEO TITLE
+========================================================= */
+
+.video-title {
+
+    margin-top: 17px;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    color: var(--white);
+
+    line-height: 1.35;
+
+}
+
+
+.video-title::before {
+
+    content: "♡ ";
+
+    color: var(--pink);
+
+}
+
+
+.video-meta {
+
+    margin-top: 7px;
+
+    color: #756b7b;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+}
+
+
+/* =========================================================
+   ACTION BAR
+========================================================= */
+
+.action-bar {
+
+    margin-top: 17px;
+
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.action-button {
+
+    border:
+        1px solid
+        rgba(255,183,213,.17);
+
+    background:
+        rgba(255,255,255,.035);
+
+    color: var(--muted);
+
+    border-radius: 10px;
+
+    padding:
+        9px 13px;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.action-button:hover {
+
+    color: var(--pink);
+
+    border-color:
+        rgba(255,183,213,.4);
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+.action-button.active-like {
+
+    color: var(--pink);
+
+    border-color: var(--pink);
+
+    background:
+        rgba(255,183,213,.10);
+
+}
+
+
+.action-button.active-dislike {
+
+    color: var(--red);
+
+    border-color: var(--red);
+
+    background:
+        rgba(255,66,105,.08);
+
+}
+
+
+.action-button.share {
+
+    color: var(--purple);
+
+}
+
+
+/* =========================================================
+   COMMENTS CARD
+========================================================= */
+
+.comments-card {
+
+    margin-top: 20px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(29,20,35,.96),
+            rgba(13,9,18,.96)
+        );
+
+    border:
+        1px solid
+        rgba(255,183,213,.16);
+
+    border-radius: 18px;
+
+    padding: 18px;
+
+    box-shadow:
+        0 15px 40px
+        rgba(0,0,0,.45);
+
+}
+
+
+.comments-title {
+
+    color: var(--pink);
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+}
+
+
+.comments-subtitle {
+
+    margin-top: 4px;
+
+    color: #716777;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+}
+
+
+/* =========================================================
+   COMMENT FORM
+========================================================= */
+
+.comment-form {
+
+    margin-top: 16px;
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+
+.comment-input {
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding:
+        11px 12px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(255,183,213,.16);
+
+    background: #0b0810;
+
+    color: white;
+
+    outline: none;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+}
+
+
+.comment-input:focus {
+
+    border-color:
+        var(--pink);
+
+}
+
+
+.comment-input::placeholder {
+
+    color: #655b69;
+
+}
+
+
+.comment-submit {
+
+    border:
+        1px solid
+        rgba(255,183,213,.25);
+
+    background:
+        rgba(255,183,213,.08);
+
+    color: var(--pink);
+
+    border-radius: 10px;
+
+    padding:
+        10px 13px;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+}
+
+
+.comment-submit:hover {
+
+    background:
+        var(--pink);
+
+    color: #120b12;
+
+}
+
+
+/* =========================================================
+   COMMENT LIST
+========================================================= */
+
+.comment-list {
+
+    margin-top: 18px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+}
+
+
+.comment {
+
+    padding: 12px;
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,.025);
+
+    border:
+        1px solid
+        rgba(255,183,213,.08);
+
+}
+
+
+.comment-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+}
+
+
+.comment-user {
+
+    color: var(--yellow);
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+}
+
+
+.comment-time {
+
+    color: #5f5665;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+}
+
+
+.comment-text {
+
+    margin-top: 7px;
+
+    color: #cfc7d1;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    word-break: break-word;
+
+}
+
+
+.no-comments {
+
+    padding: 25px;
+
+    text-align: center;
+
+    color: #625968;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+}
+
+
+/* =========================================================
+   SHARE MESSAGE
+========================================================= */
+
+.share-message {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 25px;
+
+    transform:
+        translateX(-50%)
+        translateY(20px);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 20000;
+
+    background: #1d1423;
+
+    border:
+        1px solid
+        rgba(255,183,213,.3);
+
+    color: var(--pink);
+
+    padding:
+        10px 15px;
+
+    border-radius: 10px;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    transition: .25s;
+
+}
+
+
+.share-message.show {
+
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+
+    margin-top: 45px;
+
+    text-align: center;
+
+    color: #5d5363;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    line-height: 2.2;
+
+}
+
+
+footer strong {
+
+    color: var(--pink);
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:650px) {
+
+    .container {
+
+        width:
+            calc(100% - 14px);
+
+    }
+
+    .back-area {
+
+        padding-top: 10px;
+
+    }
+
+    .player-card {
+
+        padding: 9px;
+
+    }
+
+    .video-title {
+
+        font-size: 17px;
+
+    }
+
+    .comment-form {
+
+        flex-direction: column;
+
+    }
+
+    .comment-submit {
+
+        width: 100%;
+
+    }
+
+    .action-button {
+
+        flex: 1;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="container">
+
+
+<!-- =====================================================
+     BACK
+===================================================== -->
+
+<div class="back-area">
+
+    <button
+        class="back-button"
+        onclick="goBack()"
+    >
+        ← BACK TO ARCHIVE
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     WATCH
+===================================================== -->
+
+<section class="watch-section">
+
+    <div class="player-card">
+
+
+        <!-- PLAYER -->
+
+        <div
+            id="player"
+            class="player"
+        >
+
+            <div class="loading">
+
+                <div class="loading-face">
+                    ♡
+                </div>
+
+                loading tape...
+
+            </div>
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <div
+            id="videoTitle"
+            class="video-title"
+        >
+            loading...
+        </div>
+
+
+        <div
+            id="videoMeta"
+            class="video-meta"
+        >
+            📼 TAPE &nbsp; // &nbsp; LOADING
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="action-bar">
+
+
+            <button
+                id="likeButton"
+                class="action-button"
+                onclick="toggleLike()"
+            >
+
+                ♡ LIKE
+                <span id="likeCount">
+                    0
+                </span>
+
+            </button>
+
+
+            <button
+                id="dislikeButton"
+                class="action-button"
+                onclick="toggleDislike()"
+            >
+
+                ♢ DISLIKE
+                <span id="dislikeCount">
+                    0
+                </span>
+
+            </button>
+
+
+            <button
+                class="action-button share"
+                onclick="shareVideo()"
+            >
+
+                ↗ SHARE
+
+            </button>
+
+
+            <button
+                class="action-button"
+                onclick="scrollToComments()"
+            >
+
+                💬 COMMENTS
+                <span id="commentCount">
+                    0
+                </span>
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     COMMENTS
+===================================================== -->
+
+<section
+    id="commentsSection"
+    class="comments-card"
+>
+
+
+    <div class="comments-title">
+
+        💬 COMMENTS
+
+    </div>
+
+
+    <div class="comments-subtitle">
+
+        leave a little note in the archive...
+
+    </div>
+
+
+    <div class="comment-form">
+
+
+        <input
+            id="commentInput"
+            class="comment-input"
+            type="text"
+            maxlength="500"
+            placeholder="write something..."
+            autocomplete="off"
+        >
+
+
+        <button
+            class="comment-submit"
+            onclick="addComment()"
+        >
+
+            POST ♡
+
+        </button>
+
+
+    </div>
+
+
+    <div
+        id="commentList"
+        class="comment-list"
+    >
+
+        <div class="no-comments">
+
+            loading comments...
+
+        </div>
+
+    </div>
+
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+    <strong>
+        ♡ かわいいけど、ちょっと変 ♡
+    </strong>
+
+    <br>
+
+    MEDIA_ARCHIVE // 秘密のアーカイブ
+
+    <br>
+
+    [ tape index online ] [ system stable ]
+
+</footer>
+
+
+</div>
+
+
+<!-- SHARE TOAST -->
+
+<div
+    id="shareMessage"
+    class="share-message"
+>
+
+    ♡ link copied
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyB_rZQ0-PTcw2u--0AjybOBtWnoh2xDk",
+
+    authDomain:
+        "counter-ea7c8.firebaseapp.com",
+
+    projectId:
+        "counter-ea7c8",
+
+    storageBucket:
+        "counter-ea7c8.firebasestorage.app",
+
+    messagingSenderId:
+        "976604631332",
+
+    appId:
+        "1:976604631332:web:fc0929d3231ac63a67a3b1"
+
+};
+
+
+firebase.initializeApp(
+    firebaseConfig
+);
+
+
+const db =
+    firebase.firestore();
+
+
+/* =========================================================
+   GET VIDEO ID
+========================================================= */
+
+const urlParams =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const videoId =
+    urlParams.get("id");
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentVideo = null;
+
+let liked = false;
+
+let disliked = false;
+
+let commentsUnsubscribe = null;
+
+
+/* =========================================================
+   CHECK ID
+========================================================= */
+
+if (!videoId) {
+
+    showError(
+        "NO TAPE ID",
+        "This watch page does not contain a video ID."
+    );
+
+}
+
+else {
+
+    loadVideo();
+
+}
+
+
+/* =========================================================
+   LOAD VIDEO
+========================================================= */
+
+async function loadVideo() {
+
+    try {
+
+        const doc =
+            await db
+                .collection("videos")
+                .doc(videoId)
+                .get();
+
+
+        if (!doc.exists) {
+
+            showError(
+                "TAPE NOT FOUND",
+                "This video no longer exists in the archive."
+            );
+
+            return;
+
+        }
+
+
+        currentVideo = {
+
+            id: doc.id,
+
+            ...doc.data()
+
+        };
+
+
+        renderVideo();
+
+
+        loadReactions();
+
+        loadComments();
+
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "VIDEO LOAD ERROR:",
+            error
+        );
+
+
+        showError(
+            "ARCHIVE CONNECTION FAILED",
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   RENDER VIDEO
+========================================================= */
+
+function renderVideo() {
+
+    const title =
+        currentVideo.title ||
+        "untitled tape";
+
+
+    document.getElementById(
+        "videoTitle"
+    ).textContent =
+        title;
+
+
+    document.getElementById(
+        "videoMeta"
+    ).textContent =
+        "📼 TAPE_" +
+        videoId.slice(0,8) +
+        " // ARCHIVED";
+
+
+    const player =
+        document.getElementById(
+            "player"
+        );
+
+
+    const rawInput =
+        currentVideo.rawInput;
+
+
+    const embedURL =
+        extractVideoURL(
+            rawInput
+        );
+
+
+    if (!embedURL) {
+
+        player.innerHTML = `
+
+            <div class="error-box">
+
+                EMBED CODE INVALID
+
+                <small>
+                    No usable video URL was found.
+                </small>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /*
+       We generate the iframe ourselves
+       from the stored URL.
+
+       This avoids putting arbitrary
+       HTML directly into the page.
+    */
+
+    player.innerHTML = `
+
+        <iframe
+
+            src="${escapeHTML(
+                embedURL
+            )}"
+
+            title="${escapeHTML(
+                title
+            )}"
+
+            allow="fullscreen"
+
+            sandbox="
+                allow-same-origin
+                allow-scripts
+                allow-popups
+                allow-forms
+            "
+
+            style="
+                border:0;
+            "
+
+        ></iframe>
+
+    `;
+
+}
+
+
+/* =========================================================
+   EXTRACT VIDEO URL
+========================================================= */
+
+function extractVideoURL(
+    rawInput
+) {
+
+    if (!rawInput) {
+
+        return null;
+
+    }
+
+
+    const input =
+        rawInput.trim();
+
+
+    /*
+       If an iframe was saved,
+       extract src.
+    */
+
+    if (
+        input
+            .toLowerCase()
+            .startsWith("<iframe")
+    ) {
+
+        const match =
+            input.match(
+                /src\s*=\s*["']([^"']+)["']/i
+            );
+
+
+        if (match) {
+
+            return match[1];
+
+        }
+
+    }
+
+
+    /*
+       Otherwise assume
+       the field contains a URL.
+    */
+
+    if (
+        input.startsWith(
+            "https://"
+        ) ||
+        input.startsWith(
+            "http://"
+        )
+    ) {
+
+        return input;
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =========================================================
+   REACTIONS
+========================================================= */
+
+async function loadReactions() {
+
+    try {
+
+        const reactionRef =
+            db
+                .collection("videos")
+                .doc(videoId)
+                .collection("stats")
+                .doc("reactions");
+
+
+        const doc =
+            await reactionRef.get();
+
+
+        if (!doc.exists) {
+
+            document.getElementById(
+                "likeCount"
+            ).textContent = "0";
+
+
+            document.getElementById(
+                "dislikeCount"
+            ).textContent = "0";
+
+
+            return;
+
+        }
+
+
+        const data =
+            doc.data();
+
+
+        document.getElementById(
+            "likeCount"
+        ).textContent =
+            data.likes || 0;
+
+
+        document.getElementById(
+            "dislikeCount"
+        ).textContent =
+            data.dislikes || 0;
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "REACTION LOAD ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LIKE
+========================================================= */
+
+async function toggleLike() {
+
+    if (!videoId) {
+        return;
+    }
+
+
+    const ref =
+        db
+            .collection("videos")
+            .doc(videoId)
+            .collection("stats")
+            .doc("reactions");
+
+
+    try {
+
+        await db.runTransaction(
+            async transaction => {
+
+                const doc =
+                    await transaction.get(
+                        ref
+                    );
+
+
+                const data =
+                    doc.exists
+                        ?
+                    doc.data()
+                        :
+                    {
+                        likes: 0,
+                        dislikes: 0
+                    };
+
+
+                let likes =
+                    Number(
+                        data.likes || 0
+                    );
+
+
+                let dislikes =
+                    Number(
+                        data.dislikes || 0
+                    );
+
+
+                if (!liked) {
+
+                    likes++;
+
+                    liked = true;
+
+
+                    if (disliked) {
+
+                        dislikes =
+                            Math.max(
+                                0,
+                                dislikes - 1
+                            );
+
+                        disliked = false;
+
+                    }
+
+                }
+
+                else {
+
+                    likes =
+                        Math.max(
+                            0,
+                            likes - 1
+                        );
+
+                    liked = false;
+
+                }
+
+
+                transaction.set(
+                    ref,
+                    {
+                        likes: likes,
+                        dislikes: dislikes
+                    },
+                    {
+                        merge: true
+                    }
+                );
+
+            }
+        );
+
+
+        updateReactionUI();
+
+        loadReactions();
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "LIKE ERROR:",
+            error
+        );
+
+
+        alert(
+            "Could not save like:\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DISLIKE
+========================================================= */
+
+async function toggleDislike() {
+
+    if (!videoId) {
+        return;
+    }
+
+
+    const ref =
+        db
+            .collection("videos")
+            .doc(videoId)
+            .collection("stats")
+            .doc("reactions");
+
+
+    try {
+
+        await db.runTransaction(
+            async transaction => {
+
+                const doc =
+                    await transaction.get(
+                        ref
+                    );
+
+
+                const data =
+                    doc.exists
+                        ?
+                    doc.data()
+                        :
+                    {
+                        likes: 0,
+                        dislikes: 0
+                    };
+
+
+                let likes =
+                    Number(
+                        data.likes || 0
+                    );
+
+
+                let dislikes =
+                    Number(
+                        data.dislikes || 0
+                    );
+
+
+                if (!disliked) {
+
+                    dislikes++;
+
+                    disliked = true;
+
+
+                    if (liked) {
+
+                        likes =
+                            Math.max(
+                                0,
+                                likes - 1
+                            );
+
+                        liked = false;
+
+                    }
+
+                }
+
+                else {
+
+                    dislikes =
+                        Math.max(
+                            0,
+                            dislikes - 1
+                        );
+
+                    disliked = false;
+
+                }
+
+
+                transaction.set(
+                    ref,
+                    {
+                        likes: likes,
+                        dislikes: dislikes
+                    },
+                    {
+                        merge: true
+                    }
+                );
+
+            }
+        );
+
+
+        updateReactionUI();
+
+        loadReactions();
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "DISLIKE ERROR:",
+            error
+        );
+
+
+        alert(
+            "Could not save dislike:\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   REACTION UI
+========================================================= */
+
+function updateReactionUI() {
+
+    const likeButton =
+        document.getElementById(
+            "likeButton"
+        );
+
+
+    const dislikeButton =
+        document.getElementById(
+            "dislikeButton"
+        );
+
+
+    likeButton.classList.toggle(
+        "active-like",
+        liked
+    );
+
+
+    dislikeButton.classList.toggle(
+        "active-dislike",
+        disliked
+    );
+
+}
+
+
+/* =========================================================
+   COMMENTS
+========================================================= */
+
+function loadComments() {
+
+    if (
+        commentsUnsubscribe
+    ) {
+
+        commentsUnsubscribe();
+
+    }
+
+
+    commentsUnsubscribe =
+        db
+            .collection("comments")
+            .where(
+                "videoId",
+                "==",
+                videoId
+            )
+            .onSnapshot(
+
+                snapshot => {
+
+                    const comments =
+                        snapshot.docs
+                            .map(
+                                doc => ({
+
+                                    id:
+                                        doc.id,
+
+                                    ...doc.data()
+
+                                })
+                            );
+
+
+                    comments.sort(
+                        (
+                            a,
+                            b
+                        ) => {
+
+                            const aTime =
+                                a.createdAt
+                                    ?
+                                a.createdAt
+                                    .toMillis()
+                                    :
+                                0;
+
+
+                            const bTime =
+                                b.createdAt
+                                    ?
+                                b.createdAt
+                                    .toMillis()
+                                    :
+                                0;
+
+
+                            return (
+                                bTime -
+                                aTime
+                            );
+
+                        }
+                    );
+
+
+                    renderComments(
+                        comments
+                    );
+
+                },
+
+                error => {
+
+                    console.error(
+                        "COMMENTS ERROR:",
+                        error
+                    );
+
+
+                    document.getElementById(
+                        "commentList"
+                    ).innerHTML = `
+
+                        <div class="no-comments">
+
+                            comments unavailable
+
+                        </div>
+
+                    `;
+
+                }
+
+            );
+
+}
+
+
+/* =========================================================
+   RENDER COMMENTS
+========================================================= */
+
+function renderComments(
+    comments
+) {
+
+    document.getElementById(
+        "commentCount"
+    ).textContent =
+        comments.length;
+
+
+    const list =
+        document.getElementById(
+            "commentList"
+        );
+
+
+    if (!comments.length) {
+
+        list.innerHTML = `
+
+            <div class="no-comments">
+
+                (⁠｡⁠•́⁠︿⁠•̀⁠｡⁠)
+
+                <br><br>
+
+                no comments yet...
+
+                <br>
+
+                be the first little archivist ♡
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        comments
+            .map(
+                comment => `
+
+                    <div
+                        class="comment"
+                    >
+
+                        <div
+                            class="comment-header"
+                        >
+
+                            <span
+                                class="comment-user"
+                            >
+
+                                ${escapeHTML(
+                                    comment.username ||
+                                    "anonymous"
+                                )}
+
+                            </span>
+
+
+                            <span
+                                class="comment-time"
+                            >
+
+                                ${formatTimestamp(
+                                    comment.createdAt
+                                )}
+
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            class="comment-text"
+                        >
+
+                            ${escapeHTML(
+                                comment.text ||
+                                ""
+                            )}
+
+                        </div>
+
+                    </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   ADD COMMENT
+========================================================= */
+
+async function addComment() {
+
+    const input =
+        document.getElementById(
+            "commentInput"
+        );
+
+
+    const text =
+        input.value.trim();
+
+
+    if (!text) {
+
+        return;
+
+    }
+
+
+    if (!videoId) {
+
+        return;
+
+    }
+
+
+    const button =
+        document.querySelector(
+            ".comment-submit"
+        );
+
+
+    button.disabled = true;
+
+
+    try {
+
+        await db
+            .collection("comments")
+            .add({
+
+                videoId:
+                    videoId,
+
+                username:
+                    "anonymous",
+
+                text:
+                    text,
+
+                createdAt:
+                    firebase.firestore
+                        .FieldValue
+                        .serverTimestamp()
+
+            });
+
+
+        input.value = "";
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "COMMENT ERROR:",
+            error
+        );
+
+
+        alert(
+            "Could not post comment:\n" +
+            error.message
+        );
+
+    }
+
+    finally {
+
+        button.disabled = false;
+
+    }
+
+}
+
+
+/* =========================================================
+   ENTER TO COMMENT
+========================================================= */
+
+document
+    .getElementById(
+        "commentInput"
+    )
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key ===
+                "Enter"
+            ) {
+
+                event.preventDefault();
+
+                addComment();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+async function shareVideo() {
+
+    const url =
+        window.location.href;
+
+
+    try {
+
+        if (
+            navigator.share
+        ) {
+
+            await navigator.share({
+
+                title:
+                    currentVideo
+                        ?.title ||
+                    "MEDIA_ARCHIVE",
+
+                text:
+                    "Check out this tape",
+
+                url:
+                    url
+
+            });
+
+        }
+
+        else if (
+            navigator.clipboard
+        ) {
+
+            await navigator
+                .clipboard
+                .writeText(
+                    url
+                );
+
+
+            showShareMessage();
+
+        }
+
+        else {
+
+            prompt(
+                "Copy this link:",
+                url
+            );
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.log(
+            "Share cancelled"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SHARE TOAST
+========================================================= */
+
+function showShareMessage() {
+
+    const message =
+        document.getElementById(
+            "shareMessage"
+        );
+
+
+    message.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        () => {
+
+            message.classList.remove(
+                "show"
+            );
+
+        },
+        1800
+    );
+
+}
+
+
+/* =========================================================
+   SCROLL COMMENTS
+========================================================= */
+
+function scrollToComments() {
+
+    document
+        .getElementById(
+            "commentsSection"
+        )
+        .scrollIntoView({
+
+            behavior:
+                "smooth"
+
+        });
+
+}
+
+
+/* =========================================================
+   BACK
+========================================================= */
+
+function goBack() {
+
+    if (
+        document.referrer &&
+        document.referrer
+            .includes(
+                window.location.hostname
+            )
+    ) {
+
+        history.back();
+
+    }
+
+    else {
+
+        window.location.href =
+            "index.html";
+
+    }
+
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+function showError(
+    title,
+    message
+) {
+
+    document.getElementById(
+        "player"
+    ).innerHTML = `
+
+        <div class="error-box">
+
+            ${escapeHTML(
+                title
+            )}
+
+            <small>
+
+                ${escapeHTML(
+                    message
+                )}
+
+            </small>
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "videoTitle"
+    ).textContent =
+        "Tape unavailable";
+
+}
+
+
+/* =========================================================
+   FORMAT TIMESTAMP
+========================================================= */
+
+function formatTimestamp(
+    timestamp
+) {
+
+    if (!timestamp) {
+
+        return "just now";
+
+    }
+
+
+    try {
+
+        return timestamp
+            .toDate()
+            .toLocaleString();
+
+    }
+
+    catch(error) {
+
+        return "archived";
+
+    }
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(
+    value
+) {
+
+    return String(value)
+        .replace(
+            /[&<>"']/g,
+            character => ({
+
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+
+            }[character])
+        );
+
+}
+
+</script>
+
+</body>
+</html>
