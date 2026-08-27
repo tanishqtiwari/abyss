@@ -8,8 +8,10 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Video Archive</title>
+<meta name="theme-color"
+      content="#050505">
 
+<title>Video Archive</title>
 
 <style>
 
@@ -21,28 +23,34 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
 
-html,
 body {
-
     margin: 0;
-    padding: 0;
+    min-height: 100vh;
+    padding-bottom: 70px;
 
-    min-height: 100%;
+    background:
+        radial-gradient(
+            circle at 10% 5%,
+            rgba(255,255,255,.018),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(255,255,255,.012),
+            transparent 25%
+        ),
+        #050505;
 
-    background: #09090b;
-
-    color: #ffffff;
+    color: #ddd;
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
-}
-
-
-body {
-    padding-bottom: 60px;
 }
 
 
@@ -53,32 +61,30 @@ body {
 .header {
 
     position: sticky;
-
     top: 0;
-
     z-index: 100;
 
     background:
-        rgba(9, 9, 11, 0.95);
+        rgba(5,5,5,.94);
 
     backdrop-filter:
-        blur(14px);
+        blur(18px);
 
     border-bottom:
-        1px solid #29292f;
+        1px solid #171717;
 }
 
 
 .header-inner {
 
     width:
-        min(1200px, 94%);
+        min(1400px,94%);
+
+    min-height:
+        78px;
 
     margin:
         auto;
-
-    padding:
-        16px 0;
 
     display:
         flex;
@@ -87,61 +93,186 @@ body {
         center;
 
     gap:
-        20px;
+        24px;
 }
 
 
+/* =====================================================
+   LOGO
+===================================================== */
+
 .logo {
 
-    font-size:
-        20px;
+    width:
+        190px;
 
-    font-weight:
-        800;
+    aspect-ratio:
+        1600 / 380;
 
-    white-space:
-        nowrap;
+    flex-shrink:
+        0;
+
+    overflow:
+        hidden;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+}
+
+
+.logo img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        contain;
+
+    display:
+        block;
+
+    filter:
+        none;
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.search-wrapper {
+
+    flex:
+        1;
+
+    max-width:
+        620px;
+
+    margin:
+        auto;
 }
 
 
 .search {
 
-    flex:
-        1;
-
-    min-width:
-        0;
+    width:
+        100%;
 
     height:
-        42px;
+        43px;
 
     padding:
-        0 14px;
+        0 17px;
 
     background:
-        #141417;
-
-    color:
-        #ffffff;
+        #090909;
 
     border:
-        1px solid #303038;
+        1px solid #242424;
 
     border-radius:
-        9px;
+        11px;
 
     outline:
         none;
 
+    color:
+        #ddd;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     font-size:
-        14px;
+        13px;
+
+    box-shadow:
+        3px 3px 0 #020202;
+
+    transition:
+        .2s ease;
+}
+
+
+.search::placeholder {
+
+    color:
+        #444;
 }
 
 
 .search:focus {
 
     border-color:
-        #5b5b66;
+        #3a3a3a;
+
+    background:
+        #0c0c0c;
+}
+
+
+/* =====================================================
+   RANDOM BUTTON
+===================================================== */
+
+.random-button {
+
+    width:
+        43px;
+
+    height:
+        43px;
+
+    flex-shrink:
+        0;
+
+    border:
+        1px solid #292929;
+
+    border-radius:
+        11px;
+
+    background:
+        #0b0b0b;
+
+    color:
+        #666;
+
+    cursor:
+        pointer;
+
+    font-size:
+        21px;
+
+    box-shadow:
+        3px 3px 0 #020202;
+
+    transition:
+        .2s ease;
+}
+
+
+.random-button:hover {
+
+    color:
+        #ddd;
+
+    background:
+        #111;
+
+    transform:
+        rotate(8deg)
+        translateY(-2px);
 }
 
 
@@ -152,23 +283,59 @@ body {
 .main {
 
     width:
-        min(1200px, 94%);
+        min(1400px,94%);
 
     margin:
-        28px auto 60px;
+        0 auto;
+
+    padding:
+        38px 0 0;
+}
+
+
+/* =====================================================
+   TOP BAR
+===================================================== */
+
+.top-bar {
+
+    margin-bottom:
+        30px;
+}
+
+
+.heading {
+
+    margin:
+        0;
+
+    color:
+        #e1e1e1;
+
+    font-size:
+        28px;
+
+    font-weight:
+        700;
+
+    letter-spacing:
+        -.6px;
+
+    line-height:
+        1;
 }
 
 
 .status {
 
-    margin-bottom:
-        18px;
+    margin-top:
+        9px;
 
     color:
-        #92929c;
+        #454545;
 
     font-size:
-        13px;
+        11px;
 }
 
 
@@ -185,13 +352,13 @@ body {
         32px;
 
     margin:
-        40px auto;
+        50px auto;
 
     border:
-        3px solid #303036;
+        3px solid #262626;
 
     border-top-color:
-        #ffffff;
+        #aaa;
 
     border-radius:
         50%;
@@ -221,13 +388,10 @@ body {
         grid;
 
     grid-template-columns:
-        repeat(
-            auto-fill,
-            minmax(260px, 1fr)
-        );
+        repeat(5,minmax(0,1fr));
 
     gap:
-        18px;
+        30px 17px;
 }
 
 
@@ -237,34 +401,55 @@ body {
 
 .card {
 
-    background:
-        #121216;
-
-    border:
-        1px solid #29292f;
-
-    border-radius:
-        12px;
-
-    overflow:
-        hidden;
+    min-width:
+        0;
 
     cursor:
         pointer;
 
     transition:
-        transform .15s ease,
-        border-color .15s ease;
+        transform .2s ease;
+}
+
+
+/*
+Small irregular rotations give the
+cards the slightly handmade feel.
+*/
+
+.card:nth-child(4n+1) {
+
+    transform:
+        rotate(-.35deg);
+}
+
+
+.card:nth-child(4n+2) {
+
+    transform:
+        rotate(.25deg);
+}
+
+
+.card:nth-child(4n+3) {
+
+    transform:
+        rotate(-.15deg);
+}
+
+
+.card:nth-child(4n) {
+
+    transform:
+        rotate(.35deg);
 }
 
 
 .card:hover {
 
     transform:
-        translateY(-2px);
-
-    border-color:
-        #484850;
+        translateY(-6px)
+        rotate(0deg);
 }
 
 
@@ -277,29 +462,50 @@ body {
     position:
         relative;
 
-    aspect-ratio:
-        16 / 9;
+    width:
+        100%;
 
-    background:
-        linear-gradient(
-            135deg,
-            #1b1b20,
-            #09090b
-        );
+    aspect-ratio:
+        16 / 10;
 
     overflow:
         hidden;
 
-    display:
-        flex;
+    background:
+        linear-gradient(
+            135deg,
+            #141414,
+            #070707
+        );
 
-    align-items:
-        center;
+    border:
+        1px solid #222;
 
-    justify-content:
-        center;
+    border-radius:
+        10px;
+
+    box-shadow:
+        4px 5px 0 #020202;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
 }
 
+
+.card:hover .thumbnail {
+
+    border-color:
+        #353535;
+
+    box-shadow:
+        5px 7px 0 #010101;
+}
+
+
+/* =====================================================
+   THUMBNAIL IMAGE
+===================================================== */
 
 .thumbnail img {
 
@@ -320,32 +526,75 @@ body {
 
     object-fit:
         cover;
+
+    opacity:
+        .88;
+
+    transition:
+        transform .45s ease,
+        opacity .25s ease;
+}
+
+
+.card:hover .thumbnail img {
+
+    transform:
+        scale(1.06);
+
+    opacity:
+        .62;
 }
 
 
 /* =====================================================
-   PLAY PLACEHOLDER
+   CORNER DETAIL
 ===================================================== */
 
-.play {
+.thumbnail::before {
+
+    content:
+        "";
 
     position:
-        relative;
+        absolute;
 
     z-index:
-        2;
+        4;
+
+    left:
+        8px;
+
+    top:
+        8px;
 
     width:
-        52px;
+        6px;
 
     height:
-        52px;
+        6px;
 
     border-radius:
         50%;
 
     background:
-        rgba(255,255,255,.12);
+        #555;
+}
+
+
+/* =====================================================
+   PLAY BUTTON
+===================================================== */
+
+.play-overlay {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    z-index:
+        5;
 
     display:
         flex;
@@ -356,20 +605,71 @@ body {
     justify-content:
         center;
 
-    font-size:
-        20px;
+    opacity:
+        0;
+
+    transition:
+        opacity .2s ease;
+}
+
+
+.card:hover .play-overlay {
+
+    opacity:
+        1;
+}
+
+
+.play {
+
+    width:
+        54px;
+
+    height:
+        54px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
 
     padding-left:
         3px;
 
+    border:
+        1px solid #777;
+
+    border-radius:
+        17px;
+
+    background:
+        #151515;
+
+    color:
+        #ddd;
+
+    font-size:
+        18px;
+
+    box-shadow:
+        4px 5px 0 #000;
+
+    transform:
+        rotate(-4deg);
+
     transition:
-        transform .15s ease;
+        .2s ease;
 }
 
 
 .card:hover .play {
 
     transform:
+        rotate(4deg)
         scale(1.08);
 }
 
@@ -381,16 +681,44 @@ body {
 .title {
 
     padding:
-        13px 14px 15px;
+        11px 2px 0;
+
+    color:
+        #cfcfcf;
 
     font-size:
-        14px;
+        13px;
 
     font-weight:
         600;
 
     line-height:
         1.4;
+
+    letter-spacing:
+        -.1px;
+
+    display:
+        -webkit-box;
+
+    -webkit-line-clamp:
+        2;
+
+    -webkit-box-orient:
+        vertical;
+
+    overflow:
+        hidden;
+
+    transition:
+        color .2s ease;
+}
+
+
+.card:hover .title {
+
+    color:
+        #eee;
 }
 
 
@@ -404,16 +732,127 @@ body {
         none;
 
     padding:
-        50px 20px;
+        100px 20px;
 
     text-align:
         center;
 
     color:
-        #8d8d96;
+        #444;
 
     font-size:
-        14px;
+        13px;
+}
+
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
+.pagination {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        7px;
+
+    margin-top:
+        60px;
+}
+
+
+.page-button {
+
+    min-width:
+        39px;
+
+    height:
+        39px;
+
+    padding:
+        0 10px;
+
+    border:
+        1px solid #242424;
+
+    border-radius:
+        10px;
+
+    background:
+        #090909;
+
+    color:
+        #555;
+
+    cursor:
+        pointer;
+
+    font-size:
+        12px;
+
+    box-shadow:
+        2px 3px 0 #020202;
+
+    transition:
+        .18s ease;
+}
+
+
+.page-button:hover {
+
+    color:
+        #ccc;
+
+    background:
+        #111;
+
+    transform:
+        translateY(-2px);
+}
+
+
+.page-button.active {
+
+    color:
+        #111;
+
+    background:
+        #ddd;
+
+    border-color:
+        #ddd;
+
+    font-weight:
+        700;
+
+    transform:
+        rotate(-3deg);
+
+    box-shadow:
+        3px 4px 0 #000;
+}
+
+
+.page-button:disabled {
+
+    opacity:
+        .2;
+
+    cursor:
+        default;
+
+    transform:
+        none;
 }
 
 
@@ -445,7 +884,10 @@ body {
         18px;
 
     background:
-        rgba(0,0,0,.88);
+        rgba(0,0,0,.94);
+
+    backdrop-filter:
+        blur(10px);
 }
 
 
@@ -463,22 +905,25 @@ body {
 .modal-box {
 
     width:
-        min(1100px, 100%);
+        min(1100px,100%);
 
     max-height:
         95vh;
 
     overflow:
-        auto;
+        hidden;
 
     background:
-        #0d0d10;
+        #080808;
 
     border:
-        1px solid #29292f;
+        1px solid #292929;
 
     border-radius:
-        13px;
+        12px;
+
+    box-shadow:
+        7px 8px 0 #000;
 }
 
 
@@ -487,6 +932,12 @@ body {
 ===================================================== */
 
 .modal-header {
+
+    min-height:
+        58px;
+
+    padding:
+        9px 12px 9px 17px;
 
     display:
         flex;
@@ -500,18 +951,18 @@ body {
     gap:
         15px;
 
-    padding:
-        14px 16px;
-
     border-bottom:
-        1px solid #29292f;
+        1px solid #1d1d1d;
 }
 
 
 .modal-title {
 
+    color:
+        #ccc;
+
     font-size:
-        16px;
+        14px;
 
     font-weight:
         700;
@@ -523,32 +974,48 @@ body {
 
 .close {
 
+    width:
+        37px;
+
+    height:
+        37px;
+
     flex-shrink:
         0;
 
-    width:
-        36px;
-
-    height:
-        36px;
-
     border:
-        none;
+        1px solid #292929;
 
     border-radius:
-        8px;
+        10px;
 
     background:
-        #19191e;
+        #0c0c0c;
 
     color:
-        #ffffff;
+        #666;
 
     cursor:
         pointer;
 
     font-size:
-        22px;
+        21px;
+
+    transition:
+        .2s ease;
+}
+
+
+.close:hover {
+
+    color:
+        #ddd;
+
+    background:
+        #151515;
+
+    transform:
+        rotate(5deg);
 }
 
 
@@ -565,7 +1032,7 @@ body {
         16 / 9;
 
     background:
-        #000000;
+        #000;
 }
 
 
@@ -589,51 +1056,140 @@ body {
    MOBILE
 ===================================================== */
 
-@media (max-width: 650px) {
+@media (max-width:1200px) {
+
+    .grid {
+
+        grid-template-columns:
+            repeat(4,minmax(0,1fr));
+    }
+
+}
+
+
+@media (max-width:900px) {
+
+    .grid {
+
+        grid-template-columns:
+            repeat(3,minmax(0,1fr));
+    }
+
+}
+
+
+@media (max-width:650px) {
 
     .header-inner {
 
-        flex-direction:
-            column;
+        min-height:
+            108px;
 
-        align-items:
-            stretch;
+        padding:
+            9px 0;
+
+        flex-wrap:
+            wrap;
 
         gap:
-            10px;
+            9px;
+    }
+
+
+    .logo {
+
+        width:
+            145px;
+    }
+
+
+    .random-button {
+
+        margin-left:
+            auto;
+    }
+
+
+    .search-wrapper {
+
+        order:
+            3;
+
+        flex-basis:
+            100%;
+
+        max-width:
+            none;
+    }
+
+
+    .search {
+
+        height:
+            40px;
     }
 
 
     .main {
 
         width:
-            96%;
+            94%;
 
-        margin-top:
-            20px;
+        padding-top:
+            28px;
+    }
+
+
+    .heading {
+
+        font-size:
+            25px;
     }
 
 
     .grid {
 
         grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
+            repeat(2,minmax(0,1fr));
 
         gap:
-            10px;
+            25px 10px;
+    }
+
+
+    .thumbnail {
+
+        border-radius:
+            8px;
+
+        box-shadow:
+            3px 4px 0 #020202;
     }
 
 
     .title {
 
-        padding:
-            10px;
+        padding-top:
+            8px;
 
         font-size:
             12px;
+    }
+
+
+    .play {
+
+        width:
+            44px;
+
+        height:
+            44px;
+
+        border-radius:
+            14px;
+
+        font-size:
+            15px;
     }
 
 
@@ -661,6 +1217,38 @@ body {
 
 }
 
+
+/* =====================================================
+   TOUCH
+===================================================== */
+
+@media (hover:none) {
+
+    .play-overlay {
+
+        opacity:
+            1;
+    }
+
+
+    .card:hover {
+
+        transform:
+            none;
+    }
+
+
+    .card:hover .thumbnail img {
+
+        transform:
+            none;
+
+        opacity:
+            .88;
+    }
+
+}
+
 </style>
 
 </head>
@@ -678,18 +1266,43 @@ body {
     <div class="header-inner">
 
 
+        <!-- LOGO -->
+
         <div class="logo">
-            VIDEO ARCHIVE
+
+            <img
+                src="https://firebasestorage.googleapis.com/v0/b/counter-ea7c8.firebasestorage.app/o/sf%2F10c2d1be-e912-4443-be9a-0341e2f98808.jpeg?alt=media&token=2b4a2e40-1e85-4d36-b00d-bd910f120d0f"
+                alt="Logo"
+            >
+
         </div>
 
 
-        <input
-            id="search"
-            class="search"
-            type="search"
-            placeholder="Search videos..."
-            autocomplete="off"
+        <!-- SEARCH -->
+
+        <div class="search-wrapper">
+
+            <input
+                id="search"
+                class="search"
+                type="search"
+                placeholder="Search videos..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <!-- RANDOM -->
+
+        <button
+            id="randomButton"
+            class="random-button"
+            type="button"
+            title="Random video"
         >
+            ⤨
+        </button>
 
 
     </div>
@@ -705,13 +1318,24 @@ body {
 <main class="main">
 
 
-    <div
-        id="status"
-        class="status"
-    >
-        Loading videos...
+    <div class="top-bar">
+
+        <h1 class="heading">
+            Latest Videos
+        </h1>
+
+
+        <div
+            id="status"
+            class="status"
+        >
+            Loading videos...
+        </div>
+
     </div>
 
+
+    <!-- LOADER -->
 
     <div
         id="loader"
@@ -719,11 +1343,15 @@ body {
     ></div>
 
 
+    <!-- VIDEO GRID -->
+
     <section
         id="grid"
         class="grid"
     ></section>
 
+
+    <!-- EMPTY -->
 
     <div
         id="empty"
@@ -731,6 +1359,14 @@ body {
     >
         No videos found.
     </div>
+
+
+    <!-- PAGINATION -->
+
+    <nav
+        id="pagination"
+        class="pagination"
+    ></nav>
 
 
 </main>
@@ -745,7 +1381,6 @@ body {
     id="modal"
     class="modal"
 >
-
 
     <div class="modal-box">
 
@@ -787,14 +1422,25 @@ body {
 <script>
 
 /* =====================================================
-   CSV
-
-   links.csv is in the SAME folder
-   as videos.html.
+   SETTINGS
 ===================================================== */
+
+
+/*
+links.csv is in the SAME folder
+as this HTML file.
+*/
 
 const CSV_URL =
     "./links.csv";
+
+
+/*
+Exactly 30 videos per page.
+*/
+
+const VIDEOS_PER_PAGE =
+    30;
 
 
 /* =====================================================
@@ -819,6 +1465,11 @@ const loader =
 const empty =
     document.getElementById(
         "empty"
+    );
+
+const pagination =
+    document.getElementById(
+        "pagination"
     );
 
 const search =
@@ -846,6 +1497,11 @@ const closeButton =
         "close"
     );
 
+const randomButton =
+    document.getElementById(
+        "randomButton"
+    );
+
 
 /* =====================================================
    DATA
@@ -855,16 +1511,69 @@ let videos = [];
 
 let filteredVideos = [];
 
+let currentPage = 1;
+
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+
+/*
+Fisher-Yates shuffle.
+
+This randomizes the entire CSV
+every time the page loads.
+*/
+
+function shuffle(array) {
+
+    const result =
+        [...array];
+
+
+    for (
+        let i = result.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(
+                Math.random() *
+                (i + 1)
+            );
+
+
+        [
+            result[i],
+            result[j]
+        ] =
+        [
+            result[j],
+            result[i]
+        ];
+    }
+
+
+    return result;
+}
+
 
 /* =====================================================
    FORMAT TITLE
-
-   rich-people-are-watching-an-exhibition
-
-   →
-
-   Rich People Are Watching An Exhibition
 ===================================================== */
+
+
+/*
+Example:
+
+rich-people-are-watching-an-exhibition
+
+becomes:
+
+Rich People Are Watching An Exhibition
+*/
 
 function formatTitle(slug) {
 
@@ -890,7 +1599,7 @@ function formatTitle(slug) {
     catch (_) {
 
         // Ignore malformed
-        // encoded characters
+        // encoded text.
 
     }
 
@@ -916,6 +1625,7 @@ function formatTitle(slug) {
                 word => {
 
                     if (!word) {
+
                         return "";
                     }
 
@@ -950,8 +1660,7 @@ function cleanUrl(rawUrl) {
 
 
     /*
-    Remove quotes if the CSV
-    contains them.
+    Remove surrounding quotes.
     */
 
     if (
@@ -974,16 +1683,15 @@ function cleanUrl(rawUrl) {
                 1,
                 -1
             ).trim();
-
     }
 
 
     /*
-    Fix:
+    Fix malformed:
 
     https//example.com
 
-    →
+    into:
 
     https://example.com
     */
@@ -1007,16 +1715,22 @@ function cleanUrl(rawUrl) {
 
 
 /* =====================================================
-   GET THUMBNAIL FOLDER
-
-   ID 1     → 0
-   ID 999   → 0
-   ID 1000  → 1000
-   ID 1465  → 1000
-   ID 1999  → 1000
-   ID 2000  → 2000
-   ID 2283  → 2000
+   THUMBNAIL FOLDER
 ===================================================== */
+
+
+/*
+Examples:
+
+1     → 0
+999   → 0
+1000  → 1000
+1465  → 1000
+1999  → 1000
+2000  → 2000
+2283  → 2000
+3000  → 3000
+*/
 
 function getThumbnailFolder(id) {
 
@@ -1026,11 +1740,6 @@ function getThumbnailFolder(id) {
             10
         );
 
-
-    /*
-    If the ID isn't numeric,
-    we cannot calculate the folder.
-    */
 
     if (
         Number.isNaN(number)
@@ -1051,7 +1760,7 @@ function getThumbnailFolder(id) {
 
 
 /* =====================================================
-   CREATE THUMBNAIL URL
+   CREATE THUMBNAIL
 ===================================================== */
 
 function createThumbnailUrl(
@@ -1082,7 +1791,9 @@ function createThumbnailUrl(
         +
         "/"
         +
-        encodeURIComponent(id)
+        encodeURIComponent(
+            id
+        )
         +
         "/264x198/1.jpg"
     );
@@ -1091,21 +1802,32 @@ function createThumbnailUrl(
 
 /* =====================================================
    PARSE VIDEO URL
-
-   Example:
-
-   https://sick-r.com/videos/2283/
-   rich-people-are-watching-an-exhibition/
-
-   →
-
-   embed:
-   https://sick-r.com/embed/2283
-
-   thumbnail:
-   https://sick-r.com/contents/videos_screenshots/
-   2000/2283/264x198/1.jpg
 ===================================================== */
+
+
+/*
+Input:
+
+https://sick-r.com/videos/2283/
+rich-people-are-watching-an-exhibition/
+
+Output:
+
+ID:
+2283
+
+Title:
+Rich People Are Watching An Exhibition
+
+Embed:
+
+https://sick-r.com/embed/2283
+
+Thumbnail:
+
+https://sick-r.com/contents/videos_screenshots/
+2000/2283/264x198/1.jpg
+*/
 
 function parseVideoUrl(
     rawUrl
@@ -1135,7 +1857,7 @@ function parseVideoUrl(
 
     }
 
-    catch (error) {
+    catch (_) {
 
         console.warn(
             "Invalid URL:",
@@ -1154,9 +1876,9 @@ function parseVideoUrl(
             );
 
 
-    /* ==============================================
+    /* =================================================
        /videos/ID/title
-    ============================================== */
+    ================================================= */
 
     const videosIndex =
         parts.findIndex(
@@ -1180,11 +1902,6 @@ function parseVideoUrl(
             ];
 
 
-        /*
-        Everything after the ID
-        is considered part of the title.
-        */
-
         const titleSlug =
             parts
                 .slice(
@@ -1199,10 +1916,6 @@ function parseVideoUrl(
             );
 
 
-        /*
-        Create embed URL.
-        */
-
         const embedUrl =
             url.origin
             +
@@ -1213,10 +1926,6 @@ function parseVideoUrl(
             );
 
 
-        /*
-        Create thumbnail URL.
-        */
-
         const thumbnailUrl =
             createThumbnailUrl(
                 url,
@@ -1225,9 +1934,6 @@ function parseVideoUrl(
 
 
         return {
-
-            sourceUrl:
-                url.href,
 
             id:
                 id,
@@ -1239,14 +1945,17 @@ function parseVideoUrl(
                 embedUrl,
 
             thumbnailUrl:
-                thumbnailUrl
+                thumbnailUrl,
+
+            sourceUrl:
+                url.href
         };
     }
 
 
-    /* ==============================================
-       ALREADY /embed/ID
-    ============================================== */
+    /* =================================================
+       /embed/ID
+    ================================================= */
 
     const embedIndex =
         parts.findIndex(
@@ -1270,17 +1979,7 @@ function parseVideoUrl(
             ];
 
 
-        const thumbnailUrl =
-            createThumbnailUrl(
-                url,
-                id
-            );
-
-
         return {
-
-            sourceUrl:
-                url.href,
 
             id:
                 id,
@@ -1292,7 +1991,13 @@ function parseVideoUrl(
                 url.href,
 
             thumbnailUrl:
-                thumbnailUrl
+                createThumbnailUrl(
+                    url,
+                    id
+                ),
+
+            sourceUrl:
+                url.href
         };
     }
 
@@ -1303,13 +2008,16 @@ function parseVideoUrl(
 
 /* =====================================================
    PARSE CSV
-
-   One URL per line.
 ===================================================== */
 
-function parseCSV(
-    text
-) {
+
+/*
+One URL per line.
+
+No columns required.
+*/
+
+function parseCSV(text) {
 
     return text
 
@@ -1330,32 +2038,21 @@ function parseCSV(
 
 
 /* =====================================================
-   LOAD VIDEOS
+   LOAD CSV
 ===================================================== */
 
 async function loadVideos() {
 
     try {
 
-
         status.textContent =
             "Loading video list...";
 
-
-        /*
-        Because links.csv is next to
-        videos.html, this is:
-
-        ./links.csv
-        */
 
         const response =
             await fetch(
                 CSV_URL,
                 {
-                    method:
-                        "GET",
-
                     cache:
                         "no-cache"
                 }
@@ -1373,24 +2070,9 @@ async function loadVideos() {
         }
 
 
-        /*
-        Read CSV.
-        */
-
         const text =
             await response.text();
 
-
-        console.log(
-            "CSV downloaded:",
-            text.length,
-            "characters"
-        );
-
-
-        /*
-        Get individual URLs.
-        */
 
         const urls =
             parseCSV(
@@ -1398,20 +2080,15 @@ async function loadVideos() {
             );
 
 
-        console.log(
-            "CSV lines:",
-            urls.length
-        );
-
-
-        const results = [];
+        const results =
+            [];
 
         const seen =
             new Set();
 
 
         /*
-        Process every URL.
+        Parse every URL.
         */
 
         for (
@@ -1425,10 +2102,6 @@ async function loadVideos() {
                     rawUrl
                 );
 
-
-            /*
-            Skip invalid URLs.
-            */
 
             if (!video) {
 
@@ -1461,46 +2134,39 @@ async function loadVideos() {
         }
 
 
+        /*
+        =================================================
+        IMPORTANT
+
+        Shuffle the entire archive
+        every time the page loads.
+        =================================================
+        */
+
         videos =
-            results;
+            shuffle(
+                results
+            );
 
 
         filteredVideos =
-            results;
+            [...videos];
 
-
-        /*
-        Hide loader.
-        */
 
         loader.style.display =
             "none";
 
 
-        /*
-        Show number of videos.
-        */
-
         status.textContent =
             `${videos.length.toLocaleString()} videos available`;
 
 
-        /*
-        Display cards.
-        */
-
         render();
 
-
-        console.log(
-            "Videos parsed:",
-            videos.length
-        );
 
     }
 
     catch (error) {
-
 
         console.error(
             "CSV ERROR:",
@@ -1517,7 +2183,7 @@ async function loadVideos() {
 
 
         empty.textContent =
-            "Could not load links.csv. Make sure videos.html and links.csv are in the same folder.";
+            "Could not load links.csv. Make sure it is in the same folder as this page.";
 
 
         empty.style.display =
@@ -1533,6 +2199,9 @@ async function loadVideos() {
 function render() {
 
     grid.innerHTML =
+        "";
+
+    pagination.innerHTML =
         "";
 
 
@@ -1551,172 +2220,405 @@ function render() {
         "none";
 
 
+    const totalPages =
+        Math.ceil(
+            filteredVideos.length /
+            VIDEOS_PER_PAGE
+        );
+
+
+    if (
+        currentPage > totalPages
+    ) {
+
+        currentPage =
+            totalPages;
+    }
+
+
+    /*
+    Only render the current
+    30 videos.
+
+    This is important when
+    the CSV contains hundreds
+    of thousands of links.
+    */
+
+    const start =
+        (
+            currentPage - 1
+        )
+        *
+        VIDEOS_PER_PAGE;
+
+
+    const pageVideos =
+        filteredVideos.slice(
+            start,
+            start + VIDEOS_PER_PAGE
+        );
+
+
     const fragment =
         document.createDocumentFragment();
 
 
-    for (
-        const video
-        of filteredVideos
-    ) {
+    pageVideos.forEach(
+        video => {
 
-
-        const card =
-            document.createElement(
-                "article"
-            );
-
-
-        card.className =
-            "card";
-
-
-        /* ==========================================
-           THUMBNAIL
-        ========================================== */
-
-        const thumbnail =
-            document.createElement(
-                "div"
-            );
-
-
-        thumbnail.className =
-            "thumbnail";
-
-
-        /*
-        Play button stays visible
-        over the thumbnail.
-        */
-
-        const play =
-            document.createElement(
-                "div"
-            );
-
-
-        play.className =
-            "play";
-
-
-        play.textContent =
-            "▶";
-
-
-        /*
-        Add thumbnail image.
-        */
-
-        if (
-            video.thumbnailUrl
-        ) {
-
-
-            const img =
-                document.createElement(
-                    "img"
-                );
-
-
-            img.src =
-                video.thumbnailUrl;
-
-
-            img.alt =
-                video.title;
-
-
-            /*
-            Lazy loading is important
-            for a large video archive.
-            */
-
-            img.loading =
-                "lazy";
-
-
-            /*
-            If 1.jpg doesn't exist,
-            remove the image and leave
-            the placeholder.
-            */
-
-            img.onerror =
-                function() {
-
-                    this.remove();
-
-                };
-
-
-            thumbnail.appendChild(
-                img
-            );
-        }
-
-
-        thumbnail.appendChild(
-            play
-        );
-
-
-        /* ==========================================
-           TITLE
-        ========================================== */
-
-        const title =
-            document.createElement(
-                "div"
-            );
-
-
-        title.className =
-            "title";
-
-
-        title.textContent =
-            video.title;
-
-
-        /* ==========================================
-           BUILD CARD
-        ========================================== */
-
-        card.appendChild(
-            thumbnail
-        );
-
-
-        card.appendChild(
-            title
-        );
-
-
-        /*
-        Open player when clicked.
-        */
-
-        card.addEventListener(
-            "click",
-            function() {
-
-                openVideo(
+            fragment.appendChild(
+                createCard(
                     video
-                );
+                )
+            );
 
-            }
-        );
-
-
-        fragment.appendChild(
-            card
-        );
-    }
+        }
+    );
 
 
     grid.appendChild(
         fragment
+    );
+
+
+    renderPagination(
+        totalPages
+    );
+}
+
+
+/* =====================================================
+   CREATE CARD
+===================================================== */
+
+function createCard(video) {
+
+    const card =
+        document.createElement(
+            "article"
+        );
+
+
+    card.className =
+        "card";
+
+
+    /* =================================================
+       THUMBNAIL
+    ================================================= */
+
+    const thumbnail =
+        document.createElement(
+            "div"
+        );
+
+
+    thumbnail.className =
+        "thumbnail";
+
+
+    /*
+    Thumbnail image.
+    */
+
+    if (
+        video.thumbnailUrl
+    ) {
+
+
+        const img =
+            document.createElement(
+                "img"
+            );
+
+
+        img.src =
+            video.thumbnailUrl;
+
+
+        img.alt =
+            video.title;
+
+
+        /*
+        Lazy loading means only
+        thumbnails near the viewport
+        are requested.
+        */
+
+        img.loading =
+            "lazy";
+
+
+        /*
+        If 1.jpg doesn't exist,
+        simply remove it.
+        */
+
+        img.onerror =
+            function() {
+
+                this.remove();
+
+            };
+
+
+        thumbnail.appendChild(
+            img
+        );
+    }
+
+
+    /* =================================================
+       PLAY OVERLAY
+    ================================================= */
+
+    const overlay =
+        document.createElement(
+            "div"
+        );
+
+
+    overlay.className =
+        "play-overlay";
+
+
+    const play =
+        document.createElement(
+            "div"
+        );
+
+
+    play.className =
+        "play";
+
+
+    play.textContent =
+        "▶";
+
+
+    overlay.appendChild(
+        play
+    );
+
+
+    thumbnail.appendChild(
+        overlay
+    );
+
+
+    /* =================================================
+       TITLE
+    ================================================= */
+
+    const title =
+        document.createElement(
+            "div"
+        );
+
+
+    title.className =
+        "title";
+
+
+    title.textContent =
+        video.title;
+
+
+    /* =================================================
+       CARD
+    ================================================= */
+
+    card.appendChild(
+        thumbnail
+    );
+
+
+    card.appendChild(
+        title
+    );
+
+
+    card.addEventListener(
+        "click",
+        function() {
+
+            openVideo(
+                video
+            );
+
+        }
+    );
+
+
+    return card;
+}
+
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
+function renderPagination(
+    totalPages
+) {
+
+    if (
+        totalPages <= 1
+    ) {
+
+        return;
+    }
+
+
+    /*
+    Previous.
+    */
+
+    const previous =
+        document.createElement(
+            "button"
+        );
+
+
+    previous.className =
+        "page-button";
+
+
+    previous.textContent =
+        "‹";
+
+
+    previous.disabled =
+        currentPage === 1;
+
+
+    previous.onclick =
+        function() {
+
+            currentPage--;
+
+            render();
+
+            scrollTop();
+
+        };
+
+
+    pagination.appendChild(
+        previous
+    );
+
+
+    /*
+    Determine page range.
+    */
+
+    let start =
+        Math.max(
+            1,
+            currentPage - 2
+        );
+
+
+    let end =
+        Math.min(
+            totalPages,
+            currentPage + 2
+        );
+
+
+    /*
+    Page numbers.
+    */
+
+    for (
+        let page = start;
+        page <= end;
+        page++
+    ) {
+
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+
+        button.className =
+            "page-button";
+
+
+        button.textContent =
+            page;
+
+
+        if (
+            page === currentPage
+        ) {
+
+            button.classList.add(
+                "active"
+            );
+        }
+
+
+        button.onclick =
+            function() {
+
+                currentPage =
+                    page;
+
+                render();
+
+                scrollTop();
+
+            };
+
+
+        pagination.appendChild(
+            button
+        );
+    }
+
+
+    /*
+    Next.
+    */
+
+    const next =
+        document.createElement(
+            "button"
+        );
+
+
+    next.className =
+        "page-button";
+
+
+    next.textContent =
+        "›";
+
+
+    next.disabled =
+        currentPage === totalPages;
+
+
+    next.onclick =
+        function() {
+
+            currentPage++;
+
+            render();
+
+            scrollTop();
+
+        };
+
+
+    pagination.appendChild(
+        next
     );
 }
 
@@ -1729,7 +2631,6 @@ search.addEventListener(
     "input",
     function() {
 
-
         const query =
             this.value
                 .trim()
@@ -1739,7 +2640,7 @@ search.addEventListener(
         if (!query) {
 
             filteredVideos =
-                videos;
+                [...videos];
 
         }
 
@@ -1757,6 +2658,10 @@ search.addEventListener(
         }
 
 
+        currentPage =
+            1;
+
+
         status.textContent =
             `${filteredVideos.length.toLocaleString()} videos`;
 
@@ -1767,24 +2672,49 @@ search.addEventListener(
 
 
 /* =====================================================
+   RANDOM VIDEO
+===================================================== */
+
+randomButton.addEventListener(
+    "click",
+    function() {
+
+        if (
+            videos.length === 0
+        ) {
+
+            return;
+        }
+
+
+        const randomIndex =
+            Math.floor(
+                Math.random() *
+                videos.length
+            );
+
+
+        openVideo(
+            videos[
+                randomIndex
+            ]
+        );
+    }
+);
+
+
+/* =====================================================
    OPEN VIDEO
 ===================================================== */
 
-function openVideo(
-    video
-) {
-
-
-    /*
-    Set title.
-    */
+function openVideo(video) {
 
     modalTitle.textContent =
         video.title;
 
 
     /*
-    Remove previous iframe.
+    Remove previous player.
     */
 
     videoContainer.innerHTML =
@@ -1792,10 +2722,9 @@ function openVideo(
 
 
     /*
-    Create iframe ONLY now.
-
-    The archive page doesn't
-    load the video player beforehand.
+    Create iframe only when
+    the visitor actually opens
+    the video.
     */
 
     const iframe =
@@ -1808,20 +2737,11 @@ function openVideo(
         video.embedUrl;
 
 
-    /*
-    Allow fullscreen.
-    */
-
     iframe.setAttribute(
         "allowfullscreen",
         ""
     );
 
-
-    /*
-    Common permissions required
-    by embedded video players.
-    */
 
     iframe.setAttribute(
         "allow",
@@ -1840,18 +2760,10 @@ function openVideo(
     );
 
 
-    /*
-    Show modal.
-    */
-
     modal.classList.add(
         "open"
     );
 
-
-    /*
-    Stop background scrolling.
-    */
 
     document.body.style.overflow =
         "hidden";
@@ -1864,10 +2776,9 @@ function openVideo(
 
 function closeVideo() {
 
-
     /*
-    Removing the iframe also
-    stops the embedded player.
+    Destroy iframe so the video
+    stops completely.
     */
 
     videoContainer.innerHTML =
@@ -1913,7 +2824,7 @@ modal.addEventListener(
 
 
 /* =====================================================
-   ESC KEY
+   ESCAPE
 ===================================================== */
 
 document.addEventListener(
@@ -1921,8 +2832,7 @@ document.addEventListener(
     function(event) {
 
         if (
-            event.key === "Escape"
-            &&
+            event.key === "Escape" &&
             modal.classList.contains(
                 "open"
             )
@@ -1932,6 +2842,23 @@ document.addEventListener(
         }
     }
 );
+
+
+/* =====================================================
+   SCROLL TOP
+===================================================== */
+
+function scrollTop() {
+
+    window.scrollTo({
+
+        top:
+            0,
+
+        behavior:
+            "smooth"
+    });
+}
 
 
 /* =====================================================
