@@ -11,7 +11,11 @@
 <meta name="theme-color"
       content="#050505">
 
-<title>Video Archive</title>
+<meta name="description"
+      content="Sick Fetish video archive">
+
+<title>Sick Fetish</title>
+
 
 <style>
 
@@ -36,16 +40,16 @@ body {
         radial-gradient(
             circle at 10% 5%,
             rgba(255,255,255,.018),
-            transparent 25%
+            transparent 24%
         ),
         radial-gradient(
             circle at 90% 80%,
             rgba(255,255,255,.012),
-            transparent 25%
+            transparent 26%
         ),
         #050505;
 
-    color: #ddd;
+    color: #dddddd;
 
     font-family:
         Arial,
@@ -55,19 +59,62 @@ body {
 
 
 /* =====================================================
+   VARIABLES
+===================================================== */
+
+:root {
+
+    --bg:
+        #050505;
+
+    --surface:
+        #0b0b0b;
+
+    --surface-2:
+        #111111;
+
+    --border:
+        #242424;
+
+    --border-light:
+        #2d2d2d;
+
+    --text:
+        #dddddd;
+
+    --text-bright:
+        #eeeeee;
+
+    --muted:
+        #666666;
+
+    --muted-dark:
+        #454545;
+}
+
+
+/* =====================================================
    HEADER
 ===================================================== */
 
 .header {
 
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position:
+        sticky;
+
+    top:
+        0;
+
+    z-index:
+        100;
 
     background:
-        rgba(5,5,5,.94);
+        rgba(5,5,5,.95);
 
     backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
         blur(18px);
 
     border-bottom:
@@ -81,7 +128,7 @@ body {
         min(1400px,94%);
 
     min-height:
-        78px;
+        76px;
 
     margin:
         auto;
@@ -123,6 +170,12 @@ body {
 
     justify-content:
         center;
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
 }
 
 
@@ -142,14 +195,27 @@ body {
 
     filter:
         none;
+
+    transition:
+        transform .2s ease;
+}
+
+
+.logo:hover img {
+
+    transform:
+        scale(1.025);
 }
 
 
 /* =====================================================
-   SEARCH
+   SEARCH WRAPPER
 ===================================================== */
 
 .search-wrapper {
+
+    position:
+        relative;
 
     flex:
         1;
@@ -162,6 +228,10 @@ body {
 }
 
 
+/* =====================================================
+   SEARCH
+===================================================== */
+
 .search {
 
     width:
@@ -171,10 +241,13 @@ body {
         43px;
 
     padding:
-        0 17px;
+        0 44px 0 17px;
 
     background:
         #090909;
+
+    color:
+        #dddddd;
 
     border:
         1px solid #242424;
@@ -184,9 +257,6 @@ body {
 
     outline:
         none;
-
-    color:
-        #ddd;
 
     font-family:
         Arial,
@@ -200,24 +270,105 @@ body {
         3px 3px 0 #020202;
 
     transition:
-        .2s ease;
+        border-color .2s ease,
+        background .2s ease;
 }
 
 
 .search::placeholder {
 
     color:
-        #444;
+        #444444;
 }
 
 
 .search:focus {
 
     border-color:
-        #3a3a3a;
+        #3b3b3b;
 
     background:
-        #0c0c0c;
+        #0d0d0d;
+}
+
+
+/* =====================================================
+   SEARCH CANCEL
+===================================================== */
+
+.search-cancel {
+
+    position:
+        absolute;
+
+    right:
+        7px;
+
+    top:
+        50%;
+
+    transform:
+        translateY(-50%);
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    padding:
+        0;
+
+    border:
+        0;
+
+    border-radius:
+        8px;
+
+    background:
+        transparent;
+
+    color:
+        #555555;
+
+    cursor:
+        pointer;
+
+    font-size:
+        20px;
+
+    line-height:
+        30px;
+
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    transition:
+        background .15s ease,
+        color .15s ease;
+}
+
+
+.search-wrapper.has-text .search-cancel {
+
+    display:
+        flex;
+}
+
+
+.search-cancel:hover {
+
+    background:
+        #191919;
+
+    color:
+        #dddddd;
 }
 
 
@@ -246,7 +397,7 @@ body {
         #0b0b0b;
 
     color:
-        #666;
+        #666666;
 
     cursor:
         pointer;
@@ -265,10 +416,10 @@ body {
 .random-button:hover {
 
     color:
-        #ddd;
+        #dddddd;
 
     background:
-        #111;
+        #111111;
 
     transform:
         rotate(8deg)
@@ -286,21 +437,21 @@ body {
         min(1400px,94%);
 
     margin:
-        0 auto;
+        auto;
 
     padding:
-        38px 0 0;
+        36px 0 0;
 }
 
 
 /* =====================================================
-   TOP BAR
+   SECTION HEADER
 ===================================================== */
 
 .top-bar {
 
     margin-bottom:
-        30px;
+        29px;
 }
 
 
@@ -313,7 +464,7 @@ body {
         #e1e1e1;
 
     font-size:
-        28px;
+        29px;
 
     font-weight:
         700;
@@ -322,7 +473,7 @@ body {
         -.6px;
 
     line-height:
-        1;
+        1.1;
 }
 
 
@@ -332,7 +483,7 @@ body {
         9px;
 
     color:
-        #454545;
+        #484848;
 
     font-size:
         11px;
@@ -346,31 +497,32 @@ body {
 .loader {
 
     width:
-        32px;
+        31px;
 
     height:
-        32px;
+        31px;
 
     margin:
-        50px auto;
+        55px auto;
 
     border:
-        3px solid #262626;
+        3px solid #272727;
 
     border-top-color:
-        #aaa;
+        #b0b0b0;
 
     border-radius:
         50%;
 
     animation:
-        spin .8s linear infinite;
+        spin .75s linear infinite;
 }
 
 
 @keyframes spin {
 
     to {
+
         transform:
             rotate(360deg);
     }
@@ -412,22 +564,17 @@ body {
 }
 
 
-/*
-Small irregular rotations give the
-cards the slightly handmade feel.
-*/
-
 .card:nth-child(4n+1) {
 
     transform:
-        rotate(-.35deg);
+        rotate(-.3deg);
 }
 
 
 .card:nth-child(4n+2) {
 
     transform:
-        rotate(.25deg);
+        rotate(.2deg);
 }
 
 
@@ -441,14 +588,14 @@ cards the slightly handmade feel.
 .card:nth-child(4n) {
 
     transform:
-        rotate(.35deg);
+        rotate(.25deg);
 }
 
 
 .card:hover {
 
     transform:
-        translateY(-6px)
+        translateY(-5px)
         rotate(0deg);
 }
 
@@ -474,12 +621,12 @@ cards the slightly handmade feel.
     background:
         linear-gradient(
             135deg,
-            #141414,
+            #151515,
             #070707
         );
 
     border:
-        1px solid #222;
+        1px solid #222222;
 
     border-radius:
         10px;
@@ -528,26 +675,30 @@ cards the slightly handmade feel.
         cover;
 
     opacity:
-        .88;
+        .9;
 
     transition:
-        transform .45s ease,
-        opacity .25s ease;
+        transform .4s ease,
+        opacity .25s ease,
+        filter .25s ease;
 }
 
 
 .card:hover .thumbnail img {
 
     transform:
-        scale(1.06);
+        scale(1.055);
 
     opacity:
-        .62;
+        .72;
+
+    filter:
+        brightness(.8);
 }
 
 
 /* =====================================================
-   CORNER DETAIL
+   SUBTLE THUMBNAIL DETAIL
 ===================================================== */
 
 .thumbnail::before {
@@ -577,100 +728,10 @@ cards the slightly handmade feel.
         50%;
 
     background:
-        #555;
-}
-
-
-/* =====================================================
-   PLAY BUTTON
-===================================================== */
-
-.play-overlay {
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    z-index:
-        5;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
+        #555555;
 
     opacity:
-        0;
-
-    transition:
-        opacity .2s ease;
-}
-
-
-.card:hover .play-overlay {
-
-    opacity:
-        1;
-}
-
-
-.play {
-
-    width:
-        54px;
-
-    height:
-        54px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    padding-left:
-        3px;
-
-    border:
-        1px solid #777;
-
-    border-radius:
-        17px;
-
-    background:
-        #151515;
-
-    color:
-        #ddd;
-
-    font-size:
-        18px;
-
-    box-shadow:
-        4px 5px 0 #000;
-
-    transform:
-        rotate(-4deg);
-
-    transition:
-        .2s ease;
-}
-
-
-.card:hover .play {
-
-    transform:
-        rotate(4deg)
-        scale(1.08);
+        .8;
 }
 
 
@@ -681,7 +742,7 @@ cards the slightly handmade feel.
 .title {
 
     padding:
-        11px 2px 0;
+        10px 2px 0;
 
     color:
         #cfcfcf;
@@ -718,30 +779,7 @@ cards the slightly handmade feel.
 .card:hover .title {
 
     color:
-        #eee;
-}
-
-
-/* =====================================================
-   EMPTY
-===================================================== */
-
-.empty {
-
-    display:
-        none;
-
-    padding:
-        100px 20px;
-
-    text-align:
-        center;
-
-    color:
-        #444;
-
-    font-size:
-        13px;
+        #eeeeee;
 }
 
 
@@ -754,10 +792,10 @@ cards the slightly handmade feel.
     display:
         flex;
 
-    justify-content:
+    align-items:
         center;
 
-    align-items:
+    justify-content:
         center;
 
     flex-wrap:
@@ -766,8 +804,8 @@ cards the slightly handmade feel.
     gap:
         7px;
 
-    margin-top:
-        60px;
+    margin:
+        58px 0 20px;
 }
 
 
@@ -792,10 +830,15 @@ cards the slightly handmade feel.
         #090909;
 
     color:
-        #555;
+        #555555;
 
     cursor:
         pointer;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
 
     font-size:
         12px;
@@ -811,10 +854,10 @@ cards the slightly handmade feel.
 .page-button:hover {
 
     color:
-        #ccc;
+        #cccccc;
 
     background:
-        #111;
+        #111111;
 
     transform:
         translateY(-2px);
@@ -824,13 +867,13 @@ cards the slightly handmade feel.
 .page-button.active {
 
     color:
-        #111;
+        #111111;
 
     background:
-        #ddd;
+        #dddddd;
 
     border-color:
-        #ddd;
+        #dddddd;
 
     font-weight:
         700;
@@ -839,7 +882,7 @@ cards the slightly handmade feel.
         rotate(-3deg);
 
     box-shadow:
-        3px 4px 0 #000;
+        3px 4px 0 #000000;
 }
 
 
@@ -857,7 +900,30 @@ cards the slightly handmade feel.
 
 
 /* =====================================================
-   MODAL
+   EMPTY
+===================================================== */
+
+.empty {
+
+    display:
+        none;
+
+    padding:
+        100px 20px;
+
+    text-align:
+        center;
+
+    color:
+        #444444;
+
+    font-size:
+        13px;
+}
+
+
+/* =====================================================
+   VIDEO MODAL
 ===================================================== */
 
 .modal {
@@ -881,13 +947,16 @@ cards the slightly handmade feel.
         center;
 
     padding:
-        18px;
+        24px;
 
     background:
-        rgba(0,0,0,.94);
+        rgba(0,0,0,.93);
 
     backdrop-filter:
-        blur(10px);
+        blur(8px);
+
+    -webkit-backdrop-filter:
+        blur(8px);
 }
 
 
@@ -899,16 +968,21 @@ cards the slightly handmade feel.
 
 
 /* =====================================================
-   MODAL BOX
+   SMALLER CENTERED POPUP
 ===================================================== */
 
 .modal-box {
 
     width:
-        min(1100px,100%);
+        min(900px,92vw);
+
+    /*
+    Keeps the popup comfortably
+    inside the screen.
+    */
 
     max-height:
-        95vh;
+        88vh;
 
     overflow:
         hidden;
@@ -923,7 +997,7 @@ cards the slightly handmade feel.
         12px;
 
     box-shadow:
-        7px 8px 0 #000;
+        7px 8px 0 #000000;
 }
 
 
@@ -937,7 +1011,7 @@ cards the slightly handmade feel.
         58px;
 
     padding:
-        9px 12px 9px 17px;
+        9px 10px 9px 16px;
 
     display:
         flex;
@@ -945,21 +1019,28 @@ cards the slightly handmade feel.
     align-items:
         center;
 
-    justify-content:
-        space-between;
-
     gap:
-        15px;
+        10px;
 
     border-bottom:
         1px solid #1d1d1d;
 }
 
 
+/* =====================================================
+   MODAL TITLE
+===================================================== */
+
 .modal-title {
 
+    flex:
+        1;
+
+    min-width:
+        0;
+
     color:
-        #ccc;
+        #cccccc;
 
     font-size:
         14px;
@@ -968,17 +1049,30 @@ cards the slightly handmade feel.
         700;
 
     line-height:
-        1.4;
+        1.35;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
 }
 
 
-.close {
+/* =====================================================
+   MODAL SHARE
+===================================================== */
+
+.modal-share {
 
     width:
-        37px;
+        38px;
 
     height:
-        37px;
+        38px;
 
     flex-shrink:
         0;
@@ -987,13 +1081,75 @@ cards the slightly handmade feel.
         1px solid #292929;
 
     border-radius:
-        10px;
+        9px;
 
     background:
-        #0c0c0c;
+        #101010;
 
     color:
-        #666;
+        #777777;
+
+    cursor:
+        pointer;
+
+    font-size:
+        16px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    transition:
+        background .18s ease,
+        border-color .18s ease,
+        color .18s ease;
+}
+
+
+.modal-share:hover {
+
+    background:
+        #181818;
+
+    border-color:
+        #424242;
+
+    color:
+        #eeeeee;
+}
+
+
+/* =====================================================
+   CLOSE BUTTON
+===================================================== */
+
+.close {
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    flex-shrink:
+        0;
+
+    border:
+        1px solid #292929;
+
+    border-radius:
+        9px;
+
+    background:
+        #101010;
+
+    color:
+        #888888;
 
     cursor:
         pointer;
@@ -1001,26 +1157,40 @@ cards the slightly handmade feel.
     font-size:
         21px;
 
+    line-height:
+        1;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
     transition:
-        .2s ease;
+        background .18s ease,
+        border-color .18s ease,
+        color .18s ease;
 }
 
 
 .close:hover {
 
-    color:
-        #ddd;
-
     background:
-        #151515;
+        #1b1b1b;
 
-    transform:
-        rotate(5deg);
+    border-color:
+        #454545;
+
+    color:
+        #eeeeee;
 }
 
 
 /* =====================================================
-   VIDEO
+   VIDEO CONTAINER
 ===================================================== */
 
 .video-container {
@@ -1032,7 +1202,7 @@ cards the slightly handmade feel.
         16 / 9;
 
     background:
-        #000;
+        #000000;
 }
 
 
@@ -1053,6 +1223,70 @@ cards the slightly handmade feel.
 
 
 /* =====================================================
+   TOAST
+===================================================== */
+
+.toast {
+
+    position:
+        fixed;
+
+    left:
+        50%;
+
+    bottom:
+        24px;
+
+    z-index:
+        2000;
+
+    padding:
+        10px 17px;
+
+    border:
+        1px solid #292929;
+
+    border-radius:
+        10px;
+
+    background:
+        #101010;
+
+    color:
+        #cccccc;
+
+    font-size:
+        12px;
+
+    box-shadow:
+        4px 5px 0 #000000;
+
+    opacity:
+        0;
+
+    transform:
+        translate(-50%,20px);
+
+    pointer-events:
+        none;
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease;
+}
+
+
+.toast.show {
+
+    opacity:
+        1;
+
+    transform:
+        translate(-50%,0);
+}
+
+
+/* =====================================================
    MOBILE
 ===================================================== */
 
@@ -1063,7 +1297,6 @@ cards the slightly handmade feel.
         grid-template-columns:
             repeat(4,minmax(0,1fr));
     }
-
 }
 
 
@@ -1073,6 +1306,9 @@ cards the slightly handmade feel.
 
         grid-template-columns:
             repeat(3,minmax(0,1fr));
+
+        gap:
+            25px 13px;
     }
 
 }
@@ -1136,7 +1372,7 @@ cards the slightly handmade feel.
             94%;
 
         padding-top:
-            28px;
+            27px;
     }
 
 
@@ -1153,7 +1389,7 @@ cards the slightly handmade feel.
             repeat(2,minmax(0,1fr));
 
         gap:
-            25px 10px;
+            24px 10px;
     }
 
 
@@ -1169,34 +1405,21 @@ cards the slightly handmade feel.
 
     .title {
 
-        padding-top:
-            8px;
+        padding:
+            8px 1px 0;
 
         font-size:
             12px;
-    }
 
-
-    .play {
-
-        width:
-            44px;
-
-        height:
-            44px;
-
-        border-radius:
-            14px;
-
-        font-size:
-            15px;
+        line-height:
+            1.35;
     }
 
 
     .modal {
 
         padding:
-            0;
+            10px;
     }
 
 
@@ -1205,31 +1428,67 @@ cards the slightly handmade feel.
         width:
             100%;
 
-        height:
-            100%;
-
         max-height:
-            100vh;
+            none;
 
         border-radius:
-            0;
+            10px;
+    }
+
+
+    .modal-header {
+
+        min-height:
+            55px;
+
+        padding-left:
+            12px;
+    }
+
+
+    .modal-title {
+
+        font-size:
+            13px;
+    }
+
+
+    .modal-share,
+    .close {
+
+        width:
+            36px;
+
+        height:
+            36px;
+    }
+
+}
+
+
+@media (max-width:380px) {
+
+    .grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .logo {
+
+        width:
+            135px;
     }
 
 }
 
 
 /* =====================================================
-   TOUCH
+   TOUCH DEVICES
 ===================================================== */
 
 @media (hover:none) {
-
-    .play-overlay {
-
-        opacity:
-            1;
-    }
-
 
     .card:hover {
 
@@ -1244,7 +1503,10 @@ cards the slightly handmade feel.
             none;
 
         opacity:
-            .88;
+            .9;
+
+        filter:
+            none;
     }
 
 }
@@ -1268,11 +1530,17 @@ cards the slightly handmade feel.
 
         <!-- LOGO -->
 
-        <div class="logo">
+        <div
+            id="logo"
+            class="logo"
+            title="Home"
+            role="button"
+            tabindex="0"
+        >
 
             <img
                 src="https://firebasestorage.googleapis.com/v0/b/counter-ea7c8.firebasestorage.app/o/sf%2F10c2d1be-e912-4443-be9a-0341e2f98808.jpeg?alt=media&token=2b4a2e40-1e85-4d36-b00d-bd910f120d0f"
-                alt="Logo"
+                alt="Sick Fetish"
             >
 
         </div>
@@ -1280,7 +1548,10 @@ cards the slightly handmade feel.
 
         <!-- SEARCH -->
 
-        <div class="search-wrapper">
+        <div
+            id="searchWrapper"
+            class="search-wrapper"
+        >
 
             <input
                 id="search"
@@ -1288,7 +1559,19 @@ cards the slightly handmade feel.
                 type="search"
                 placeholder="Search videos..."
                 autocomplete="off"
+                aria-label="Search videos"
             >
+
+
+            <button
+                id="searchCancel"
+                class="search-cancel"
+                type="button"
+                aria-label="Cancel search"
+                title="Clear search"
+            >
+                ×
+            </button>
 
         </div>
 
@@ -1299,6 +1582,7 @@ cards the slightly handmade feel.
             id="randomButton"
             class="random-button"
             type="button"
+            aria-label="Random video"
             title="Random video"
         >
             ⤨
@@ -1320,7 +1604,10 @@ cards the slightly handmade feel.
 
     <div class="top-bar">
 
-        <h1 class="heading">
+        <h1
+            id="heading"
+            class="heading"
+        >
             Latest Videos
         </h1>
 
@@ -1343,7 +1630,7 @@ cards the slightly handmade feel.
     ></div>
 
 
-    <!-- VIDEO GRID -->
+    <!-- GRID -->
 
     <section
         id="grid"
@@ -1366,6 +1653,7 @@ cards the slightly handmade feel.
     <nav
         id="pagination"
         class="pagination"
+        aria-label="Video pages"
     ></nav>
 
 
@@ -1380,9 +1668,16 @@ cards the slightly handmade feel.
 <div
     id="modal"
     class="modal"
+    aria-hidden="true"
 >
 
-    <div class="modal-box">
+
+    <div
+        class="modal-box"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+    >
 
 
         <div class="modal-header">
@@ -1391,14 +1686,31 @@ cards the slightly handmade feel.
             <div
                 id="modalTitle"
                 class="modal-title"
-            ></div>
+            >
+            </div>
 
+
+            <!-- SHARE BUTTON -->
+
+            <button
+                id="modalShare"
+                class="modal-share"
+                type="button"
+                aria-label="Share video"
+                title="Share video"
+            >
+                ↗
+            </button>
+
+
+            <!-- CLOSE BUTTON -->
 
             <button
                 id="close"
                 class="close"
                 type="button"
-                aria-label="Close"
+                aria-label="Close video"
+                title="Close"
             >
                 ×
             </button>
@@ -1419,16 +1731,30 @@ cards the slightly handmade feel.
 
 
 
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div
+    id="toast"
+    class="toast"
+    role="status"
+    aria-live="polite"
+>
+    Link copied
+</div>
+
+
+
 <script>
 
 /* =====================================================
-   SETTINGS
+   CONFIGURATION
 ===================================================== */
 
 
 /*
-links.csv is in the SAME folder
-as this HTML file.
+CSV is in the SAME folder as videos.html.
 */
 
 const CSV_URL =
@@ -1444,7 +1770,7 @@ const VIDEOS_PER_PAGE =
 
 
 /* =====================================================
-   ELEMENTS
+   DOM ELEMENTS
 ===================================================== */
 
 const grid =
@@ -1452,50 +1778,60 @@ const grid =
         "grid"
     );
 
+
 const status =
     document.getElementById(
         "status"
     );
+
 
 const loader =
     document.getElementById(
         "loader"
     );
 
+
 const empty =
     document.getElementById(
         "empty"
     );
+
 
 const pagination =
     document.getElementById(
         "pagination"
     );
 
+
 const search =
     document.getElementById(
         "search"
     );
 
-const modal =
+
+const searchWrapper =
     document.getElementById(
-        "modal"
+        "searchWrapper"
     );
 
-const modalTitle =
+
+const searchCancel =
     document.getElementById(
-        "modalTitle"
+        "searchCancel"
     );
 
-const videoContainer =
+
+const heading =
     document.getElementById(
-        "videoContainer"
+        "heading"
     );
 
-const closeButton =
+
+const logo =
     document.getElementById(
-        "close"
+        "logo"
     );
+
 
 const randomButton =
     document.getElementById(
@@ -1503,28 +1839,65 @@ const randomButton =
     );
 
 
+const modal =
+    document.getElementById(
+        "modal"
+    );
+
+
+const modalTitle =
+    document.getElementById(
+        "modalTitle"
+    );
+
+
+const modalShare =
+    document.getElementById(
+        "modalShare"
+    );
+
+
+const videoContainer =
+    document.getElementById(
+        "videoContainer"
+    );
+
+
+const closeButton =
+    document.getElementById(
+        "close"
+    );
+
+
+const toast =
+    document.getElementById(
+        "toast"
+    );
+
+
 /* =====================================================
-   DATA
+   STATE
 ===================================================== */
 
-let videos = [];
+let videos =
+    [];
 
-let filteredVideos = [];
+let filteredVideos =
+    [];
 
-let currentPage = 1;
+let currentPage =
+    1;
+
+let currentVideo =
+    null;
+
+let toastTimer =
+    null;
 
 
 /* =====================================================
    SHUFFLE
 ===================================================== */
-
-
-/*
-Fisher-Yates shuffle.
-
-This randomizes the entire CSV
-every time the page loads.
-*/
 
 function shuffle(array) {
 
@@ -1564,18 +1937,9 @@ function shuffle(array) {
    FORMAT TITLE
 ===================================================== */
 
-
-/*
-Example:
-
-rich-people-are-watching-an-exhibition
-
-becomes:
-
-Rich People Are Watching An Exhibition
-*/
-
-function formatTitle(slug) {
+function formatTitle(
+    slug
+) {
 
     if (!slug) {
 
@@ -1598,9 +1962,7 @@ function formatTitle(slug) {
 
     catch (_) {
 
-        // Ignore malformed
-        // encoded text.
-
+        // Ignore decoding errors.
     }
 
 
@@ -1617,35 +1979,28 @@ function formatTitle(slug) {
             .trim();
 
 
-    title =
-        title
-            .toLowerCase()
-            .split(" ")
-            .map(
-                word => {
+    return title
+        .toLowerCase()
+        .split(" ")
+        .map(
+            word => {
 
-                    if (!word) {
-
-                        return "";
-                    }
-
-
-                    return (
-                        word.charAt(0)
-                            .toUpperCase()
-                        +
-                        word.slice(1)
-                    );
-
+                if (!word) {
+                    return "";
                 }
-            )
-            .join(" ");
 
 
-    return (
-        title ||
-        "Untitled Video"
-    );
+                return (
+                    word.charAt(0).toUpperCase()
+                    +
+                    word.slice(1)
+                );
+
+            }
+        )
+        .join(" ")
+        ||
+        "Untitled Video";
 }
 
 
@@ -1653,10 +2008,14 @@ function formatTitle(slug) {
    CLEAN URL
 ===================================================== */
 
-function cleanUrl(rawUrl) {
+function cleanUrl(
+    rawUrl
+) {
 
     let url =
-        rawUrl.trim();
+        String(
+            rawUrl || ""
+        ).trim();
 
 
     /*
@@ -1687,13 +2046,10 @@ function cleanUrl(rawUrl) {
 
 
     /*
-    Fix malformed:
+    Fix accidental:
 
     https//example.com
 
-    into:
-
-    https://example.com
     */
 
     url =
@@ -1718,21 +2074,9 @@ function cleanUrl(rawUrl) {
    THUMBNAIL FOLDER
 ===================================================== */
 
-
-/*
-Examples:
-
-1     → 0
-999   → 0
-1000  → 1000
-1465  → 1000
-1999  → 1000
-2000  → 2000
-2283  → 2000
-3000  → 3000
-*/
-
-function getThumbnailFolder(id) {
+function getThumbnailFolder(
+    id
+) {
 
     const number =
         parseInt(
@@ -1742,12 +2086,20 @@ function getThumbnailFolder(id) {
 
 
     if (
-        Number.isNaN(number)
+        Number.isNaN(
+            number
+        )
     ) {
 
         return null;
     }
 
+
+    /*
+    1-999   → 0
+    1000-1999 → 1000
+    2000-2999 → 2000
+    */
 
     return (
         Math.floor(
@@ -1760,7 +2112,7 @@ function getThumbnailFolder(id) {
 
 
 /* =====================================================
-   CREATE THUMBNAIL
+   THUMBNAIL URL
 ===================================================== */
 
 function createThumbnailUrl(
@@ -1804,31 +2156,6 @@ function createThumbnailUrl(
    PARSE VIDEO URL
 ===================================================== */
 
-
-/*
-Input:
-
-https://sick-r.com/videos/2283/
-rich-people-are-watching-an-exhibition/
-
-Output:
-
-ID:
-2283
-
-Title:
-Rich People Are Watching An Exhibition
-
-Embed:
-
-https://sick-r.com/embed/2283
-
-Thumbnail:
-
-https://sick-r.com/contents/videos_screenshots/
-2000/2283/264x198/1.jpg
-*/
-
 function parseVideoUrl(
     rawUrl
 ) {
@@ -1859,11 +2186,6 @@ function parseVideoUrl(
 
     catch (_) {
 
-        console.warn(
-            "Invalid URL:",
-            cleaned
-        );
-
         return null;
     }
 
@@ -1876,15 +2198,18 @@ function parseVideoUrl(
             );
 
 
-    /* =================================================
-       /videos/ID/title
-    ================================================= */
+    /*
+    ================================================
+    /videos/ID/title
+    ================================================
+    */
 
     const videosIndex =
         parts.findIndex(
             part =>
                 part.toLowerCase()
-                === "videos"
+                ===
+                "videos"
         );
 
 
@@ -1953,15 +2278,18 @@ function parseVideoUrl(
     }
 
 
-    /* =================================================
-       /embed/ID
-    ================================================= */
+    /*
+    ================================================
+    /embed/ID
+    ================================================
+    */
 
     const embedIndex =
         parts.findIndex(
             part =>
                 part.toLowerCase()
-                === "embed"
+                ===
+                "embed"
         );
 
 
@@ -2010,49 +2338,50 @@ function parseVideoUrl(
    PARSE CSV
 ===================================================== */
 
+function parseCSV(
+    text
+) {
 
-/*
-One URL per line.
-
-No columns required.
-*/
-
-function parseCSV(text) {
-
-    return text
-
+    return String(
+        text || ""
+    )
         .split(
             /\r?\n/
         )
-
         .map(
             line =>
                 line.trim()
         )
-
         .filter(
-            line =>
-                line.length > 0
+            Boolean
         );
 }
 
 
 /* =====================================================
-   LOAD CSV
+   LOAD VIDEOS
 ===================================================== */
 
 async function loadVideos() {
 
     try {
 
+
         status.textContent =
             "Loading video list...";
 
+
+        /*
+        Fetch CSV.
+        */
 
         const response =
             await fetch(
                 CSV_URL,
                 {
+                    method:
+                        "GET",
+
                     cache:
                         "no-cache"
                 }
@@ -2088,7 +2417,8 @@ async function loadVideos() {
 
 
         /*
-        Parse every URL.
+        Convert every line
+        into a video object.
         */
 
         for (
@@ -2110,7 +2440,7 @@ async function loadVideos() {
 
 
             /*
-            Prevent duplicates.
+            Deduplicate by embed URL.
             */
 
             if (
@@ -2135,12 +2465,8 @@ async function loadVideos() {
 
 
         /*
-        =================================================
-        IMPORTANT
-
-        Shuffle the entire archive
-        every time the page loads.
-        =================================================
+        RANDOMIZE THE ENTIRE
+        ARCHIVE ON EVERY PAGE LOAD.
         */
 
         videos =
@@ -2157,6 +2483,10 @@ async function loadVideos() {
             "none";
 
 
+        heading.textContent =
+            "Latest Videos";
+
+
         status.textContent =
             `${videos.length.toLocaleString()} videos available`;
 
@@ -2164,9 +2494,21 @@ async function loadVideos() {
         render();
 
 
+        /*
+        If somebody shared:
+
+        ?video=2283
+
+        automatically open it.
+        */
+
+        openVideoFromUrl();
+
+
     }
 
     catch (error) {
+
 
         console.error(
             "CSV ERROR:",
@@ -2183,7 +2525,7 @@ async function loadVideos() {
 
 
         empty.textContent =
-            "Could not load links.csv. Make sure it is in the same folder as this page.";
+            "Could not load links.csv. Make sure videos.html and links.csv are in the same folder.";
 
 
         empty.style.display =
@@ -2228,22 +2570,14 @@ function render() {
 
 
     if (
-        currentPage > totalPages
+        currentPage >
+        totalPages
     ) {
 
         currentPage =
             totalPages;
     }
 
-
-    /*
-    Only render the current
-    30 videos.
-
-    This is important when
-    the CSV contains hundreds
-    of thousands of links.
-    */
 
     const start =
         (
@@ -2264,17 +2598,17 @@ function render() {
         document.createDocumentFragment();
 
 
-    pageVideos.forEach(
-        video => {
+    for (
+        const video
+        of pageVideos
+    ) {
 
-            fragment.appendChild(
-                createCard(
-                    video
-                )
-            );
-
-        }
-    );
+        fragment.appendChild(
+            createCard(
+                video
+            )
+        );
+    }
 
 
     grid.appendChild(
@@ -2292,7 +2626,9 @@ function render() {
    CREATE CARD
 ===================================================== */
 
-function createCard(video) {
+function createCard(
+    video
+) {
 
     const card =
         document.createElement(
@@ -2304,9 +2640,9 @@ function createCard(video) {
         "card";
 
 
-    /* =================================================
-       THUMBNAIL
-    ================================================= */
+    /*
+    Thumbnail.
+    */
 
     const thumbnail =
         document.createElement(
@@ -2327,90 +2663,45 @@ function createCard(video) {
     ) {
 
 
-        const img =
+        const image =
             document.createElement(
                 "img"
             );
 
 
-        img.src =
+        image.src =
             video.thumbnailUrl;
 
 
-        img.alt =
+        image.alt =
             video.title;
 
 
-        /*
-        Lazy loading means only
-        thumbnails near the viewport
-        are requested.
-        */
-
-        img.loading =
+        image.loading =
             "lazy";
 
 
         /*
-        If 1.jpg doesn't exist,
-        simply remove it.
+        If thumbnail 1.jpg doesn't exist,
+        remove it and keep the dark background.
         */
 
-        img.onerror =
+        image.onerror =
             function() {
 
                 this.remove();
-
             };
 
 
         thumbnail.appendChild(
-            img
+            image
         );
     }
 
 
-    /* =================================================
-       PLAY OVERLAY
-    ================================================= */
-
-    const overlay =
-        document.createElement(
-            "div"
-        );
-
-
-    overlay.className =
-        "play-overlay";
-
-
-    const play =
-        document.createElement(
-            "div"
-        );
-
-
-    play.className =
-        "play";
-
-
-    play.textContent =
-        "▶";
-
-
-    overlay.appendChild(
-        play
-    );
-
-
-    thumbnail.appendChild(
-        overlay
-    );
-
-
-    /* =================================================
-       TITLE
-    ================================================= */
+    /*
+    Title only.
+    */
 
     const title =
         document.createElement(
@@ -2426,10 +2717,6 @@ function createCard(video) {
         video.title;
 
 
-    /* =================================================
-       CARD
-    ================================================= */
-
     card.appendChild(
         thumbnail
     );
@@ -2440,6 +2727,10 @@ function createCard(video) {
     );
 
 
+    /*
+    Clicking card opens player.
+    */
+
     card.addEventListener(
         "click",
         function() {
@@ -2447,7 +2738,6 @@ function createCard(video) {
             openVideo(
                 video
             );
-
         }
     );
 
@@ -2494,16 +2784,27 @@ function renderPagination(
         currentPage === 1;
 
 
-    previous.onclick =
+    previous.addEventListener(
+        "click",
         function() {
+
+            if (
+                currentPage <= 1
+            ) {
+
+                return;
+            }
+
 
             currentPage--;
 
+
             render();
 
-            scrollTop();
 
-        };
+            scrollTop();
+        }
+    );
 
 
     pagination.appendChild(
@@ -2512,7 +2813,7 @@ function renderPagination(
 
 
     /*
-    Determine page range.
+    Show a compact range of pages.
     */
 
     let start =
@@ -2530,7 +2831,7 @@ function renderPagination(
 
 
     /*
-    Page numbers.
+    Page buttons.
     */
 
     for (
@@ -2564,17 +2865,20 @@ function renderPagination(
         }
 
 
-        button.onclick =
+        button.addEventListener(
+            "click",
             function() {
 
                 currentPage =
                     page;
 
+
                 render();
 
-                scrollTop();
 
-            };
+                scrollTop();
+            }
+        );
 
 
         pagination.appendChild(
@@ -2605,21 +2909,57 @@ function renderPagination(
         currentPage === totalPages;
 
 
-    next.onclick =
+    next.addEventListener(
+        "click",
         function() {
+
+            if (
+                currentPage >= totalPages
+            ) {
+
+                return;
+            }
+
 
             currentPage++;
 
+
             render();
 
-            scrollTop();
 
-        };
+            scrollTop();
+        }
+    );
 
 
     pagination.appendChild(
         next
     );
+}
+
+
+/* =====================================================
+   SEARCH UI
+===================================================== */
+
+function updateSearchUI() {
+
+    if (
+        search.value.trim()
+    ) {
+
+        searchWrapper.classList.add(
+            "has-text"
+        );
+
+    }
+
+    else {
+
+        searchWrapper.classList.remove(
+            "has-text"
+        );
+    }
 }
 
 
@@ -2631,42 +2971,259 @@ search.addEventListener(
     "input",
     function() {
 
+        updateSearchUI();
+
+
         const query =
             this.value
                 .trim()
                 .toLowerCase();
 
 
+        /*
+        No search.
+        */
+
         if (!query) {
+
+
+            heading.textContent =
+                "Latest Videos";
+
 
             filteredVideos =
                 [...videos];
 
+
+            currentPage =
+                1;
+
+
+            status.textContent =
+                `${videos.length.toLocaleString()} videos available`;
+
+
+            render();
+
+
+            return;
         }
 
-        else {
 
-            filteredVideos =
-                videos.filter(
-                    video =>
-                        video.title
-                            .toLowerCase()
-                            .includes(
-                                query
-                            )
-                );
-        }
+        /*
+        Find matches first.
+        */
+
+        const matches =
+            videos.filter(
+                video =>
+                    video.title
+                        .toLowerCase()
+                        .includes(
+                            query
+                        )
+            );
+
+
+        /*
+        IMPORTANT:
+
+        Randomize search results,
+        so the ordering changes every
+        time the search is performed.
+        */
+
+        filteredVideos =
+            shuffle(
+                matches
+            );
 
 
         currentPage =
             1;
 
 
+        heading.textContent =
+            "Search Results";
+
+
         status.textContent =
-            `${filteredVideos.length.toLocaleString()} videos`;
+            `${filteredVideos.length.toLocaleString()} results`;
 
 
         render();
+    }
+);
+
+
+/* =====================================================
+   CANCEL SEARCH
+===================================================== */
+
+searchCancel.addEventListener(
+    "click",
+    function() {
+
+        search.value =
+            "";
+
+
+        updateSearchUI();
+
+
+        /*
+        Return to main archive.
+        */
+
+        filteredVideos =
+            [...videos];
+
+
+        currentPage =
+            1;
+
+
+        heading.textContent =
+            "Latest Videos";
+
+
+        status.textContent =
+            `${videos.length.toLocaleString()} videos available`;
+
+
+        render();
+
+
+        /*
+        Remove shared video parameter.
+        */
+
+        const url =
+            new URL(
+                window.location.href
+            );
+
+
+        url.searchParams.delete(
+            "video"
+        );
+
+
+        window.history.replaceState(
+            {},
+            "",
+            url
+        );
+
+
+        search.focus();
+    }
+);
+
+
+/* =====================================================
+   LOGO → HOME
+===================================================== */
+
+function goHome() {
+
+    /*
+    Clear search.
+    */
+
+    search.value =
+        "";
+
+
+    updateSearchUI();
+
+
+    /*
+    Restore main archive.
+    */
+
+    filteredVideos =
+        [...videos];
+
+
+    currentPage =
+        1;
+
+
+    heading.textContent =
+        "Latest Videos";
+
+
+    status.textContent =
+        `${videos.length.toLocaleString()} videos available`;
+
+
+    render();
+
+
+    /*
+    Close player.
+    */
+
+    closeVideo();
+
+
+    /*
+    Remove video query parameter.
+    */
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+
+    url.searchParams.delete(
+        "video"
+    );
+
+
+    window.history.replaceState(
+        {},
+        "",
+        url
+    );
+
+
+    /*
+    Go to top.
+    */
+
+    window.scrollTo({
+
+        top:
+            0,
+
+        behavior:
+            "smooth"
+    });
+}
+
+
+logo.addEventListener(
+    "click",
+    goHome
+);
+
+
+logo.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
+
+            event.preventDefault();
+
+            goHome();
+        }
     }
 );
 
@@ -2707,14 +3264,29 @@ randomButton.addEventListener(
    OPEN VIDEO
 ===================================================== */
 
-function openVideo(video) {
+function openVideo(
+    video
+) {
+
+    if (!video) {
+        return;
+    }
+
+
+    currentVideo =
+        video;
+
+
+    /*
+    Set title.
+    */
 
     modalTitle.textContent =
         video.title;
 
 
     /*
-    Remove previous player.
+    Clear existing iframe.
     */
 
     videoContainer.innerHTML =
@@ -2722,9 +3294,7 @@ function openVideo(video) {
 
 
     /*
-    Create iframe only when
-    the visitor actually opens
-    the video.
+    Create iframe only now.
     */
 
     const iframe =
@@ -2755,13 +3325,57 @@ function openVideo(video) {
     );
 
 
+    iframe.setAttribute(
+        "title",
+        video.title
+    );
+
+
+    /*
+    Add player.
+    */
+
     videoContainer.appendChild(
         iframe
     );
 
 
+    /*
+    Put video ID in URL so the
+    page can be shared.
+    */
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+
+    url.searchParams.set(
+        "video",
+        video.id
+    );
+
+
+    window.history.replaceState(
+        {},
+        "",
+        url
+    );
+
+
+    /*
+    Open modal.
+    */
+
     modal.classList.add(
         "open"
+    );
+
+
+    modal.setAttribute(
+        "aria-hidden",
+        "false"
     );
 
 
@@ -2771,18 +3385,247 @@ function openVideo(video) {
 
 
 /* =====================================================
+   OPEN VIDEO FROM SHARED URL
+===================================================== */
+
+function openVideoFromUrl() {
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+
+    const videoId =
+        url.searchParams.get(
+            "video"
+        );
+
+
+    if (!videoId) {
+
+        return;
+    }
+
+
+    const video =
+        videos.find(
+            item =>
+                String(item.id)
+                ===
+                String(videoId)
+        );
+
+
+    if (!video) {
+
+        /*
+        Invalid video ID.
+        Remove it from URL.
+        */
+
+        url.searchParams.delete(
+            "video"
+        );
+
+
+        window.history.replaceState(
+            {},
+            "",
+            url
+        );
+
+
+        return;
+    }
+
+
+    openVideo(
+        video
+    );
+}
+
+
+/* =====================================================
+   SHARE CURRENT VIDEO
+===================================================== */
+
+async function shareCurrentVideo() {
+
+    if (!currentVideo) {
+
+        return;
+    }
+
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+
+    url.searchParams.set(
+        "video",
+        currentVideo.id
+    );
+
+
+    const shareUrl =
+        url.href;
+
+
+    /*
+    Native share menu.
+    */
+
+    if (
+        navigator.share
+    ) {
+
+        try {
+
+            await navigator.share({
+
+                title:
+                    currentVideo.title,
+
+                text:
+                    "Watch " +
+                    currentVideo.title,
+
+                url:
+                    shareUrl
+            });
+
+
+            return;
+
+        }
+
+        catch (error) {
+
+            /*
+            User cancelled native
+            sharing.
+            */
+
+            if (
+                error.name ===
+                "AbortError"
+            ) {
+
+                return;
+            }
+        }
+    }
+
+
+    /*
+    Clipboard fallback.
+    */
+
+    try {
+
+        await navigator.clipboard.writeText(
+            shareUrl
+        );
+
+
+        showToast(
+            "Link copied"
+        );
+
+    }
+
+    catch (_) {
+
+        /*
+        Fallback for older browsers.
+        */
+
+        const input =
+            document.createElement(
+                "input"
+            );
+
+
+        input.value =
+            shareUrl;
+
+
+        document.body.appendChild(
+            input
+        );
+
+
+        input.select();
+
+
+        input.setSelectionRange(
+            0,
+            input.value.length
+        );
+
+
+        try {
+
+            document.execCommand(
+                "copy"
+            );
+
+            showToast(
+                "Link copied"
+            );
+
+        }
+
+        catch (_) {
+
+            showToast(
+                "Copy failed"
+            );
+        }
+
+
+        input.remove();
+    }
+}
+
+
+/* =====================================================
+   SHARE BUTTON
+===================================================== */
+
+modalShare.addEventListener(
+    "click",
+    function(event) {
+
+        event.stopPropagation();
+
+        shareCurrentVideo();
+    }
+);
+
+
+/* =====================================================
    CLOSE VIDEO
 ===================================================== */
 
 function closeVideo() {
 
     /*
-    Destroy iframe so the video
-    stops completely.
+    Destroy iframe.
+
+    This stops playback and releases
+    the embedded player.
     */
 
     videoContainer.innerHTML =
         "";
+
+
+    currentVideo =
+        null;
 
 
     modal.classList.remove(
@@ -2790,8 +3633,36 @@ function closeVideo() {
     );
 
 
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
     document.body.style.overflow =
         "";
+
+
+    /*
+    Remove video parameter from URL.
+    */
+
+    const url =
+        new URL(
+            window.location.href
+        );
+
+
+    url.searchParams.delete(
+        "video"
+    );
+
+
+    window.history.replaceState(
+        {},
+        "",
+        url
+    );
 }
 
 
@@ -2806,7 +3677,7 @@ closeButton.addEventListener(
 
 
 /* =====================================================
-   CLICK OUTSIDE
+   CLICK OUTSIDE MODAL
 ===================================================== */
 
 modal.addEventListener(
@@ -2842,6 +3713,42 @@ document.addEventListener(
         }
     }
 );
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function showToast(
+    message
+) {
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            function() {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2200
+        );
+}
 
 
 /* =====================================================
