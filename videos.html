@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Video Archive</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    background: #09090b;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    padding-bottom: 60px;
+}
+
+/* ================= HEADER ================= */
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    background: rgba(9, 9, 11, 0.95);
+    backdrop-filter: blur(14px);
+
+    border-bottom: 1px solid #29292f;
+}
+
+.header-inner {
+    width: min(1200px, 94%);
+    margin: auto;
+
+    padding: 16px 0;
+
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.search {
+    flex: 1;
+    min-width: 0;
+
+    height: 42px;
+    padding: 0 14px;
+
+    background: #141417;
+    color: #fff;
+
+    border: 1px solid #303038;
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+.search:focus {
+    border-color: #5b5b66;
+}
+
+/* ================= MAIN ================= */
+
+.main {
+    width: min(1200px, 94%);
+    margin: 28px auto 60px;
+}
+
+.status {
+    margin-bottom: 18px;
+    color: #92929c;
+    font-size: 13px;
+}
+
+/* ================= LOADER ================= */
+
+.loader {
+    width: 32px;
+    height: 32px;
+
+    margin: 40px auto;
+
+    border: 3px solid #303036;
+    border-top-color: #fff;
+
+    border-radius: 50%;
+
+    animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ================= GRID ================= */
+
+.grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(260px, 1fr)
+        );
+
+    gap: 18px;
+}
+
+/* ================= CARD ================= */
+
+.card {
+    background: #121216;
+
+    border: 1px solid #29292f;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    cursor: pointer;
+
+    transition:
+        transform .15s ease,
+        border-color .15s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    border-color: #484850;
+}
+
+/* ================= THUMBNAIL ================= */
+
+.thumbnail {
+    aspect-ratio: 16 / 9;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1b1b20,
+            #09090b
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play {
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.10);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+
+    padding-left: 3px;
+}
+
+/* ================= TITLE ================= */
+
+.title {
+    padding: 13px 14px 15px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    line-height: 1.4;
+}
+
+/* ================= EMPTY ================= */
+
+.empty {
+    display: none;
+
+    padding: 50px 20px;
+
+    text-align: center;
+
+    color: #8d8d96;
+
+    font-size: 14px;
+}
+
+/* ================= MODAL ================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1000;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 18px;
+
+    background: rgba(0,0,0,.88);
+}
+
+.modal.open {
+    display: flex;
+}
+
+/* ================= MODAL BOX ================= */
+
+.modal-box {
+    width: min(1100px, 100%);
+
+    max-height: 95vh;
+
+    overflow: auto;
+
+    background: #0d0d10;
+
+    border: 1px solid #29292f;
+
+    border-radius: 13px;
+}
+
+/* ================= MODAL HEADER ================= */
+
+.modal-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 14px 16px;
+
+    border-bottom: 1px solid #29292f;
+}
+
+.modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.close {
+    flex-shrink: 0;
+
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #19191e;
+
+    color: #fff;
+
+    cursor: pointer;
+
+    font-size: 22px;
+}
+
+/* ================= VIDEO ================= */
+
+.video-container {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+}
+
+.video-container iframe {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    border: 0;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 650px) {
+
+    .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .main {
+        width: 96%;
+        margin-top: 20px;
+    }
+
+    .grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 10px;
+    }
+
+    .title {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .modal {
+        padding: 0;
+    }
+
+    .modal-box {
+        width: 100%;
+        height: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <div class="logo">
+            VIDEO ARCHIVE
+        </div>
+
+        <input
+            id="search"
+            class="search"
+            type="search"
+            placeholder="Search videos..."
+            autocomplete="off"
+        >
+
+    </div>
+
+</header>
+
+
+<main class="main">
+
+    <div
+        id="status"
+        class="status"
+    >
+        Loading videos...
+    </div>
+
+
+    <div
+        id="loader"
+        class="loader"
+    ></div>
+
+
+    <section
+        id="grid"
+        class="grid"
+    ></section>
+
+
+    <div
+        id="empty"
+        class="empty"
+    >
+        No videos found.
+    </div>
+
+</main>
+
+
+<!-- VIDEO MODAL -->
+
+<div
+    id="modal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div
+                id="modalTitle"
+                class="modal-title"
+            ></div>
+
+            <button
+                id="close"
+                class="close"
+                type="button"
+                aria-label="Close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            id="videoContainer"
+            class="video-container"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   CSV FILE
+
+   links.csv is in the SAME folder as this HTML file.
+===================================================== */
+
+const CSV_URL = "./links.csv";
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const grid =
+    document.getElementById("grid");
+
+const status =
+    document.getElementById("status");
+
+const loader =
+    document.getElementById("loader");
+
+const empty =
+    document.getElementById("empty");
+
+const search =
+    document.getElementById("search");
+
+const modal =
+    document.getElementById("modal");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
+const videoContainer =
+    document.getElementById(
+        "videoContainer"
+    );
+
+const closeButton =
+    document.getElementById("close");
+
+
+/* =====================================================
+   DATA
+===================================================== */
+
+let videos = [];
+
+let filteredVideos = [];
+
+
+/* =====================================================
+   FORMAT TITLE
+
+   rich-people-are-watching-an-exhibition
+
+   →
+
+   Rich People Are Watching An Exhibition
+===================================================== */
+
+function formatTitle(slug) {
+
+    if (!slug) {
+        return "Untitled Video";
+    }
+
+    let title = slug;
+
+    try {
+        title = decodeURIComponent(title);
+    }
+
+    catch (_) {
+        // Ignore decode errors
+    }
+
+    title =
+        title
+            .replace(/[-_]+/g, " ")
+            .replace(/\s+/g, " ")
+            .trim();
+
+    title =
+        title
+            .toLowerCase()
+            .split(" ")
+            .map(word => {
+
+                if (!word) {
+                    return "";
+                }
+
+                return (
+                    word.charAt(0).toUpperCase()
+                    +
+                    word.slice(1)
+                );
+
+            })
+            .join(" ");
+
+    return title || "Untitled Video";
+}
+
+
+/* =====================================================
+   CLEAN URL
+===================================================== */
+
+function cleanUrl(rawUrl) {
+
+    let url = rawUrl.trim();
+
+    /*
+    Remove surrounding quotes.
+    */
+
+    if (
+        url.length >= 2 &&
+        (
+            (
+                url.startsWith('"') &&
+                url.endsWith('"')
+            )
+            ||
+            (
+                url.startsWith("'") &&
+                url.endsWith("'")
+            )
+        )
+    ) {
+
+        url =
+            url.slice(1, -1).trim();
+    }
+
+
+    /*
+    Fix:
+
+    https//example.com
+
+    →
+
+    https://example.com
+    */
+
+    url =
+        url.replace(
+            /^https\/\//i,
+            "https://"
+        );
+
+
+    url =
+        url.replace(
+            /^http\/\//i,
+            "http://"
+        );
+
+
+    return url;
+}
+
+
+/* =====================================================
+   PARSE VIDEO URL
+
+   Example:
+
+   https://sick-r.com/videos/2283/
+   rich-people-are-watching-an-exhibition/
+
+   →
+
+   ID:
+   2283
+
+   TITLE:
+   Rich People Are Watching An Exhibition
+
+   EMBED:
+   https://sick-r.com/embed/2283
+===================================================== */
+
+function parseVideoUrl(rawUrl) {
+
+    const cleaned =
+        cleanUrl(rawUrl);
+
+    if (!cleaned) {
+        return null;
+    }
+
+
+    let url;
+
+    try {
+
+        url =
+            new URL(cleaned);
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Invalid URL:",
+            cleaned
+        );
+
+        return null;
+    }
+
+
+    const parts =
+        url.pathname
+            .split("/")
+            .filter(Boolean);
+
+
+    /*
+    Find "videos"
+    */
+
+    const videosIndex =
+        parts.findIndex(
+            part =>
+                part.toLowerCase()
+                === "videos"
+        );
+
+
+    /*
+    NORMAL VIDEO URL
+    */
+
+    if (
+        videosIndex !== -1 &&
+        parts[videosIndex + 1]
+    ) {
+
+        const id =
+            parts[videosIndex + 1];
+
+
+        /*
+        Everything after the ID
+        becomes the title.
+        */
+
+        const titleSlug =
+            parts
+                .slice(
+                    videosIndex + 2
+                )
+                .join("-");
+
+
+        const title =
+            formatTitle(
+                titleSlug
+            );
+
+
+        /*
+        Convert:
+
+        /videos/2283/title
+
+        →
+
+        /embed/2283
+        */
+
+        const embedUrl =
+            url.origin +
+            "/embed/" +
+            encodeURIComponent(id);
+
+
+        return {
+
+            sourceUrl:
+                url.href,
+
+            id:
+                id,
+
+            title:
+                title,
+
+            embedUrl:
+                embedUrl
+
+        };
+    }
+
+
+    /*
+    ALREADY AN EMBED URL
+    */
+
+    const embedIndex =
+        parts.findIndex(
+            part =>
+                part.toLowerCase()
+                === "embed"
+        );
+
+
+    if (
+        embedIndex !== -1 &&
+        parts[embedIndex + 1]
+    ) {
+
+        return {
+
+            sourceUrl:
+                url.href,
+
+            id:
+                parts[
+                    embedIndex + 1
+                ],
+
+            title:
+                "Video",
+
+            embedUrl:
+                url.href
+
+        };
+    }
+
+
+    return null;
+}
+
+
+/* =====================================================
+   PARSE CSV
+
+   Expected:
+
+   URL
+   URL
+   URL
+
+   One URL per line.
+===================================================== */
+
+function parseCSV(text) {
+
+    return text
+
+        .split(/\r?\n/)
+
+        .map(
+            line =>
+                line.trim()
+        )
+
+        .filter(
+            line =>
+                line.length > 0
+        );
+}
+
+
+/* =====================================================
+   LOAD CSV
+===================================================== */
+
+async function loadVideos() {
+
+    try {
+
+        status.textContent =
+            "Loading video list...";
+
+
+        /*
+        Fetch ./links.csv
+
+        Because links.csv is in the same folder,
+        this is a same-origin request.
+        */
+
+        const response =
+            await fetch(
+                CSV_URL,
+                {
+                    method: "GET",
+                    cache: "no-cache"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+        }
+
+
+        /*
+        Convert CSV to text.
+        */
+
+        const text =
+            await response.text();
+
+
+        console.log(
+            "CSV downloaded:",
+            text.length,
+            "characters"
+        );
+
+
+        /*
+        Get individual URLs.
+        */
+
+        const urls =
+            parseCSV(text);
+
+
+        console.log(
+            "Lines found:",
+            urls.length
+        );
+
+
+        const results = [];
+
+        const seen =
+            new Set();
+
+
+        /*
+        Process URLs.
+        */
+
+        for (
+            const rawUrl
+            of urls
+        ) {
+
+            const video =
+                parseVideoUrl(
+                    rawUrl
+                );
+
+
+            if (!video) {
+                continue;
+            }
+
+
+            /*
+            Remove duplicates.
+            */
+
+            if (
+                seen.has(
+                    video.embedUrl
+                )
+            ) {
+
+                continue;
+            }
+
+
+            seen.add(
+                video.embedUrl
+            );
+
+
+            results.push(
+                video
+            );
+        }
+
+
+        videos =
+            results;
+
+
+        filteredVideos =
+            results;
+
+
+        /*
+        Hide loader.
+        */
+
+        loader.style.display =
+            "none";
+
+
+        /*
+        Show count.
+        */
+
+        status.textContent =
+            `${videos.length.toLocaleString()} videos available`;
+
+
+        /*
+        Render.
+        */
+
+        render();
+
+
+        /*
+        Debugging.
+        */
+
+        console.log(
+            "Videos parsed:",
+            videos.length
+        );
+
+
+        console.log(
+            videos.slice(0, 5)
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "CSV ERROR:",
+            error
+        );
+
+
+        loader.style.display =
+            "none";
+
+
+        status.textContent =
+            "Could not load links.csv";
+
+
+        empty.textContent =
+            "Could not load links.csv. Make sure videos.html and links.csv are in the same folder.";
+
+
+        empty.style.display =
+            "block";
+    }
+}
+
+
+/* =====================================================
+   RENDER CARDS
+===================================================== */
+
+function render() {
+
+    grid.innerHTML =
+        "";
+
+
+    if (
+        filteredVideos.length === 0
+    ) {
+
+        empty.style.display =
+            "block";
+
+        return;
+    }
+
+
+    empty.style.display =
+        "none";
+
+
+    const fragment =
+        document.createDocumentFragment();
+
+
+    for (
+        const video
+        of filteredVideos
+    ) {
+
+        const card =
+            document.createElement(
+                "article"
+            );
+
+
+        card.className =
+            "card";
+
+
+        /*
+        Thumbnail
+        */
+
+        const thumbnail =
+            document.createElement(
+                "div"
+            );
+
+
+        thumbnail.className =
+            "thumbnail";
+
+
+        /*
+        Play icon
+        */
+
+        const play =
+            document.createElement(
+                "div"
+            );
+
+
+        play.className =
+            "play";
+
+
+        play.textContent =
+            "▶";
+
+
+        thumbnail.appendChild(
+            play
+        );
+
+
+        /*
+        Title
+        */
+
+        const title =
+            document.createElement(
+                "div"
+            );
+
+
+        title.className =
+            "title";
+
+
+        title.textContent =
+            video.title;
+
+
+        /*
+        Build card
+        */
+
+        card.appendChild(
+            thumbnail
+        );
+
+
+        card.appendChild(
+            title
+        );
+
+
+        /*
+        Open player
+        */
+
+        card.addEventListener(
+            "click",
+            () => {
+
+                openVideo(
+                    video
+                );
+
+            }
+        );
+
+
+        fragment.appendChild(
+            card
+        );
+    }
+
+
+    grid.appendChild(
+        fragment
+    );
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+search.addEventListener(
+    "input",
+    function() {
+
+        const query =
+            this.value
+                .trim()
+                .toLowerCase();
+
+
+        if (!query) {
+
+            filteredVideos =
+                videos;
+
+        }
+
+        else {
+
+            filteredVideos =
+                videos.filter(
+                    video =>
+                        video.title
+                            .toLowerCase()
+                            .includes(
+                                query
+                            )
+                );
+        }
+
+
+        status.textContent =
+            `${filteredVideos.length.toLocaleString()} videos`;
+
+
+        render();
+    }
+);
+
+
+/* =====================================================
+   OPEN VIDEO
+===================================================== */
+
+function openVideo(video) {
+
+    modalTitle.textContent =
+        video.title;
+
+
+    /*
+    Remove any previous player.
+    */
+
+    videoContainer.innerHTML =
+        "";
+
+
+    /*
+    Create iframe ONLY after
+    user clicks a video.
+    */
+
+    const iframe =
+        document.createElement(
+            "iframe"
+        );
+
+
+    iframe.src =
+        video.embedUrl;
+
+
+    iframe.setAttribute(
+        "allowfullscreen",
+        ""
+    );
+
+
+    iframe.setAttribute(
+        "allow",
+        "autoplay; fullscreen; picture-in-picture; encrypted-media"
+    );
+
+
+    iframe.setAttribute(
+        "referrerpolicy",
+        "strict-origin-when-cross-origin"
+    );
+
+
+    videoContainer.appendChild(
+        iframe
+    );
+
+
+    /*
+    Open modal.
+    */
+
+    modal.classList.add(
+        "open"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+}
+
+
+/* =====================================================
+   CLOSE VIDEO
+===================================================== */
+
+function closeVideo() {
+
+    /*
+    Removing the iframe also stops
+    the embedded video.
+    */
+
+    videoContainer.innerHTML =
+        "";
+
+
+    modal.classList.remove(
+        "open"
+    );
+
+
+    document.body.style.overflow =
+        "";
+}
+
+
+/* =====================================================
+   CLOSE BUTTON
+===================================================== */
+
+closeButton.addEventListener(
+    "click",
+    closeVideo
+);
+
+
+/* =====================================================
+   CLICK OUTSIDE PLAYER
+===================================================== */
+
+modal.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            event.target === modal
+        ) {
+
+            closeVideo();
+        }
+    }
+);
+
+
+/* =====================================================
+   ESC KEY
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Escape" &&
+            modal.classList.contains(
+                "open"
+            )
+        ) {
+
+            closeVideo();
+        }
+    }
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadVideos();
+
+</script>
+
+</body>
+</html>
