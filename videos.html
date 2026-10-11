@@ -293,6 +293,114 @@ body {
 
 
 /* =====================================================
+   SEARCH SUGGESTIONS DROPDOWN
+===================================================== */
+
+.search-suggestions {
+
+    position:
+        absolute;
+
+    top:
+        calc(100% + 6px);
+
+    left:
+        0;
+
+    right:
+        0;
+
+    background:
+        #0a0a0a;
+
+    border:
+        1px solid #242424;
+
+    border-radius:
+        11px;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,0.6);
+
+    z-index:
+        150;
+
+    display:
+        none;
+
+    max-height:
+        360px;
+
+    overflow-y:
+        auto;
+}
+
+
+.search-suggestions.open {
+
+    display:
+        block;
+}
+
+
+.suggestion-item {
+
+    padding:
+        11px 16px;
+
+    font-size:
+        13px;
+
+    color:
+        #cccccc;
+
+    cursor:
+        pointer;
+
+    border-bottom:
+        1px solid #141414;
+
+    transition:
+        background .15s ease,
+        color .15s ease;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+}
+
+
+.suggestion-item:last-child {
+
+    border-bottom:
+        0;
+}
+
+
+.suggestion-item:hover,
+.suggestion-item.highlighted {
+
+    background:
+        #161616;
+
+    color:
+        #ffffff;
+}
+
+
+.suggestion-item strong {
+
+    color:
+        #ffffff;
+}
+
+
+/* =====================================================
    SEARCH CANCEL
 ===================================================== */
 
@@ -976,11 +1084,6 @@ body {
     width:
         min(900px,92vw);
 
-    /*
-    Keeps the popup comfortably
-    inside the screen.
-    */
-
     max-height:
         88vh;
 
@@ -1560,6 +1663,9 @@ body {
                 placeholder="Search videos..."
                 autocomplete="off"
                 aria-label="Search videos"
+                role="combobox"
+                aria-expanded="false"
+                aria-controls="searchSuggestions"
             >
 
 
@@ -1572,6 +1678,15 @@ body {
             >
                 ×
             </button>
+
+
+            <!-- SUGGESTIONS DROPDOWN -->
+
+            <div
+                id="searchSuggestions"
+                class="search-suggestions"
+                role="listbox"
+            ></div>
 
         </div>
 
@@ -1752,18 +1867,8 @@ body {
    CONFIGURATION
 ===================================================== */
 
-
-/*
-CSV is in the SAME folder as videos.html.
-*/
-
 const CSV_URL =
     "./links.csv";
-
-
-/*
-Exactly 30 videos per page.
-*/
 
 const VIDEOS_PER_PAGE =
     30;
@@ -1774,125 +1879,120 @@ const VIDEOS_PER_PAGE =
 ===================================================== */
 
 const grid =
-    document.getElementById(
-        "grid"
-    );
-
+    document.getElementById("grid");
 
 const status =
-    document.getElementById(
-        "status"
-    );
-
+    document.getElementById("status");
 
 const loader =
-    document.getElementById(
-        "loader"
-    );
-
+    document.getElementById("loader");
 
 const empty =
-    document.getElementById(
-        "empty"
-    );
-
+    document.getElementById("empty");
 
 const pagination =
-    document.getElementById(
-        "pagination"
-    );
-
+    document.getElementById("pagination");
 
 const search =
-    document.getElementById(
-        "search"
-    );
-
+    document.getElementById("search");
 
 const searchWrapper =
-    document.getElementById(
-        "searchWrapper"
-    );
-
+    document.getElementById("searchWrapper");
 
 const searchCancel =
-    document.getElementById(
-        "searchCancel"
-    );
+    document.getElementById("searchCancel");
 
+const searchSuggestions =
+    document.getElementById("searchSuggestions");
 
 const heading =
-    document.getElementById(
-        "heading"
-    );
-
+    document.getElementById("heading");
 
 const logo =
-    document.getElementById(
-        "logo"
-    );
-
+    document.getElementById("logo");
 
 const randomButton =
-    document.getElementById(
-        "randomButton"
-    );
-
+    document.getElementById("randomButton");
 
 const modal =
-    document.getElementById(
-        "modal"
-    );
-
+    document.getElementById("modal");
 
 const modalTitle =
-    document.getElementById(
-        "modalTitle"
-    );
-
+    document.getElementById("modalTitle");
 
 const modalShare =
-    document.getElementById(
-        "modalShare"
-    );
-
+    document.getElementById("modalShare");
 
 const videoContainer =
-    document.getElementById(
-        "videoContainer"
-    );
-
+    document.getElementById("videoContainer");
 
 const closeButton =
-    document.getElementById(
-        "close"
-    );
-
+    document.getElementById("close");
 
 const toast =
-    document.getElementById(
-        "toast"
-    );
+    document.getElementById("toast");
 
 
 /* =====================================================
    STATE
 ===================================================== */
 
-let videos =
-    [];
+let videos = [];
+let filteredVideos = [];
+let currentPage = 1;
+let currentVideo = null;
+let toastTimer = null;
+let searchTimeout = null;
+let selectedSuggestionIndex = -1;
 
-let filteredVideos =
-    [];
 
-let currentPage =
-    1;
+/* =====================================================
+   TOKENIZER & SEARCH LOGIC (YOUTUBE-STYLE)
+===================================================== */
 
-let currentVideo =
-    null;
+function tokenizeText(text) {
+    return String(text || "")
+        .toLowerCase()
+        .replace(/[^\w\s]/g, " ")
+        .split(/\s+/)
+        .filter(word => word.length > 0);
+}
 
-let toastTimer =
-    null;
+
+function searchVideos(query, allVideos) {
+    const cleanQuery = query.trim().toLowerCase();
+    if (!cleanQuery) return allVideos;
+
+    const queryTokens = tokenizeText(cleanQuery);
+
+    const scoredResults = allVideos.map(video => {
+        let score = 0;
+        const titleLower = video.title.toLowerCase();
+
+        // 1. Exact substring bonus
+        if (titleLower.includes(cleanQuery)) {
+            score += 100;
+        }
+
+        // 2. Token matching & prefix scoring
+        queryTokens.forEach(qToken => {
+            video.tokens.forEach(vToken => {
+                if (vToken === qToken) {
+                    score += 20; // Exact token match
+                } else if (vToken.startsWith(qToken)) {
+                    score += 8;  // Prefix match (e.g., "vid" -> "video")
+                }
+            });
+        });
+
+        return { video, score };
+    });
+
+    return scoredResults
+        .filter(item => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(item => item.video);
+}
 
 
 /* =====================================================
@@ -1900,35 +2000,11 @@ let toastTimer =
 ===================================================== */
 
 function shuffle(array) {
-
-    const result =
-        [...array];
-
-
-    for (
-        let i = result.length - 1;
-        i > 0;
-        i--
-    ) {
-
-        const j =
-            Math.floor(
-                Math.random() *
-                (i + 1)
-            );
-
-
-        [
-            result[i],
-            result[j]
-        ] =
-        [
-            result[j],
-            result[i]
-        ];
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
     }
-
-
     return result;
 }
 
@@ -1937,70 +2013,24 @@ function shuffle(array) {
    FORMAT TITLE
 ===================================================== */
 
-function formatTitle(
-    slug
-) {
-
-    if (!slug) {
-
-        return "Untitled Video";
-    }
-
-
-    let title =
-        slug;
-
-
+function formatTitle(slug) {
+    if (!slug) return "Untitled Video";
+    let title = slug;
     try {
-
-        title =
-            decodeURIComponent(
-                title
-            );
-
-    }
-
-    catch (_) {
-
-        // Ignore decoding errors.
-    }
-
-
-    title =
-        title
-            .replace(
-                /[-_]+/g,
-                " "
-            )
-            .replace(
-                /\s+/g,
-                " "
-            )
-            .trim();
-
+        title = decodeURIComponent(title);
+    } catch (_) {}
 
     return title
+        .replace(/[-_]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
         .toLowerCase()
         .split(" ")
-        .map(
-            word => {
-
-                if (!word) {
-                    return "";
-                }
-
-
-                return (
-                    word.charAt(0).toUpperCase()
-                    +
-                    word.slice(1)
-                );
-
-            }
-        )
-        .join(" ")
-        ||
-        "Untitled Video";
+        .map(word => {
+            if (!word) return "";
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        })
+        .join(" ") || "Untitled Video";
 }
 
 
@@ -2008,145 +2038,42 @@ function formatTitle(
    CLEAN URL
 ===================================================== */
 
-function cleanUrl(
-    rawUrl
-) {
-
-    let url =
-        String(
-            rawUrl || ""
-        ).trim();
-
-
-    /*
-    Remove surrounding quotes.
-    */
-
+function cleanUrl(rawUrl) {
+    let url = String(rawUrl || "").trim();
     if (
         url.length >= 2 &&
-        (
-            (
-                url.startsWith('"') &&
-                url.endsWith('"')
-            )
-            ||
-            (
-                url.startsWith("'") &&
-                url.endsWith("'")
-            )
-        )
+        ((url.startsWith('"') && url.endsWith('"')) ||
+         (url.startsWith("'") && url.endsWith("'")))
     ) {
-
-        url =
-            url.slice(
-                1,
-                -1
-            ).trim();
+        url = url.slice(1, -1).trim();
     }
 
-
-    /*
-    Fix accidental:
-
-    https//example.com
-
-    */
-
-    url =
-        url.replace(
-            /^https\/\//i,
-            "https://"
-        );
-
-
-    url =
-        url.replace(
-            /^http\/\//i,
-            "http://"
-        );
-
-
+    url = url.replace(/^https\/\//i, "https://");
+    url = url.replace(/^http\/\//i, "http://");
     return url;
 }
 
 
 /* =====================================================
-   THUMBNAIL FOLDER
+   THUMBNAIL FOLDER & URL
 ===================================================== */
 
-function getThumbnailFolder(
-    id
-) {
-
-    const number =
-        parseInt(
-            id,
-            10
-        );
-
-
-    if (
-        Number.isNaN(
-            number
-        )
-    ) {
-
-        return null;
-    }
-
-
-    /*
-    1-999   → 0
-    1000-1999 → 1000
-    2000-2999 → 2000
-    */
-
-    return (
-        Math.floor(
-            number / 1000
-        )
-        *
-        1000
-    );
+function getThumbnailFolder(id) {
+    const number = parseInt(id, 10);
+    if (Number.isNaN(number)) return null;
+    return Math.floor(number / 1000) * 1000;
 }
 
 
-/* =====================================================
-   THUMBNAIL URL
-===================================================== */
-
-function createThumbnailUrl(
-    url,
-    id
-) {
-
-    const folder =
-        getThumbnailFolder(
-            id
-        );
-
-
-    if (
-        folder === null
-    ) {
-
-        return null;
-    }
-
-
+function createThumbnailUrl(url, id) {
+    const folder = getThumbnailFolder(id);
+    if (folder === null) return null;
     return (
-        url.origin
-        +
-        "/contents/videos_screenshots/"
-        +
-        folder
-        +
-        "/"
-        +
-        encodeURIComponent(
-            id
-        )
-        +
+        url.origin +
+        "/contents/videos_screenshots/" +
+        folder +
+        "/" +
+        encodeURIComponent(id) +
         "/264x198/1.jpg"
     );
 }
@@ -2156,179 +2083,54 @@ function createThumbnailUrl(
    PARSE VIDEO URL
 ===================================================== */
 
-function parseVideoUrl(
-    rawUrl
-) {
-
-    const cleaned =
-        cleanUrl(
-            rawUrl
-        );
-
-
-    if (!cleaned) {
-
-        return null;
-    }
-
+function parseVideoUrl(rawUrl) {
+    const cleaned = cleanUrl(rawUrl);
+    if (!cleaned) return null;
 
     let url;
-
-
     try {
-
-        url =
-            new URL(
-                cleaned
-            );
-
-    }
-
-    catch (_) {
-
+        url = new URL(cleaned);
+    } catch (_) {
         return null;
     }
 
+    const parts = url.pathname.split("/").filter(Boolean);
 
-    const parts =
-        url.pathname
-            .split("/")
-            .filter(
-                Boolean
-            );
-
-
-    /*
-    ================================================
-    /videos/ID/title
-    ================================================
-    */
-
-    const videosIndex =
-        parts.findIndex(
-            part =>
-                part.toLowerCase()
-                ===
-                "videos"
-        );
-
-
-    if (
-        videosIndex !== -1 &&
-        parts[
-            videosIndex + 1
-        ]
-    ) {
-
-
-        const id =
-            parts[
-                videosIndex + 1
-            ];
-
-
-        const titleSlug =
-            parts
-                .slice(
-                    videosIndex + 2
-                )
-                .join("-");
-
-
-        const title =
-            formatTitle(
-                titleSlug
-            );
-
-
-        const embedUrl =
-            url.origin
-            +
-            "/embed/"
-            +
-            encodeURIComponent(
-                id
-            );
-
-
-        const thumbnailUrl =
-            createThumbnailUrl(
-                url,
-                id
-            );
-
+    // /videos/ID/title
+    const videosIndex = parts.findIndex(part => part.toLowerCase() === "videos");
+    if (videosIndex !== -1 && parts[videosIndex + 1]) {
+        const id = parts[videosIndex + 1];
+        const titleSlug = parts.slice(videosIndex + 2).join("-");
+        const title = formatTitle(titleSlug);
+        const embedUrl = url.origin + "/embed/" + encodeURIComponent(id);
+        const thumbnailUrl = createThumbnailUrl(url, id);
+        const tokens = new Set([...tokenizeText(title), ...tokenizeText(id)]);
 
         return {
-
-            id:
-                id,
-
-            title:
-                title,
-
-            embedUrl:
-                embedUrl,
-
-            thumbnailUrl:
-                thumbnailUrl,
-
-            sourceUrl:
-                url.href
+            id,
+            title,
+            embedUrl,
+            thumbnailUrl,
+            sourceUrl: url.href,
+            tokens
         };
     }
 
-
-    /*
-    ================================================
-    /embed/ID
-    ================================================
-    */
-
-    const embedIndex =
-        parts.findIndex(
-            part =>
-                part.toLowerCase()
-                ===
-                "embed"
-        );
-
-
-    if (
-        embedIndex !== -1 &&
-        parts[
-            embedIndex + 1
-        ]
-    ) {
-
-
-        const id =
-            parts[
-                embedIndex + 1
-            ];
-
+    // /embed/ID
+    const embedIndex = parts.findIndex(part => part.toLowerCase() === "embed");
+    if (embedIndex !== -1 && parts[embedIndex + 1]) {
+        const id = parts[embedIndex + 1];
+        const tokens = new Set(tokenizeText(id));
 
         return {
-
-            id:
-                id,
-
-            title:
-                "Video",
-
-            embedUrl:
-                url.href,
-
-            thumbnailUrl:
-                createThumbnailUrl(
-                    url,
-                    id
-                ),
-
-            sourceUrl:
-                url.href
+            id,
+            title: "Video " + id,
+            embedUrl: url.href,
+            thumbnailUrl: createThumbnailUrl(url, id),
+            sourceUrl: url.href,
+            tokens
         };
     }
-
 
     return null;
 }
@@ -2338,23 +2140,11 @@ function parseVideoUrl(
    PARSE CSV
 ===================================================== */
 
-function parseCSV(
-    text
-) {
-
-    return String(
-        text || ""
-    )
-        .split(
-            /\r?\n/
-        )
-        .map(
-            line =>
-                line.trim()
-        )
-        .filter(
-            Boolean
-        );
+function parseCSV(text) {
+    return String(text || "")
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean);
 }
 
 
@@ -2363,1413 +2153,424 @@ function parseCSV(
 ===================================================== */
 
 async function loadVideos() {
-
     try {
+        status.textContent = "Loading video list...";
 
+        const response = await fetch(CSV_URL, {
+            method: "GET",
+            cache: "no-cache"
+        });
 
-        status.textContent =
-            "Loading video list...";
-
-
-        /*
-        Fetch CSV.
-        */
-
-        const response =
-            await fetch(
-                CSV_URL,
-                {
-                    method:
-                        "GET",
-
-                    cache:
-                        "no-cache"
-                }
-            );
-
-
-        if (
-            !response.ok
-        ) {
-
-            throw new Error(
-                "HTTP " +
-                response.status
-            );
+        if (!response.ok) {
+            throw new Error("HTTP " + response.status);
         }
 
+        const text = await response.text();
+        const urls = parseCSV(text);
 
-        const text =
-            await response.text();
+        const results = [];
+        const seen = new Set();
 
+        for (const rawUrl of urls) {
+            const video = parseVideoUrl(rawUrl);
+            if (!video) continue;
 
-        const urls =
-            parseCSV(
-                text
-            );
-
-
-        const results =
-            [];
-
-        const seen =
-            new Set();
-
-
-        /*
-        Convert every line
-        into a video object.
-        */
-
-        for (
-            const rawUrl
-            of urls
-        ) {
-
-
-            const video =
-                parseVideoUrl(
-                    rawUrl
-                );
-
-
-            if (!video) {
-
-                continue;
+            if (!seen.has(video.embedUrl)) {
+                seen.add(video.embedUrl);
+                results.push(video);
             }
-
-
-            /*
-            Deduplicate by embed URL.
-            */
-
-            if (
-                seen.has(
-                    video.embedUrl
-                )
-            ) {
-
-                continue;
-            }
-
-
-            seen.add(
-                video.embedUrl
-            );
-
-
-            results.push(
-                video
-            );
         }
 
+        videos = results;
+        filteredVideos = [...videos];
 
-        /*
-        RANDOMIZE THE ENTIRE
-        ARCHIVE ON EVERY PAGE LOAD.
-        */
+        loader.style.display = "none";
+        status.textContent = `${videos.length} videos loaded`;
 
-        videos =
-            shuffle(
-                results
-            );
+        renderGrid();
+        renderPagination();
 
-
-        filteredVideos =
-            [...videos];
-
-
-        loader.style.display =
-            "none";
-
-
-        heading.textContent =
-            "Latest Videos";
-
-
-        status.textContent =
-            `${videos.length.toLocaleString()} videos available`;
-
-
-        render();
-
-
-        /*
-        If somebody shared:
-
-        ?video=2283
-
-        automatically open it.
-        */
-
-        openVideoFromUrl();
-
-
-    }
-
-    catch (error) {
-
-
-        console.error(
-            "CSV ERROR:",
-            error
-        );
-
-
-        loader.style.display =
-            "none";
-
-
-        status.textContent =
-            "Could not load links.csv";
-
-
-        empty.textContent =
-            "Could not load links.csv. Make sure videos.html and links.csv are in the same folder.";
-
-
-        empty.style.display =
-            "block";
+    } catch (err) {
+        loader.style.display = "none";
+        status.textContent = "Failed to load video list.";
+        empty.style.display = "block";
+        empty.textContent = "Error loading videos. Please check your links.csv file.";
     }
 }
 
 
 /* =====================================================
-   RENDER
+   RENDER GRID
 ===================================================== */
 
-function render() {
+function renderGrid() {
+    grid.innerHTML = "";
 
-    grid.innerHTML =
-        "";
+    const startIndex = (currentPage - 1) * VIDEOS_PER_PAGE;
+    const endIndex = startIndex + VIDEOS_PER_PAGE;
+    const pageVideos = filteredVideos.slice(startIndex, endIndex);
 
-    pagination.innerHTML =
-        "";
-
-
-    if (
-        filteredVideos.length === 0
-    ) {
-
-        empty.style.display =
-            "block";
-
+    if (pageVideos.length === 0) {
+        empty.style.display = "block";
         return;
     }
 
+    empty.style.display = "none";
 
-    empty.style.display =
-        "none";
+    pageVideos.forEach(video => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.setAttribute("role", "button");
+        card.setAttribute("tabindex", "0");
 
+        const thumb = document.createElement("div");
+        thumb.className = "thumbnail";
 
-    const totalPages =
-        Math.ceil(
-            filteredVideos.length /
-            VIDEOS_PER_PAGE
-        );
-
-
-    if (
-        currentPage >
-        totalPages
-    ) {
-
-        currentPage =
-            totalPages;
-    }
-
-
-    const start =
-        (
-            currentPage - 1
-        )
-        *
-        VIDEOS_PER_PAGE;
-
-
-    const pageVideos =
-        filteredVideos.slice(
-            start,
-            start + VIDEOS_PER_PAGE
-        );
-
-
-    const fragment =
-        document.createDocumentFragment();
-
-
-    for (
-        const video
-        of pageVideos
-    ) {
-
-        fragment.appendChild(
-            createCard(
-                video
-            )
-        );
-    }
-
-
-    grid.appendChild(
-        fragment
-    );
-
-
-    renderPagination(
-        totalPages
-    );
-}
-
-
-/* =====================================================
-   CREATE CARD
-===================================================== */
-
-function createCard(
-    video
-) {
-
-    const card =
-        document.createElement(
-            "article"
-        );
-
-
-    card.className =
-        "card";
-
-
-    /*
-    Thumbnail.
-    */
-
-    const thumbnail =
-        document.createElement(
-            "div"
-        );
-
-
-    thumbnail.className =
-        "thumbnail";
-
-
-    /*
-    Thumbnail image.
-    */
-
-    if (
-        video.thumbnailUrl
-    ) {
-
-
-        const image =
-            document.createElement(
-                "img"
-            );
-
-
-        image.src =
-            video.thumbnailUrl;
-
-
-        image.alt =
-            video.title;
-
-
-        image.loading =
-            "lazy";
-
-
-        /*
-        If thumbnail 1.jpg doesn't exist,
-        remove it and keep the dark background.
-        */
-
-        image.onerror =
-            function() {
-
-                this.remove();
-            };
-
-
-        thumbnail.appendChild(
-            image
-        );
-    }
-
-
-    /*
-    Title only.
-    */
-
-    const title =
-        document.createElement(
-            "div"
-        );
-
-
-    title.className =
-        "title";
-
-
-    title.textContent =
-        video.title;
-
-
-    card.appendChild(
-        thumbnail
-    );
-
-
-    card.appendChild(
-        title
-    );
-
-
-    /*
-    Clicking card opens player.
-    */
-
-    card.addEventListener(
-        "click",
-        function() {
-
-            openVideo(
-                video
-            );
+        if (video.thumbnailUrl) {
+            const img = document.createElement("img");
+            img.src = video.thumbnailUrl;
+            img.alt = video.title;
+            img.loading = "lazy";
+            thumb.appendChild(img);
         }
-    );
 
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "title";
+        titleDiv.textContent = video.title;
 
-    return card;
+        card.appendChild(thumb);
+        card.appendChild(titleDiv);
+
+        card.addEventListener("click", () => {
+            openModal(video);
+        });
+
+        card.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                openModal(video);
+            }
+        });
+
+        grid.appendChild(card);
+    });
 }
 
 
 /* =====================================================
-   PAGINATION
+   RENDER PAGINATION
 ===================================================== */
 
-function renderPagination(
-    totalPages
-) {
+function renderPagination() {
+    pagination.innerHTML = "";
 
-    if (
-        totalPages <= 1
-    ) {
+    const totalPages = Math.ceil(filteredVideos.length / VIDEOS_PER_PAGE);
+    if (totalPages <= 1) return;
 
-        return;
-    }
-
-
-    /*
-    Previous.
-    */
-
-    const previous =
-        document.createElement(
-            "button"
-        );
-
-
-    previous.className =
-        "page-button";
-
-
-    previous.textContent =
-        "‹";
-
-
-    previous.disabled =
-        currentPage === 1;
-
-
-    previous.addEventListener(
-        "click",
-        function() {
-
-            if (
-                currentPage <= 1
-            ) {
-
-                return;
-            }
-
-
+    // Previous Button
+    const prevBtn = document.createElement("button");
+    prevBtn.className = "page-button";
+    prevBtn.textContent = "←";
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.addEventListener("click", () => {
+        if (currentPage > 1) {
             currentPage--;
-
-
-            render();
-
-
-            scrollTop();
+            renderGrid();
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
-    );
+    });
+    pagination.appendChild(prevBtn);
 
-
-    pagination.appendChild(
-        previous
-    );
-
-
-    /*
-    Show a compact range of pages.
-    */
-
-    let start =
-        Math.max(
-            1,
-            currentPage - 2
-        );
-
-
-    let end =
-        Math.min(
-            totalPages,
-            currentPage + 2
-        );
-
-
-    /*
-    Page buttons.
-    */
-
-    for (
-        let page = start;
-        page <= end;
-        page++
-    ) {
-
-
-        const button =
-            document.createElement(
-                "button"
-            );
-
-
-        button.className =
-            "page-button";
-
-
-        button.textContent =
-            page;
-
-
-        if (
-            page === currentPage
-        ) {
-
-            button.classList.add(
-                "active"
-            );
-        }
-
-
-        button.addEventListener(
-            "click",
-            function() {
-
-                currentPage =
-                    page;
-
-
-                render();
-
-
-                scrollTop();
-            }
-        );
-
-
-        pagination.appendChild(
-            button
-        );
+    // Page Range Logic
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
     }
 
-
-    /*
-    Next.
-    */
-
-    const next =
-        document.createElement(
-            "button"
-        );
-
-
-    next.className =
-        "page-button";
-
-
-    next.textContent =
-        "›";
-
-
-    next.disabled =
-        currentPage === totalPages;
-
-
-    next.addEventListener(
-        "click",
-        function() {
-
-            if (
-                currentPage >= totalPages
-            ) {
-
-                return;
+    for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement("button");
+        btn.className = "page-button" + (i === currentPage ? " active" : "");
+        btn.textContent = i;
+        btn.addEventListener("click", () => {
+            if (currentPage !== i) {
+                currentPage = i;
+                renderGrid();
+                renderPagination();
+                window.scrollTo({ top: 0, behavior: "smooth" });
             }
+        });
+        pagination.appendChild(btn);
+    }
 
-
+    // Next Button
+    const nextBtn = document.createElement("button");
+    nextBtn.className = "page-button";
+    nextBtn.textContent = "→";
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.addEventListener("click", () => {
+        if (currentPage < totalPages) {
             currentPage++;
-
-
-            render();
-
-
-            scrollTop();
+            renderGrid();
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
-    );
-
-
-    pagination.appendChild(
-        next
-    );
-}
-
-
-/* =====================================================
-   SEARCH UI
-===================================================== */
-
-function updateSearchUI() {
-
-    if (
-        search.value.trim()
-    ) {
-
-        searchWrapper.classList.add(
-            "has-text"
-        );
-
-    }
-
-    else {
-
-        searchWrapper.classList.remove(
-            "has-text"
-        );
-    }
-}
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-search.addEventListener(
-    "input",
-    function() {
-
-        updateSearchUI();
-
-
-        const query =
-            this.value
-                .trim()
-                .toLowerCase();
-
-
-        /*
-        No search.
-        */
-
-        if (!query) {
-
-
-            heading.textContent =
-                "Latest Videos";
-
-
-            filteredVideos =
-                [...videos];
-
-
-            currentPage =
-                1;
-
-
-            status.textContent =
-                `${videos.length.toLocaleString()} videos available`;
-
-
-            render();
-
-
-            return;
-        }
-
-
-        /*
-        Find matches first.
-        */
-
-        const matches =
-            videos.filter(
-                video =>
-                    video.title
-                        .toLowerCase()
-                        .includes(
-                            query
-                        )
-            );
-
-
-        /*
-        IMPORTANT:
-
-        Randomize search results,
-        so the ordering changes every
-        time the search is performed.
-        */
-
-        filteredVideos =
-            shuffle(
-                matches
-            );
-
-
-        currentPage =
-            1;
-
-
-        heading.textContent =
-            "Search Results";
-
-
-        status.textContent =
-            `${filteredVideos.length.toLocaleString()} results`;
-
-
-        render();
-    }
-);
-
-
-/* =====================================================
-   CANCEL SEARCH
-===================================================== */
-
-searchCancel.addEventListener(
-    "click",
-    function() {
-
-        search.value =
-            "";
-
-
-        updateSearchUI();
-
-
-        /*
-        Return to main archive.
-        */
-
-        filteredVideos =
-            [...videos];
-
-
-        currentPage =
-            1;
-
-
-        heading.textContent =
-            "Latest Videos";
-
-
-        status.textContent =
-            `${videos.length.toLocaleString()} videos available`;
-
-
-        render();
-
-
-        /*
-        Remove shared video parameter.
-        */
-
-        const url =
-            new URL(
-                window.location.href
-            );
-
-
-        url.searchParams.delete(
-            "video"
-        );
-
-
-        window.history.replaceState(
-            {},
-            "",
-            url
-        );
-
-
-        search.focus();
-    }
-);
-
-
-/* =====================================================
-   LOGO → HOME
-===================================================== */
-
-function goHome() {
-
-    /*
-    Clear search.
-    */
-
-    search.value =
-        "";
-
-
-    updateSearchUI();
-
-
-    /*
-    Restore main archive.
-    */
-
-    filteredVideos =
-        [...videos];
-
-
-    currentPage =
-        1;
-
-
-    heading.textContent =
-        "Latest Videos";
-
-
-    status.textContent =
-        `${videos.length.toLocaleString()} videos available`;
-
-
-    render();
-
-
-    /*
-    Close player.
-    */
-
-    closeVideo();
-
-
-    /*
-    Remove video query parameter.
-    */
-
-    const url =
-        new URL(
-            window.location.href
-        );
-
-
-    url.searchParams.delete(
-        "video"
-    );
-
-
-    window.history.replaceState(
-        {},
-        "",
-        url
-    );
-
-
-    /*
-    Go to top.
-    */
-
-    window.scrollTo({
-
-        top:
-            0,
-
-        behavior:
-            "smooth"
     });
-}
-
-
-logo.addEventListener(
-    "click",
-    goHome
-);
-
-
-logo.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Enter" ||
-            event.key === " "
-        ) {
-
-            event.preventDefault();
-
-            goHome();
-        }
-    }
-);
-
-
-/* =====================================================
-   RANDOM VIDEO
-===================================================== */
-
-randomButton.addEventListener(
-    "click",
-    function() {
-
-        if (
-            videos.length === 0
-        ) {
-
-            return;
-        }
-
-
-        const randomIndex =
-            Math.floor(
-                Math.random() *
-                videos.length
-            );
-
-
-        openVideo(
-            videos[
-                randomIndex
-            ]
-        );
-    }
-);
-
-
-/* =====================================================
-   OPEN VIDEO
-===================================================== */
-
-function openVideo(
-    video
-) {
-
-    if (!video) {
-        return;
-    }
-
-
-    currentVideo =
-        video;
-
-
-    /*
-    Set title.
-    */
-
-    modalTitle.textContent =
-        video.title;
-
-
-    /*
-    Clear existing iframe.
-    */
-
-    videoContainer.innerHTML =
-        "";
-
-
-    /*
-    Create iframe only now.
-    */
-
-    const iframe =
-        document.createElement(
-            "iframe"
-        );
-
-
-    iframe.src =
-        video.embedUrl;
-
-
-    iframe.setAttribute(
-        "allowfullscreen",
-        ""
-    );
-
-
-    iframe.setAttribute(
-        "allow",
-        "autoplay; fullscreen; picture-in-picture; encrypted-media"
-    );
-
-
-    iframe.setAttribute(
-        "referrerpolicy",
-        "strict-origin-when-cross-origin"
-    );
-
-
-    iframe.setAttribute(
-        "title",
-        video.title
-    );
-
-
-    /*
-    Add player.
-    */
-
-    videoContainer.appendChild(
-        iframe
-    );
-
-
-    /*
-    Put video ID in URL so the
-    page can be shared.
-    */
-
-    const url =
-        new URL(
-            window.location.href
-        );
-
-
-    url.searchParams.set(
-        "video",
-        video.id
-    );
-
-
-    window.history.replaceState(
-        {},
-        "",
-        url
-    );
-
-
-    /*
-    Open modal.
-    */
-
-    modal.classList.add(
-        "open"
-    );
-
-
-    modal.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-
-    document.body.style.overflow =
-        "hidden";
+    pagination.appendChild(nextBtn);
 }
 
 
 /* =====================================================
-   OPEN VIDEO FROM SHARED URL
+   AUTOCOMPLETE SUGGESTIONS DROPDOWN
 ===================================================== */
 
-function openVideoFromUrl() {
-
-    const url =
-        new URL(
-            window.location.href
-        );
-
-
-    const videoId =
-        url.searchParams.get(
-            "video"
-        );
-
-
-    if (!videoId) {
-
+function updateSuggestions(query) {
+    const cleanQuery = query.trim().toLowerCase();
+    if (!cleanQuery || videos.length === 0) {
+        closeSuggestions();
         return;
     }
 
+    // Match top 6 video titles that include the query or tokens
+    const matches = videos.filter(v => v.title.toLowerCase().includes(cleanQuery)).slice(0, 6);
 
-    const video =
-        videos.find(
-            item =>
-                String(item.id)
-                ===
-                String(videoId)
-        );
-
-
-    if (!video) {
-
-        /*
-        Invalid video ID.
-        Remove it from URL.
-        */
-
-        url.searchParams.delete(
-            "video"
-        );
-
-
-        window.history.replaceState(
-            {},
-            "",
-            url
-        );
-
-
+    if (matches.length === 0) {
+        closeSuggestions();
         return;
     }
 
+    searchSuggestions.innerHTML = "";
+    selectedSuggestionIndex = -1;
 
-    openVideo(
-        video
-    );
+    matches.forEach((video, index) => {
+        const item = document.createElement("div");
+        item.className = "suggestion-item";
+        item.setAttribute("role", "option");
+
+        // Highlight matching query text
+        const titleText = video.title;
+        const regex = new RegExp(`(${cleanQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        const highlightedHTML = titleText.replace(regex, '<strong>$1</strong>');
+
+        item.innerHTML = `🔍 <span>${highlightedHTML}</span>`;
+
+        item.addEventListener("mousedown", (e) => {
+            e.preventDefault(); // Prevent input blur
+            search.value = video.title;
+            closeSuggestions();
+            executeSearch(video.title);
+        });
+
+        searchSuggestions.appendChild(item);
+    });
+
+    searchSuggestions.classList.add("open");
+    search.setAttribute("aria-expanded", "true");
+}
+
+
+function closeSuggestions() {
+    searchSuggestions.classList.remove("open");
+    search.setAttribute("aria-expanded", "false");
+    selectedSuggestionIndex = -1;
 }
 
 
 /* =====================================================
-   SHARE CURRENT VIDEO
+   EXECUTE SEARCH
 ===================================================== */
 
-async function shareCurrentVideo() {
+function executeSearch(query) {
+    currentPage = 1;
+    filteredVideos = searchVideos(query, videos);
+    renderGrid();
+    renderPagination();
 
-    if (!currentVideo) {
-
-        return;
+    if (query.trim()) {
+        heading.textContent = `Search: "${query.trim()}"`;
+        status.textContent = `${filteredVideos.length} videos found`;
+    } else {
+        heading.textContent = "Latest Videos";
+        status.textContent = `${videos.length} videos loaded`;
     }
+}
 
 
-    const url =
-        new URL(
-            window.location.href
-        );
+/* =====================================================
+   MODAL & TOAST
+===================================================== */
+
+function openModal(video) {
+    currentVideo = video;
+    modalTitle.textContent = video.title;
+
+    videoContainer.innerHTML = "";
+    const iframe = document.createElement("iframe");
+    iframe.src = video.embedUrl;
+    iframe.allow = "autoplay; fullscreen; encrypted-media";
+    iframe.allowFullscreen = true;
+    videoContainer.appendChild(iframe);
+
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+}
 
 
-    url.searchParams.set(
-        "video",
-        currentVideo.id
-    );
+function closeModal() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    videoContainer.innerHTML = "";
+    document.body.style.overflow = "";
+    currentVideo = null;
+}
 
 
-    const shareUrl =
-        url.href;
+function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2200);
+}
 
 
-    /*
-    Native share menu.
-    */
+/* =====================================================
+   EVENT LISTENERS
+===================================================== */
 
-    if (
-        navigator.share
-    ) {
+search.addEventListener("input", (e) => {
+    const query = e.target.value;
+    searchWrapper.classList.toggle("has-text", query.length > 0);
 
-        try {
+    updateSuggestions(query);
 
-            await navigator.share({
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        executeSearch(query);
+    }, 150);
+});
 
-                title:
-                    currentVideo.title,
 
-                text:
-                    "Watch " +
-                    currentVideo.title,
-
-                url:
-                    shareUrl
+search.addEventListener("keydown", (e) => {
+    const items = searchSuggestions.querySelectorAll(".suggestion-item");
+    
+    if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (items.length > 0) {
+            selectedSuggestionIndex = (selectedSuggestionIndex + 1) % items.length;
+            items.forEach((it, idx) => {
+                it.classList.toggle("highlighted", idx === selectedSuggestionIndex);
             });
-
-
-            return;
-
         }
-
-        catch (error) {
-
-            /*
-            User cancelled native
-            sharing.
-            */
-
-            if (
-                error.name ===
-                "AbortError"
-            ) {
-
-                return;
+    } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (items.length > 0) {
+            selectedSuggestionIndex = (selectedSuggestionIndex - 1 + items.length) % items.length;
+            items.forEach((it, idx) => {
+                it.classList.toggle("highlighted", idx === selectedSuggestionIndex);
+            });
+        }
+    } else if (e.key === "Enter") {
+        if (selectedSuggestionIndex >= 0 && items[selectedSuggestionIndex]) {
+            e.preventDefault();
+            const textSpan = items[selectedSuggestionIndex].querySelector("span");
+            if (textSpan) {
+                // Strip strong tags for clean search query
+                const cleanText = textSpan.textContent;
+                search.value = cleanText;
+                closeSuggestions();
+                executeSearch(cleanText);
             }
+        } else {
+            closeSuggestions();
         }
+    } else if (e.key === "Escape") {
+        closeSuggestions();
     }
+});
 
 
-    /*
-    Clipboard fallback.
-    */
-
-    try {
-
-        await navigator.clipboard.writeText(
-            shareUrl
-        );
+search.addEventListener("blur", () => {
+    setTimeout(closeSuggestions, 200);
+});
 
 
-        showToast(
-            "Link copied"
-        );
+searchCancel.addEventListener("click", () => {
+    search.value = "";
+    searchWrapper.classList.remove("has-text");
+    closeSuggestions();
+    executeSearch("");
+    search.focus();
+});
 
+
+randomButton.addEventListener("click", () => {
+    if (videos.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * videos.length);
+    openModal(videos[randomIndex]);
+});
+
+
+logo.addEventListener("click", () => {
+    search.value = "";
+    searchWrapper.classList.remove("has-text");
+    closeSuggestions();
+    executeSearch("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+
+closeButton.addEventListener("click", closeModal);
+
+
+modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+        closeModal();
     }
-
-    catch (_) {
-
-        /*
-        Fallback for older browsers.
-        */
-
-        const input =
-            document.createElement(
-                "input"
-            );
+});
 
 
-        input.value =
-            shareUrl;
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        closeModal();
+        closeSuggestions();
+    }
+});
 
 
-        document.body.appendChild(
-            input
-        );
+modalShare.addEventListener("click", () => {
+    if (!currentVideo) return;
+    const shareUrl = currentVideo.sourceUrl || window.location.href;
 
-
-        input.select();
-
-
-        input.setSelectionRange(
-            0,
-            input.value.length
-        );
-
-
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            showToast("Link copied to clipboard");
+        }).catch(() => {
+            showToast("Failed to copy link");
+        });
+    } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = shareUrl;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
         try {
-
-            document.execCommand(
-                "copy"
-            );
-
-            showToast(
-                "Link copied"
-            );
-
+            document.execCommand("copy");
+            showToast("Link copied to clipboard");
+        } catch (_) {
+            showToast("Failed to copy link");
         }
-
-        catch (_) {
-
-            showToast(
-                "Copy failed"
-            );
-        }
-
-
-        input.remove();
+        document.body.removeChild(textarea);
     }
-}
+});
 
 
 /* =====================================================
-   SHARE BUTTON
-===================================================== */
-
-modalShare.addEventListener(
-    "click",
-    function(event) {
-
-        event.stopPropagation();
-
-        shareCurrentVideo();
-    }
-);
-
-
-/* =====================================================
-   CLOSE VIDEO
-===================================================== */
-
-function closeVideo() {
-
-    /*
-    Destroy iframe.
-
-    This stops playback and releases
-    the embedded player.
-    */
-
-    videoContainer.innerHTML =
-        "";
-
-
-    currentVideo =
-        null;
-
-
-    modal.classList.remove(
-        "open"
-    );
-
-
-    modal.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-
-    document.body.style.overflow =
-        "";
-
-
-    /*
-    Remove video parameter from URL.
-    */
-
-    const url =
-        new URL(
-            window.location.href
-        );
-
-
-    url.searchParams.delete(
-        "video"
-    );
-
-
-    window.history.replaceState(
-        {},
-        "",
-        url
-    );
-}
-
-
-/* =====================================================
-   CLOSE BUTTON
-===================================================== */
-
-closeButton.addEventListener(
-    "click",
-    closeVideo
-);
-
-
-/* =====================================================
-   CLICK OUTSIDE MODAL
-===================================================== */
-
-modal.addEventListener(
-    "click",
-    function(event) {
-
-        if (
-            event.target === modal
-        ) {
-
-            closeVideo();
-        }
-    }
-);
-
-
-/* =====================================================
-   ESCAPE
-===================================================== */
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Escape" &&
-            modal.classList.contains(
-                "open"
-            )
-        ) {
-
-            closeVideo();
-        }
-    }
-);
-
-
-/* =====================================================
-   TOAST
-===================================================== */
-
-function showToast(
-    message
-) {
-
-    toast.textContent =
-        message;
-
-
-    toast.classList.add(
-        "show"
-    );
-
-
-    clearTimeout(
-        toastTimer
-    );
-
-
-    toastTimer =
-        setTimeout(
-            function() {
-
-                toast.classList.remove(
-                    "show"
-                );
-
-            },
-            2200
-        );
-}
-
-
-/* =====================================================
-   SCROLL TOP
-===================================================== */
-
-function scrollTop() {
-
-    window.scrollTo({
-
-        top:
-            0,
-
-        behavior:
-            "smooth"
-    });
-}
-
-
-/* =====================================================
-   START
+   INITIALIZE
 ===================================================== */
 
 loadVideos();
@@ -3777,5 +2578,4 @@ loadVideos();
 </script>
 
 </body>
-
 </html>
