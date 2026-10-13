@@ -386,9 +386,13 @@ function shuffle(array) {
 }
 
 function searchVideos(query, allVideos) {
-    if (!query.trim() || !fuseInstance) return shuffle(allVideos);
-    const results = fuseInstance.search(query.trim()).map(r => r.item);
-    return shuffle(results); // Randomized search match ordering
+    const cleanQuery = query.trim();
+    if (!cleanQuery) return shuffle(allVideos);
+
+    if (!fuseInstance) return allVideos;
+
+    const results = fuseInstance.search(cleanQuery);
+    return results.sort((a, b) => a.score - b.score).map(r => r.item);
 }
 
 function formatTitle(slug) {
@@ -445,8 +449,19 @@ async function loadVideos() {
         }
 
         videos = results;
-        filteredVideos = shuffle(videos); // Randomize feed order on load
-        fuseInstance = new Fuse(videos, { keys: ['title', 'id'], includeScore: true, threshold: 0.4, ignoreLocation: true });
+        filteredVideos = shuffle(videos);
+
+        fuseInstance = new Fuse(videos, {
+            keys: [
+                { name: 'title', weight: 0.8 },
+                { name: 'id', weight: 0.2 }
+            ],
+            includeScore: true,
+            threshold: 0.2,
+            distance: 100,
+            minMatchCharLength: 2,
+            ignoreLocation: true
+        });
 
         loader.style.display = "none";
         status.textContent = `${videos.length} videos loaded`;
@@ -527,10 +542,11 @@ function executeSearch(query) {
 }
 
 search.addEventListener("input", (e) => {
-    const q = e.target.value;
+    const q = e.target.value.trim().toLowerCase();
     searchFormWrapper.classList.toggle("has-text", q.length > 0);
-    if (!q.trim()) { searchSuggestions.classList.remove("open"); return; }
-    const matches = videos.filter(v => v.title.toLowerCase().includes(q.toLowerCase())).slice(0, 6);
+    if (!q) { searchSuggestions.classList.remove("open"); return; }
+    
+    const matches = videos.filter(v => v.title.toLowerCase().includes(q)).slice(0, 6);
     if (!matches.length) { searchSuggestions.classList.remove("open"); return; }
 
     searchSuggestions.innerHTML = "";
