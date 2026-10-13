@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch Video - Sick Fetish</title>
+<style>
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #050505;
+    color: #dddddd;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-bottom: 70px;
+}
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(5,5,5,.95);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid #171717;
+}
+.header-inner {
+    width: min(1000px, 94%);
+    height: 70px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.back-btn {
+    color: #aaaaaa;
+    text-decoration: none;
+    font-size: 14px;
+    background: #111;
+    border: 1px solid #292929;
+    padding: 8px 14px;
+    border-radius: 8px;
+    transition: .15s;
+}
+.back-btn:hover { color: #fff; background: #1c1c1c; }
+
+.watch-container {
+    width: min(1000px, 94%);
+    margin: 30px auto 0;
+}
+.player-box {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid #242424;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 6px 8px 0 #020202;
+}
+.player-box iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+.info-bar {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #1c1c1c;
+    padding-bottom: 25px;
+}
+.video-title {
+    margin: 0;
+    font-size: 20px;
+    color: #eeeeee;
+    font-weight: 700;
+    flex: 1;
+    min-width: 0;
+}
+.share-btn {
+    background: #111;
+    color: #ccc;
+    border: 1px solid #292929;
+    padding: 10px 18px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 3px 3px 0 #020202;
+    transition: .15s;
+}
+.share-btn:hover { background: #1c1c1c; color: #fff; }
+
+/* Related section */
+.related-heading {
+    margin: 35px 0 20px;
+    font-size: 18px;
+    color: #e1e1e1;
+    font-weight: 700;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px 14px;
+}
+.card {
+    min-width: 0;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    transition: transform .2s ease;
+}
+.card:hover { transform: translateY(-4px); }
+.thumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 9px;
+    box-shadow: 3px 4px 0 #020202;
+}
+.thumbnail img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: .9;
+}
+.title {
+    padding: 8px 2px 0;
+    color: #ccc;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translate(-50%, 20px);
+    background: #101010;
+    color: #ccc;
+    padding: 10px 18px;
+    border: 1px solid #292929;
+    border-radius: 10px;
+    font-size: 13px;
+    box-shadow: 4px 5px 0 #000000;
+    opacity: 0;
+    pointer-events: none;
+    transition: .2s ease;
+    z-index: 2000;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media(max-width: 800px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-inner">
+        <a href="index.html" class="back-btn">← Back to Archive</a>
+    </div>
+</header>
+
+<main class="watch-container">
+    <div class="player-box">
+        <iframe id="videoIframe" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+    </div>
+
+    <div class="info-bar">
+        <h1 class="video-title" id="videoTitle">Loading video...</h1>
+        <button id="shareBtn" class="share-btn" type="button">↗ Share Video</button>
+    </div>
+
+    <h2 class="related-heading">More Videos</h2>
+    <div id="relatedGrid" class="grid"></div>
+</main>
+
+<div id="toast" class="toast">Link copied to clipboard</div>
+
+<script>
+const CSV_URL = "./links.csv";
+
+const videoIframe = document.getElementById("videoIframe");
+const videoTitle = document.getElementById("videoTitle");
+const shareBtn = document.getElementById("shareBtn");
+const relatedGrid = document.getElementById("relatedGrid");
+const toast = document.getElementById("toast");
+
+function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function formatTitle(slug) {
+    if (!slug) return "Untitled Video";
+    let title = slug;
+    try { title = decodeURIComponent(title); } catch (_) {}
+    return title.replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim().toLowerCase()
+        .split(" ").map(w => w ? w.charAt(0).toUpperCase() + w.slice(1) : "").join(" ") || "Untitled Video";
+}
+
+function cleanUrl(rawUrl) {
+    let url = String(rawUrl || "").trim();
+    if (url.length >= 2 && ((url.startsWith('"') && url.endsWith('"')) || (url.startsWith("'") && url.endsWith("'")))) {
+        url = url.slice(1, -1).trim();
+    }
+    return url.replace(/^https\/\//i, "https://").replace(/^http\/\//i, "http://");
+}
+
+function parseVideoUrl(rawUrl) {
+    const cleaned = cleanUrl(rawUrl);
+    if (!cleaned) return null;
+    let url;
+    try { url = new URL(cleaned); } catch (_) { return null; }
+    const parts = url.pathname.split("/").filter(Boolean);
+
+    const videosIndex = parts.findIndex(p => p.toLowerCase() === "videos");
+    if (videosIndex !== -1 && parts[videosIndex + 1]) {
+        const id = parts[videosIndex + 1];
+        const titleSlug = parts.slice(videosIndex + 2).join("-");
+        const title = formatTitle(titleSlug);
+        const embedUrl = url.origin + "/embed/" + encodeURIComponent(id);
+        const thumbnailUrl = url.origin + "/contents/videos_screenshots/" + (Math.floor(parseInt(id, 10)/1000)*1000) + "/" + encodeURIComponent(id) + "/264x198/1.jpg";
+        return { id, title, embedUrl, thumbnailUrl, sourceUrl: url.href };
+    }
+    return null;
+}
+
+async function initWatchPage() {
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get("id");
+
+    if (!videoId) {
+        videoTitle.textContent = "Video not found.";
+        return;
+    }
+
+    try {
+        const response = await fetch(CSV_URL);
+        const text = await response.text();
+        const urls = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+        const allVideos = [];
+        const seen = new Set();
+        let targetVideo = null;
+
+        for (const rawUrl of urls) {
+            const video = parseVideoUrl(rawUrl);
+            if (video && !seen.has(video.embedUrl)) {
+                seen.add(video.embedUrl);
+                allVideos.push(video);
+                if (video.id === videoId) {
+                    targetVideo = video;
+                }
+            }
+        }
+
+        if (targetVideo) {
+            document.title = `${targetVideo.title} - Sick Fetish`;
+            videoTitle.textContent = targetVideo.title;
+            videoIframe.src = targetVideo.embedUrl;
+
+            shareBtn.addEventListener("click", () => {
+                const shareUrl = window.location.href;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(shareUrl).then(() => showToast("Link copied to clipboard"));
+                } else {
+                    showToast("Failed to copy link");
+                }
+            });
+
+            // Render Related/More Videos (filter out current video and pick 4 random ones)
+            const otherVideos = allVideos.filter(v => v.id !== videoId);
+            const shuffled = otherVideos.sort(() => 0.5 - Math.random()).slice(0, 4);
+
+            relatedGrid.innerHTML = "";
+            shuffled.forEach(video => {
+                const a = document.createElement("a");
+                a.className = "card";
+                a.href = `second.html?id=${encodeURIComponent(video.id)}`;
+
+                const thumb = document.createElement("div");
+                thumb.className = "thumbnail";
+                if (video.thumbnailUrl) {
+                    const img = document.createElement("img");
+                    img.src = video.thumbnailUrl;
+                    img.alt = video.title;
+                    img.loading = "lazy";
+                    thumb.appendChild(img);
+                }
+
+                const titleDiv = document.createElement("div");
+                titleDiv.className = "title";
+                titleDiv.textContent = video.title;
+
+                a.appendChild(thumb);
+                a.appendChild(titleDiv);
+                relatedGrid.appendChild(a);
+            });
+
+        } else {
+            videoTitle.textContent = "Video not found in archive.";
+        }
+    } catch (err) {
+        videoTitle.textContent = "Error loading video details.";
+    }
+}
+
+initWatchPage();
+</script>
+
+</body>
+</html>
