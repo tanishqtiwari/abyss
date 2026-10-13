@@ -411,6 +411,19 @@ function cleanUrl(rawUrl) {
     return url.replace(/^https\/\//i, "https://").replace(/^http\/\//i, "http://");
 }
 
+function createThumbnailUrl(url, id) {
+    const hostname = url.hostname.toLowerCase();
+    const isPervertDomain = hostname.includes('pervertium.com') || hostname.includes('perverttube.com');
+    const filename = isPervertDomain ? 'preview.jpg' : '1.jpg';
+
+    const number = parseInt(id, 10);
+    if (!Number.isNaN(number)) {
+        const folder = Math.floor(number / 1000) * 1000;
+        return `${url.origin}/contents/videos_screenshots/${folder}/${encodeURIComponent(id)}/264x198/${filename}`;
+    }
+    return `${url.origin}/contents/videos_screenshots/${encodeURIComponent(id)}/264x198/${filename}`;
+}
+
 function parseVideoUrl(rawUrl) {
     const cleaned = cleanUrl(rawUrl);
     if (!cleaned) return null;
@@ -424,7 +437,7 @@ function parseVideoUrl(rawUrl) {
         const titleSlug = parts.slice(videosIndex + 2).join("-");
         const title = formatTitle(titleSlug);
         const embedUrl = url.origin + "/embed/" + encodeURIComponent(id);
-        const thumbnailUrl = url.origin + "/contents/videos_screenshots/" + (Math.floor(parseInt(id, 10)/1000)*1000) + "/" + encodeURIComponent(id) + "/264x198/1.jpg";
+        const thumbnailUrl = createThumbnailUrl(url, id);
         return { id, title, embedUrl, thumbnailUrl, sourceUrl: url.href };
     }
     return null;
