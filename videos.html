@@ -414,14 +414,15 @@ function cleanUrl(rawUrl) {
 function createThumbnailUrl(url, id) {
     const hostname = url.hostname.toLowerCase();
     const isPervertDomain = hostname.includes('pervertium.com') || hostname.includes('perverttube.com');
-    const filename = isPervertDomain ? 'preview.jpg' : '1.jpg';
+    const folder = Math.floor(parseInt(id, 10) / 1000) * 1000;
 
-    const number = parseInt(id, 10);
-    if (!Number.isNaN(number)) {
-        const folder = Math.floor(number / 1000) * 1000;
-        return `${url.origin}/contents/videos_screenshots/${folder}/${encodeURIComponent(id)}/264x198/${filename}`;
+    if (isPervertDomain) {
+        // Output format: https://www.perverttube.com/contents/videos_screenshots/86000/86719/preview.jpg
+        return `${url.origin}/contents/videos_screenshots/${folder}/${encodeURIComponent(id)}/preview.jpg`;
     }
-    return `${url.origin}/contents/videos_screenshots/${encodeURIComponent(id)}/264x198/${filename}`;
+
+    // Default tube script structure with 264x198 dimension subfolder
+    return `${url.origin}/contents/videos_screenshots/${folder}/${encodeURIComponent(id)}/264x198/1.jpg`;
 }
 
 function parseVideoUrl(rawUrl) {
@@ -431,10 +432,15 @@ function parseVideoUrl(rawUrl) {
     try { url = new URL(cleaned); } catch (_) { return null; }
     const parts = url.pathname.split("/").filter(Boolean);
 
-    const videosIndex = parts.findIndex(p => p.toLowerCase() === "videos");
-    if (videosIndex !== -1 && parts[videosIndex + 1]) {
-        const id = parts[videosIndex + 1];
-        const titleSlug = parts.slice(videosIndex + 2).join("-");
+    // Support both /videos/ID/title AND /video/ID/title
+    const vIdx = parts.findIndex(p => {
+        const lower = p.toLowerCase();
+        return lower === "videos" || lower === "video";
+    });
+
+    if (vIdx !== -1 && parts[vIdx + 1]) {
+        const id = parts[vIdx + 1];
+        const titleSlug = parts.slice(vIdx + 2).join("-");
         const title = formatTitle(titleSlug);
         const embedUrl = url.origin + "/embed/" + encodeURIComponent(id);
         const thumbnailUrl = createThumbnailUrl(url, id);
