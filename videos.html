@@ -155,7 +155,6 @@ body {
 
 .suggestion-item:last-child { border-bottom: 0; }
 .suggestion-item:hover, .suggestion-item.highlighted { background: #161616; color: #ffffff; }
-.suggestion-item strong { color: #ffffff; }
 
 .search-cancel {
     position: absolute;
@@ -377,9 +376,19 @@ let filteredVideos = [];
 let currentPage = 1;
 let fuseInstance = null;
 
+function shuffle(array) {
+    const res = [...array];
+    for (let i = res.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [res[i], res[j]] = [res[j], res[i]];
+    }
+    return res;
+}
+
 function searchVideos(query, allVideos) {
-    if (!query.trim() || !fuseInstance) return allVideos;
-    return fuseInstance.search(query.trim()).map(r => r.item);
+    if (!query.trim() || !fuseInstance) return shuffle(allVideos);
+    const results = fuseInstance.search(query.trim()).map(r => r.item);
+    return shuffle(results); // Randomized search match ordering
 }
 
 function formatTitle(slug) {
@@ -436,7 +445,7 @@ async function loadVideos() {
         }
 
         videos = results;
-        filteredVideos = [...videos];
+        filteredVideos = shuffle(videos); // Randomize feed order on load
         fuseInstance = new Fuse(videos, { keys: ['title', 'id'], includeScore: true, threshold: 0.4, ignoreLocation: true });
 
         loader.style.display = "none";
@@ -557,7 +566,7 @@ randomButton.addEventListener("click", () => {
     window.location.href = `second.html?id=${encodeURIComponent(randomVideo.id)}`;
 });
 
-logo.addEventListener("click", () => { window.location.href = "index.html"; });
+logo.addEventListener("click", () => { window.location.href = "videos.html"; });
 
 loadVideos();
 </script>
