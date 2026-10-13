@@ -93,7 +93,6 @@ body {
 }
 .share-btn:hover { background: #1c1c1c; color: #fff; }
 
-/* Related section */
 .related-heading {
     margin: 35px 0 20px;
     font-size: 18px;
@@ -143,6 +142,14 @@ body {
     overflow: hidden;
 }
 
+.loader-small {
+    text-align: center;
+    padding: 20px;
+    color: #555;
+    font-size: 13px;
+    display: none;
+}
+
 .toast {
     position: fixed;
     left: 50%;
@@ -172,7 +179,7 @@ body {
 
 <header class="header">
     <div class="header-inner">
-        <a href="index.html" class="back-btn">← Back to Archive</a>
+        <a href="videos.html" class="back-btn">← Back to Archive</a>
     </div>
 </header>
 
@@ -188,6 +195,7 @@ body {
 
     <h2 class="related-heading">More Videos</h2>
     <div id="relatedGrid" class="grid"></div>
+    <div id="infiniteLoader" class="loader-small">Loading more videos...</div>
 </main>
 
 <div id="toast" class="toast">Link copied to clipboard</div>
@@ -199,7 +207,11 @@ const videoIframe = document.getElementById("videoIframe");
 const videoTitle = document.getElementById("videoTitle");
 const shareBtn = document.getElementById("shareBtn");
 const relatedGrid = document.getElementById("relatedGrid");
+const infiniteLoader = document.getElementById("infiniteLoader");
 const toast = document.getElementById("toast");
+
+let allOtherVideos = [];
+let isLoadingMore = false;
 
 function showToast(msg) {
     toast.textContent = msg;
@@ -240,6 +252,42 @@ function parseVideoUrl(rawUrl) {
         return { id, title, embedUrl, thumbnailUrl, sourceUrl: url.href };
     }
     return null;
+}
+
+function appendMoreVideos(count = 8) {
+    if (allOtherVideos.length === 0 || isLoadingMore) return;
+    isLoadingMore = true;
+    infiniteLoader.style.display = "block";
+
+    // Shuffle and pick next batch of random videos
+    const batch = [...allOtherVideos].sort(() => 0.5 - Math.random()).slice(0, count);
+
+    batch.forEach(video => {
+        const a = document.createElement("a");
+        a.className = "card";
+        a.href = `second.html?id=${encodeURIComponent(video.id)}`;
+
+        const thumb = document.createElement("div");
+        thumb.className = "thumbnail";
+        if (video.thumbnailUrl) {
+            const img = document.createElement("img");
+            img.src = video.thumbnailUrl;
+            img.alt = video.title;
+            img.loading = "lazy";
+            thumb.appendChild(img);
+        }
+
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "title";
+        titleDiv.textContent = video.title;
+
+        a.appendChild(thumb);
+        a.appendChild(titleDiv);
+        relatedGrid.appendChild(a);
+    });
+
+    isLoadingMore = false;
+    infiniteLoader.style.display = "none";
 }
 
 async function initWatchPage() {
@@ -285,33 +333,14 @@ async function initWatchPage() {
                 }
             });
 
-            // Render Related/More Videos (filter out current video and pick 4 random ones)
-            const otherVideos = allVideos.filter(v => v.id !== videoId);
-            const shuffled = otherVideos.sort(() => 0.5 - Math.random()).slice(0, 4);
+            allOtherVideos = allVideos.filter(v => v.id !== videoId);
+            appendMoreVideos(12); // Initial batch
 
-            relatedGrid.innerHTML = "";
-            shuffled.forEach(video => {
-                const a = document.createElement("a");
-                a.className = "card";
-                a.href = `second.html?id=${encodeURIComponent(video.id)}`;
-
-                const thumb = document.createElement("div");
-                thumb.className = "thumbnail";
-                if (video.thumbnailUrl) {
-                    const img = document.createElement("img");
-                    img.src = video.thumbnailUrl;
-                    img.alt = video.title;
-                    img.loading = "lazy";
-                    thumb.appendChild(img);
+            // Infinite Scroll Trigger
+            window.addEventListener("scroll", () => {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 600) {
+                    appendMoreVideos(8);
                 }
-
-                const titleDiv = document.createElement("div");
-                titleDiv.className = "title";
-                titleDiv.textContent = video.title;
-
-                a.appendChild(thumb);
-                a.appendChild(titleDiv);
-                relatedGrid.appendChild(a);
             });
 
         } else {
