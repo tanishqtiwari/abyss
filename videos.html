@@ -217,13 +217,13 @@ body {
     border: 1px solid #282828;
     border-radius: 8px;
     color: #e1e1e1;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
+    flex-shrink: 0;
     transition: background .18s ease, border-color .18s ease;
     box-shadow: 2px 2px 0 #020202;
-    flex-shrink: 0;
 }
 
 .drawer-toggle-btn:hover { background: #1a1a1a; border-color: #383838; }
@@ -234,29 +234,39 @@ body {
     gap: 8px;
     overflow-x: auto;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
 }
 
 .popular-categories::-webkit-scrollbar { display: none; }
 
+.cat-divider {
+    width: 1px;
+    height: 20px;
+    background: #222222;
+    margin: 0 4px;
+    flex-shrink: 0;
+}
+
 .cat-pill {
-    padding: 6px 14px;
+    padding: 7px 16px;
     background: transparent;
     border: 1px solid #1a1a1a;
     border-radius: 20px;
-    color: #777777;
-    font-size: 12px;
+    color: #888888;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
-    max-width: 130px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    flex-shrink: 0;
     transition: all .18s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .cat-pill:hover { color: #dddddd; border-color: #2e2e2e; background: #101010; }
 .cat-pill.active { background: #dddddd; color: #050505; border-color: #dddddd; font-weight: 700; }
-.cat-pill.temp { border-style: dashed; border-color: #333333; }
+.cat-pill.temp { border-style: dashed; border-color: #2d2d2d; color: #999999; }
+.cat-pill.temp.active { background: #dddddd; color: #050505; border-style: solid; }
 
 /* SIDEBAR DRAWER */
 .drawer-backdrop {
@@ -325,7 +335,8 @@ body {
     text-transform: uppercase;
     letter-spacing: .8px;
     color: #444444;
-    margin: 14px 0 6px 12px;
+    margin: 18px 0 8px 12px;
+    font-weight: 700;
 }
 
 .drawer-item {
@@ -543,6 +554,7 @@ const CATEGORIES = [
 ];
 
 let activeCategory = "All";
+let activeSearchQuery = "";
 
 const grid = document.getElementById("grid");
 const status = document.getElementById("status");
@@ -579,7 +591,6 @@ function shuffle(array) {
     return res;
 }
 
-/* RECENT SEARCHES STORAGE MANAGER (MAX 5) */
 function getRecentSearches() {
     try {
         return JSON.parse(localStorage.getItem('sf_recent_searches') || '[]');
@@ -592,14 +603,12 @@ function addRecentSearch(query) {
     const cleanQ = query.trim();
     if (!cleanQ) return;
 
-    // Check if it's already a built-in category keyword
     const isBuiltIn = CATEGORIES.some(c => c.name.toLowerCase() === cleanQ.toLowerCase());
     if (isBuiltIn) return;
 
     try {
         let history = getRecentSearches().filter(q => q.toLowerCase() !== cleanQ.toLowerCase());
         history.unshift(cleanQ);
-        // Keep max 5 items
         localStorage.setItem('sf_recent_searches', JSON.stringify(history.slice(0, 5)));
     } catch (_) {}
 }
@@ -642,38 +651,41 @@ closeDrawerBtn.addEventListener("click", () => toggleDrawer(false));
 drawerBackdrop.addEventListener("click", () => toggleDrawer(false));
 
 function renderCategoryNavs() {
-    // 1. Popular Pills + Temporary Recent Search Chips in Header
     popularCategoriesBar.innerHTML = "";
     
-    // Render standard popular categories
     CATEGORIES.filter(c => c.popular).forEach(cat => {
         const pill = document.createElement("button");
-        pill.className = "cat-pill" + (cat.name === activeCategory ? " active" : "");
+        const isActive = (!activeSearchQuery && activeCategory === cat.name);
+        pill.className = "cat-pill" + (isActive ? " active" : "");
         pill.textContent = cat.name;
         pill.type = "button";
         pill.addEventListener("click", () => selectCategory(cat.name));
         popularCategoriesBar.appendChild(pill);
     });
 
-    // Render temporary recent search chips (Max 5)
     const recentSearches = getRecentSearches();
-    recentSearches.forEach(query => {
-        const pill = document.createElement("button");
-        pill.className = "cat-pill temp" + (query === activeCategory ? " active" : "");
-        pill.textContent = query;
-        pill.type = "button";
-        pill.title = query;
-        pill.addEventListener("click", () => selectCategory(query, true));
-        popularCategoriesBar.appendChild(pill);
-    });
+    if (recentSearches.length > 0) {
+        const divider = document.createElement("div");
+        divider.className = "cat-divider";
+        popularCategoriesBar.appendChild(divider);
 
-    // 2. Full Sidebar Drawer List
+        recentSearches.forEach(query => {
+            const pill = document.createElement("button");
+            const isActive = (activeSearchQuery === query || activeCategory === query);
+            pill.className = "cat-pill temp" + (isActive ? " active" : "");
+            pill.textContent = `🔍 ${query}`;
+            pill.type = "button";
+            pill.title = query;
+            pill.addEventListener("click", () => triggerSearch(query));
+            popularCategoriesBar.appendChild(pill);
+        });
+    }
+
     drawerContent.innerHTML = "";
-    
-    // Built-in categories
     CATEGORIES.forEach(cat => {
         const btn = document.createElement("button");
-        btn.className = "drawer-item" + (cat.name === activeCategory ? " active" : "");
+        const isActive = (!activeSearchQuery && activeCategory === cat.name);
+        btn.className = "drawer-item" + (isActive ? " active" : "");
         btn.type = "button";
 
         let matchCount = videos.length;
@@ -691,7 +703,6 @@ function renderCategoryNavs() {
         drawerContent.appendChild(btn);
     });
 
-    // Temporary searches section in drawer if any exist
     if (recentSearches.length > 0) {
         const label = document.createElement("div");
         label.className = "drawer-section-label";
@@ -700,14 +711,15 @@ function renderCategoryNavs() {
 
         recentSearches.forEach(query => {
             const btn = document.createElement("button");
-            btn.className = "drawer-item temp" + (query === activeCategory ? " active" : "");
+            const isActive = (activeSearchQuery === query || activeCategory === query);
+            btn.className = "drawer-item" + (isActive ? " active" : "");
             btn.type = "button";
 
             const matchCount = videos.filter(v => v.title.toLowerCase().includes(query.toLowerCase())).length;
 
             btn.innerHTML = `<span>🔍 ${query}</span> <span class="drawer-item-count">${matchCount}</span>`;
             btn.addEventListener("click", () => {
-                selectCategory(query, true);
+                triggerSearch(query);
                 toggleDrawer(false);
             });
             drawerContent.appendChild(btn);
@@ -715,16 +727,19 @@ function renderCategoryNavs() {
     }
 }
 
-function selectCategory(catName, isSearchQuery = false) {
+function selectCategory(catName) {
     activeCategory = catName;
-    if (isSearchQuery) {
-        search.value = catName;
-        searchFormWrapper.classList.add("has-text");
-    } else {
-        search.value = "";
-        searchFormWrapper.classList.remove("has-text");
-    }
-    renderCategoryNavs();
+    activeSearchQuery = "";
+    search.value = "";
+    searchFormWrapper.classList.remove("has-text");
+    applyFilters();
+}
+
+function triggerSearch(query) {
+    activeSearchQuery = query.trim();
+    activeCategory = "All";
+    search.value = activeSearchQuery;
+    searchFormWrapper.classList.toggle("has-text", activeSearchQuery.length > 0);
     applyFilters();
 }
 
@@ -732,12 +747,10 @@ function applyFilters() {
     currentPage = 1;
     let baseList = videos;
 
-    const searchQuery = search.value.trim();
-    
-    if (searchQuery) {
-        baseList = searchVideos(searchQuery, videos);
-        addRecentSearch(searchQuery);
-        heading.textContent = `Search: "${searchQuery}"`;
+    if (activeSearchQuery) {
+        baseList = searchVideos(activeSearchQuery, videos);
+        addRecentSearch(activeSearchQuery);
+        heading.textContent = `Search: "${activeSearchQuery}"`;
     } else if (activeCategory !== "All") {
         const selectedCat = CATEGORIES.find(c => c.name === activeCategory);
         if (selectedCat && selectedCat.keywords.length > 0) {
@@ -745,9 +758,6 @@ function applyFilters() {
                 const titleLower = video.title.toLowerCase();
                 return selectedCat.keywords.some(kw => titleLower.includes(kw.toLowerCase()));
             });
-        } else {
-            // It's a temporary recent search query category
-            baseList = searchVideos(activeCategory, videos);
         }
         heading.textContent = `${activeCategory} Videos`;
     } else {
@@ -756,7 +766,7 @@ function applyFilters() {
     }
 
     filteredVideos = baseList;
-    renderCategoryNavs(); // Refresh counts and chips
+    renderCategoryNavs();
     status.textContent = `${filteredVideos.length} videos found`;
     renderGrid();
     renderPagination();
@@ -839,7 +849,6 @@ async function loadVideos() {
         }
 
         videos = results;
-        filteredVideos = getPersonalizedFeed(videos);
 
         fuseInstance = new Fuse(videos, {
             keys: [
@@ -856,9 +865,18 @@ async function loadVideos() {
         loader.style.display = "none";
         status.textContent = `${videos.length} videos loaded`;
 
-        renderCategoryNavs();
-        renderGrid();
-        renderPagination();
+        const params = new URLSearchParams(window.location.search);
+        const urlCat = params.get("cat");
+        const urlSearch = params.get("search");
+
+        if (urlSearch) {
+            triggerSearch(urlSearch);
+        } else if (urlCat) {
+            selectCategory(urlCat);
+        } else {
+            applyFilters();
+        }
+
     } catch (err) {
         loader.style.display = "none";
         status.textContent = "Failed to load video list.";
@@ -938,9 +956,7 @@ search.addEventListener("input", (e) => {
         item.innerHTML = `🔍 <span>${video.title}</span>`;
         item.addEventListener("mousedown", (e) => {
             e.preventDefault();
-            search.value = video.title;
-            activeCategory = video.title;
-            applyFilters();
+            triggerSearch(video.title);
             searchSuggestions.classList.remove("open");
         });
         searchSuggestions.appendChild(item);
@@ -951,16 +967,14 @@ search.addEventListener("input", (e) => {
 searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
     searchSuggestions.classList.remove("open");
-    activeCategory = search.value.trim() || "All";
-    applyFilters();
+    if (search.value.trim()) {
+        triggerSearch(search.value);
+    }
 });
 
 searchCancel.addEventListener("click", () => {
-    search.value = "";
-    searchFormWrapper.classList.remove("has-text");
+    selectCategory("All");
     searchSuggestions.classList.remove("open");
-    activeCategory = "All";
-    applyFilters();
 });
 
 randomButton.addEventListener("click", () => {
