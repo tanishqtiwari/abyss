@@ -7,44 +7,354 @@
 <title>Watch Video - Sick Fetish</title>
 <style>
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 body {
     margin: 0;
     min-height: 100vh;
-    background: #050505;
+    padding-bottom: 70px;
+    background: radial-gradient(circle at 10% 5%, rgba(255,255,255,.018), transparent 24%), radial-gradient(circle at 90% 80%, rgba(255,255,255,.012), transparent 26%), #050505;
     color: #dddddd;
     font-family: Arial, Helvetica, sans-serif;
-    padding-bottom: 70px;
+    overflow-x: hidden;
 }
+
+:root {
+    --bg: #050505;
+    --surface: #0b0b0b;
+    --surface-2: #111111;
+    --border: #242424;
+    --border-light: #2d2d2d;
+    --text: #dddddd;
+    --text-bright: #eeeeee;
+    --muted: #666666;
+    --muted-dark: #454545;
+}
+
+/* HEADER & NAVBAR */
 .header {
     position: sticky;
     top: 0;
     z-index: 100;
     background: rgba(5,5,5,.95);
     backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     border-bottom: 1px solid #171717;
 }
-.header-inner {
-    width: min(1000px, 94%);
-    height: 70px;
+
+.header-top {
+    width: min(1400px,94%);
+    min-height: 70px;
     margin: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    width: 170px;
+    aspect-ratio: 1600 / 380;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: transform .2s ease;
+}
+
+.logo:hover img { transform: scale(1.025); }
+
+.search-form-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 580px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+}
+
+.search-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.search {
+    width: 100%;
+    height: 42px;
+    padding: 0 44px 0 16px;
+    background: #090909;
+    color: #dddddd;
+    border: 1px solid #242424;
+    border-radius: 10px 0 0 10px;
+    outline: none;
+    font-size: 13px;
+    box-shadow: 2px 2px 0 #020202;
+    transition: border-color .2s ease, background .2s ease;
+}
+
+.search::placeholder { color: #444444; }
+.search:focus { border-color: #3b3b3b; background: #0d0d0d; }
+
+.search-submit {
+    height: 42px;
+    padding: 0 16px;
+    background: #141414;
+    color: #aaaaaa;
+    border: 1px solid #242424;
+    border-left: 0;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 2px 2px 0 #020202;
+    transition: background .15s ease, color .15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-submit:hover { background: #1c1c1c; color: #ffffff; }
+
+.search-suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #0a0a0a;
+    border: 1px solid #242424;
+    border-radius: 11px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+    z-index: 150;
+    display: none;
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.search-suggestions.open { display: block; }
+
+.suggestion-item {
+    padding: 11px 16px;
+    font-size: 13px;
+    color: #cccccc;
+    cursor: pointer;
+    border-bottom: 1px solid #141414;
+    transition: background .15s ease, color .15s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.suggestion-item:last-child { border-bottom: 0; }
+.suggestion-item:hover { background: #161616; color: #ffffff; }
+
+.search-cancel {
+    position: absolute;
+    right: 7px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border: 0;
+    background: transparent;
+    color: #555555;
+    cursor: pointer;
+    font-size: 18px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-form-wrapper.has-text .search-cancel { display: flex; }
+.search-cancel:hover { color: #dddddd; }
+
+.random-button {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border: 1px solid #292929;
+    border-radius: 10px;
+    background: #0b0b0b;
+    color: #666666;
+    cursor: pointer;
+    font-size: 20px;
+    box-shadow: 2px 2px 0 #020202;
+    transition: .2s ease;
+}
+
+.random-button:hover { color: #dddddd; background: #111111; transform: rotate(8deg); }
+
+/* POPULAR CATEGORIES ROW */
+.header-nav {
+    border-top: 1px solid #121212;
+    background: #080808;
+}
+
+.header-nav-inner {
+    width: min(1400px,94%);
+    margin: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.drawer-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #111111;
+    border: 1px solid #282828;
+    border-radius: 8px;
+    color: #e1e1e1;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .18s ease, border-color .18s ease;
+    box-shadow: 2px 2px 0 #020202;
+    flex-shrink: 0;
+}
+
+.drawer-toggle-btn:hover { background: #1a1a1a; border-color: #383838; }
+
+.popular-categories {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.popular-categories::-webkit-scrollbar { display: none; }
+
+.cat-pill {
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid #1a1a1a;
+    border-radius: 20px;
+    color: #777777;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all .18s ease;
+}
+
+.cat-pill:hover { color: #dddddd; border-color: #2e2e2e; background: #101010; }
+.cat-pill.temp { border-style: dashed; border-color: #333333; }
+
+/* SIDEBAR DRAWER */
+.drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s ease;
+}
+
+.drawer-backdrop.open { opacity: 1; pointer-events: auto; }
+
+.sidebar-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    max-width: 85vw;
+    background: #090909;
+    border-right: 1px solid #222222;
+    z-index: 201;
+    transform: translateX(-100%);
+    transition: transform .28s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 8px 0 32px rgba(0,0,0,0.8);
+}
+
+.sidebar-drawer.open { transform: translateX(0); }
+
+.drawer-header {
+    padding: 22px 20px;
+    border-bottom: 1px solid #1a1a1a;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-.back-btn {
-    color: #aaaaaa;
-    text-decoration: none;
-    font-size: 14px;
-    background: #111;
-    border: 1px solid #292929;
-    padding: 8px 14px;
-    border-radius: 8px;
-    transition: .15s;
-}
-.back-btn:hover { color: #fff; background: #1c1c1c; }
 
+.drawer-title { margin: 0; font-size: 17px; color: #eeeeee; font-weight: 700; }
+
+.drawer-close {
+    background: transparent;
+    border: 0;
+    color: #666666;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    transition: color .15s ease;
+}
+
+.drawer-close:hover { color: #ffffff; }
+
+.drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 12px;
+}
+
+.drawer-section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    color: #444444;
+    margin: 14px 0 6px 12px;
+}
+
+.drawer-item {
+    width: 100%;
+    text-align: left;
+    padding: 12px 16px;
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    color: #aaaaaa;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background .15s ease, color .15s ease;
+    margin-bottom: 4px;
+}
+
+.drawer-item:hover { background: #141414; color: #ffffff; }
+.drawer-item-count {
+    font-size: 11px;
+    color: #444444;
+    background: #050505;
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid #1a1a1a;
+}
+
+/* WATCH CONTAINER */
 .watch-container {
-    width: min(1000px, 94%);
+    width: min(1200px, 94%);
     margin: 30px auto 0;
 }
 .player-box {
@@ -102,7 +412,7 @@ body {
 .grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 20px 14px;
+    gap: 24px 16px;
 }
 .card {
     min-width: 0;
@@ -169,7 +479,7 @@ body {
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-@media(max-width: 800px) {
+@media(max-width: 900px) {
     .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 </style>
@@ -178,10 +488,43 @@ body {
 <body>
 
 <header class="header">
-    <div class="header-inner">
-        <a href="videos.html" class="back-btn">← Back to Archive</a>
+    <div class="header-top">
+        <div id="logo" class="logo" title="Home" role="button" tabindex="0">
+            <img src="https://firebasestorage.googleapis.com/v0/b/counter-ea7c8.firebasestorage.app/o/sf%2F10c2d1be-e912-4443-be9a-0341e2f98808.jpeg?alt=media&token=2b4a2e40-1e85-4d36-b00d-bd910f120d0f" alt="Sick Fetish">
+        </div>
+
+        <form id="searchForm" class="search-form-wrapper" onsubmit="return false;">
+            <div id="searchWrapper" class="search-wrapper">
+                <input id="search" class="search" type="search" placeholder="Search videos..." autocomplete="off">
+                <button id="searchCancel" class="search-cancel" type="button">×</button>
+                <div id="searchSuggestions" class="search-suggestions"></div>
+            </div>
+            <button id="searchSubmit" class="search-submit" type="submit">🔍</button>
+        </form>
+
+        <button id="randomButton" class="random-button" type="button" title="Random video">⤨</button>
+    </div>
+
+    <!-- POPULAR CATEGORIES ROW -->
+    <div class="header-nav">
+        <div class="header-nav-inner">
+            <button id="openDrawerBtn" class="drawer-toggle-btn" type="button">
+                <span>☰</span> All Categories
+            </button>
+            <div id="popularCategories" class="popular-categories"></div>
+        </div>
     </div>
 </header>
+
+<!-- SIDEBAR DRAWER -->
+<div id="drawerBackdrop" class="drawer-backdrop"></div>
+<aside id="sidebarDrawer" class="sidebar-drawer">
+    <div class="drawer-header">
+        <h2 class="drawer-title">All Categories</h2>
+        <button id="closeDrawerBtn" class="drawer-close" type="button">×</button>
+    </div>
+    <div id="drawerContent" class="drawer-content"></div>
+</aside>
 
 <main class="watch-container">
     <div class="player-box">
@@ -200,8 +543,21 @@ body {
 
 <div id="toast" class="toast">Link copied to clipboard</div>
 
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script>
 const CSV_URL = "./links.csv";
+const CATEGORIES = [
+    { name: "All", keywords: [], popular: true },
+    { name: "Anal", keywords: ["anal", "butt", "peg"], popular: true },
+    { name: "Babe", keywords: ["babe", "girl", "cute", "latina"], popular: true },
+    { name: "Amateur", keywords: ["amateur", "home", "selfie"], popular: true },
+    { name: "Fetish", keywords: ["fetish", "bound", "feet", "leather"], popular: true },
+    { name: "Hardcore", keywords: ["hardcore", "extreme", "rough"], popular: false },
+    { name: "POV", keywords: ["pov", "perspective"], popular: false },
+    { name: "Teen", keywords: ["teen", "young"], popular: false },
+    { name: "MILF", keywords: ["milf", "mom", "stepmom"], popular: false },
+    { name: "Lesbian", keywords: ["lesbian", "girls"], popular: false }
+];
 
 const videoIframe = document.getElementById("videoIframe");
 const videoTitle = document.getElementById("videoTitle");
@@ -210,13 +566,133 @@ const relatedGrid = document.getElementById("relatedGrid");
 const infiniteLoader = document.getElementById("infiniteLoader");
 const toast = document.getElementById("toast");
 
+const logo = document.getElementById("logo");
+const searchForm = document.getElementById("searchForm");
+const search = document.getElementById("search");
+const searchFormWrapper = document.getElementById("searchFormWrapper");
+const searchCancel = document.getElementById("searchCancel");
+const searchSuggestions = document.getElementById("searchSuggestions");
+const randomButton = document.getElementById("randomButton");
+
+const openDrawerBtn = document.getElementById("openDrawerBtn");
+const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+const sidebarDrawer = document.getElementById("sidebarDrawer");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+const popularCategoriesBar = document.getElementById("popularCategories");
+const drawerContent = document.getElementById("drawerContent");
+
+let allVideosCache = [];
 let allOtherVideos = [];
 let isLoadingMore = false;
+let fuseInstance = null;
 
 function showToast(msg) {
     toast.textContent = msg;
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function getRecentSearches() {
+    try {
+        return JSON.parse(localStorage.getItem('sf_recent_searches') || '[]');
+    } catch (_) {
+        return [];
+    }
+}
+
+function recordWatchHistory(title) {
+    const titleLower = title.toLowerCase();
+    let detectedCategory = null;
+
+    for (const cat of CATEGORIES) {
+        if (cat.keywords.some(kw => titleLower.includes(kw))) {
+            detectedCategory = cat.name;
+            break;
+        }
+    }
+
+    if (detectedCategory) {
+        try {
+            let history = JSON.parse(localStorage.getItem('sf_watch_history') || '[]');
+            history.unshift(detectedCategory);
+            localStorage.setItem('sf_watch_history', JSON.stringify(history.slice(0, 15)));
+        } catch (_) {}
+    }
+}
+
+function toggleDrawer(open) {
+    sidebarDrawer.classList.toggle("open", open);
+    drawerBackdrop.classList.toggle("open", open);
+}
+
+openDrawerBtn.addEventListener("click", () => toggleDrawer(true));
+closeDrawerBtn.addEventListener("click", () => toggleDrawer(false));
+drawerBackdrop.addEventListener("click", () => toggleDrawer(false));
+
+function renderCategoryNavs() {
+    popularCategoriesBar.innerHTML = "";
+    CATEGORIES.filter(c => c.popular).forEach(cat => {
+        const pill = document.createElement("button");
+        pill.className = "cat-pill";
+        pill.textContent = cat.name;
+        pill.type = "button";
+        pill.addEventListener("click", () => {
+            window.location.href = `videos.html?cat=${encodeURIComponent(cat.name)}`;
+        });
+        popularCategoriesBar.appendChild(pill);
+    });
+
+    const recentSearches = getRecentSearches();
+    recentSearches.forEach(query => {
+        const pill = document.createElement("button");
+        pill.className = "cat-pill temp";
+        pill.textContent = query;
+        pill.type = "button";
+        pill.addEventListener("click", () => {
+            window.location.href = `videos.html?search=${encodeURIComponent(query)}`;
+        });
+        popularCategoriesBar.appendChild(pill);
+    });
+
+    drawerContent.innerHTML = "";
+    CATEGORIES.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "drawer-item";
+        btn.type = "button";
+
+        let matchCount = allVideosCache.length;
+        if (cat.keywords.length > 0) {
+            matchCount = allVideosCache.filter(v => 
+                cat.keywords.some(kw => v.title.toLowerCase().includes(kw))
+            ).length;
+        }
+
+        btn.innerHTML = `<span>${cat.name}</span> <span class="drawer-item-count">${matchCount}</span>`;
+        btn.addEventListener("click", () => {
+            window.location.href = `videos.html?cat=${encodeURIComponent(cat.name)}`;
+        });
+        drawerContent.appendChild(btn);
+    });
+
+    if (recentSearches.length > 0) {
+        const label = document.createElement("div");
+        label.className = "drawer-section-label";
+        label.textContent = "Recent Searches";
+        drawerContent.appendChild(label);
+
+        recentSearches.forEach(query => {
+            const btn = document.createElement("button");
+            btn.className = "drawer-item temp";
+            btn.type = "button";
+            const matchCount = allVideosCache.filter(v => v.title.toLowerCase().includes(query.toLowerCase())).length;
+
+            btn.innerHTML = `<span>🔍 ${query}</span> <span class="drawer-item-count">${matchCount}</span>`;
+            btn.addEventListener("click", () => {
+                window.location.href = `videos.html?search=${encodeURIComponent(query)}`;
+            });
+            drawerContent.appendChild(btn);
+        });
+    }
 }
 
 function formatTitle(slug) {
@@ -243,7 +719,6 @@ function createThumbnailUrl(url, id) {
     if (isPervertDomain) {
         return `${url.origin}/contents/videos_screenshots/${folder}/${encodeURIComponent(id)}/preview.jpg`;
     }
-
     return `${url.origin}/contents/videos_screenshots/${folder}/${encodeURIComponent(id)}/264x198/1.jpg`;
 }
 
@@ -334,10 +809,24 @@ async function initWatchPage() {
             }
         }
 
+        allVideosCache = allVideos;
+        renderCategoryNavs();
+
+        fuseInstance = new Fuse(allVideos, {
+            keys: [{ name: 'title', weight: 0.8 }, { name: 'id', weight: 0.2 }],
+            includeScore: true,
+            threshold: 0.2,
+            distance: 100,
+            minMatchCharLength: 2,
+            ignoreLocation: true
+        });
+
         if (targetVideo) {
             document.title = `${targetVideo.title} - Sick Fetish`;
             videoTitle.textContent = targetVideo.title;
             videoIframe.src = targetVideo.embedUrl;
+
+            recordWatchHistory(targetVideo.title);
 
             shareBtn.addEventListener("click", () => {
                 const shareUrl = window.location.href;
@@ -364,6 +853,50 @@ async function initWatchPage() {
         videoTitle.textContent = "Error loading video details.";
     }
 }
+
+search.addEventListener("input", (e) => {
+    const q = e.target.value.trim().toLowerCase();
+    searchFormWrapper.classList.toggle("has-text", q.length > 0);
+    if (!q) { searchSuggestions.classList.remove("open"); return; }
+    
+    const matches = allVideosCache.filter(v => v.title.toLowerCase().includes(q)).slice(0, 6);
+    if (!matches.length) { searchSuggestions.classList.remove("open"); return; }
+
+    searchSuggestions.innerHTML = "";
+    matches.forEach(video => {
+        const item = document.createElement("div");
+        item.className = "suggestion-item";
+        item.innerHTML = `🔍 <span>${video.title}</span>`;
+        item.addEventListener("mousedown", (e) => {
+            e.preventDefault();
+            window.location.href = `videos.html?search=${encodeURIComponent(video.title)}`;
+        });
+        searchSuggestions.appendChild(item);
+    });
+    searchSuggestions.classList.add("open");
+});
+
+searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const query = search.value.trim();
+    if (query) {
+        window.location.href = `videos.html?search=${encodeURIComponent(query)}`;
+    }
+});
+
+searchCancel.addEventListener("click", () => {
+    search.value = "";
+    searchFormWrapper.classList.remove("has-text");
+    searchSuggestions.classList.remove("open");
+});
+
+randomButton.addEventListener("click", () => {
+    if (allVideosCache.length === 0) return;
+    const randomVideo = allVideosCache[Math.floor(Math.random() * allVideosCache.length)];
+    window.location.href = `second.html?id=${encodeURIComponent(randomVideo.id)}`;
+});
+
+logo.addEventListener("click", () => { window.location.href = "videos.html"; });
 
 initWatchPage();
 </script>
