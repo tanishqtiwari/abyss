@@ -732,6 +732,11 @@ function selectCategory(catName) {
     activeSearchQuery = "";
     search.value = "";
     searchFormWrapper.classList.remove("has-text");
+    
+    // Update URL query parameters without reloading page
+    const newUrl = catName === "All" ? window.location.pathname : `${window.location.pathname}?cat=${encodeURIComponent(catName)}`;
+    window.history.pushState({ cat: catName }, "", newUrl);
+
     applyFilters();
 }
 
@@ -740,6 +745,11 @@ function triggerSearch(query) {
     activeCategory = "All";
     search.value = activeSearchQuery;
     searchFormWrapper.classList.toggle("has-text", activeSearchQuery.length > 0);
+
+    // Update URL query parameters without reloading page
+    const newUrl = `${window.location.pathname}?search=${encodeURIComponent(activeSearchQuery)}`;
+    window.history.pushState({ search: activeSearchQuery }, "", newUrl);
+
     applyFilters();
 }
 
@@ -758,6 +768,9 @@ function applyFilters() {
                 const titleLower = video.title.toLowerCase();
                 return selectedCat.keywords.some(kw => titleLower.includes(kw.toLowerCase()));
             });
+        } else {
+            // Handled as custom search/category query
+            baseList = searchVideos(activeCategory, videos);
         }
         heading.textContent = `${activeCategory} Videos`;
     } else {
@@ -865,6 +878,7 @@ async function loadVideos() {
         loader.style.display = "none";
         status.textContent = `${videos.length} videos loaded`;
 
+        // Check URL parameters on initial page load
         const params = new URLSearchParams(window.location.search);
         const urlCat = params.get("cat");
         const urlSearch = params.get("search");
@@ -984,6 +998,31 @@ randomButton.addEventListener("click", () => {
 });
 
 logo.addEventListener("click", () => { window.location.href = "videos.html"; });
+
+// Handle browser back/forward buttons seamlessly
+window.addEventListener("popstate", () => {
+    const params = new URLSearchParams(window.location.search);
+    const urlCat = params.get("cat");
+    const urlSearch = params.get("search");
+
+    if (urlSearch) {
+        activeSearchQuery = urlSearch;
+        activeCategory = "All";
+        search.value = urlSearch;
+        searchFormWrapper.classList.add("has-text");
+    } else if (urlCat) {
+        activeCategory = urlCat;
+        activeSearchQuery = "";
+        search.value = "";
+        searchFormWrapper.classList.remove("has-text");
+    } else {
+        activeCategory = "All";
+        activeSearchQuery = "";
+        search.value = "";
+        searchFormWrapper.classList.remove("has-text");
+    }
+    applyFilters();
+});
 
 loadVideos();
 </script>
