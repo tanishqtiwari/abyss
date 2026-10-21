@@ -4,7 +4,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="Sick Fetish watch page">
 <title>Watch Video - Sick Fetish</title>
+
 <style>
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -190,10 +193,12 @@ body {
 
 .random-button:hover { color: #dddddd; background: #111111; transform: rotate(8deg); }
 
-/* POPULAR CATEGORIES ROW */
+/* POPULAR CATEGORIES & RECENT SEARCHES ROWS */
 .header-nav {
     border-top: 1px solid #121212;
     background: #080808;
+    display: flex;
+    flex-direction: column;
 }
 
 .header-nav-inner {
@@ -203,6 +208,10 @@ body {
     align-items: center;
     gap: 12px;
     padding: 8px 0;
+    width: 100%;
+    max-width: 1400px;
+    padding-left: 3%;
+    padding-right: 3%;
 }
 
 .drawer-toggle-btn {
@@ -236,13 +245,46 @@ body {
 
 .popular-categories::-webkit-scrollbar { display: none; }
 
-.cat-divider {
-    width: 1px;
-    height: 20px;
-    background: #222222;
-    margin: 0 4px;
+.recent-searches-row {
+    border-top: 1px solid #101010;
+    background: #060606;
+    display: none;
+}
+.recent-searches-row.visible { display: block; }
+
+.recent-searches-inner {
+    width: min(1400px, 94%);
+    margin: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    width: 100%;
+    max-width: 1400px;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+.recent-label {
+    font-size: 11px;
+    color: #555555;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    font-weight: 700;
     flex-shrink: 0;
 }
+
+.recent-searches-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+}
+
+.recent-searches-container::-webkit-scrollbar { display: none; }
 
 .cat-pill {
     padding: 7px 16px;
@@ -261,7 +303,9 @@ body {
 }
 
 .cat-pill:hover { color: #dddddd; border-color: #2e2e2e; background: #101010; }
+.cat-pill.active { background: #dddddd; color: #050505; border-color: #dddddd; font-weight: 700; }
 .cat-pill.temp { border-style: dashed; border-color: #2d2d2d; color: #999999; }
+.cat-pill.temp.active { background: #dddddd; color: #050505; border-style: solid; }
 
 /* SIDEBAR DRAWER */
 .drawer-backdrop {
@@ -353,6 +397,8 @@ body {
 }
 
 .drawer-item:hover { background: #141414; color: #ffffff; }
+.drawer-item.active { background: #1e1e1e; color: #ffffff; font-weight: 700; border-left: 3px solid #dddddd; }
+
 .drawer-item-count {
     font-size: 11px;
     color: #444444;
@@ -362,135 +408,157 @@ body {
     border: 1px solid #1a1a1a;
 }
 
-/* WATCH CONTAINER */
-.watch-container {
+/* PLAYER & CONTAINER */
+.container {
     width: min(1200px, 94%);
-    margin: 30px auto 0;
+    margin: 28px auto 0;
 }
-.player-box {
+
+.player-wrapper {
+    position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
-    background: #000;
-    border: 1px solid #242424;
+    background: #000000;
+    border: 1px solid #222222;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 6px 8px 0 #020202;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.8);
 }
-.player-box iframe {
+
+.player-wrapper iframe {
     width: 100%;
     height: 100%;
     border: 0;
     display: block;
 }
-.info-bar {
-    margin-top: 20px;
+
+.video-info {
+    margin-top: 18px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid #1c1c1c;
-    padding-bottom: 25px;
 }
+
 .video-title {
     margin: 0;
     font-size: 20px;
+    font-weight: 700;
     color: #eeeeee;
-    font-weight: 700;
-    flex: 1;
-    min-width: 0;
+    line-height: 1.35;
 }
-.share-btn {
-    background: #111;
-    color: #ccc;
-    border: 1px solid #292929;
-    padding: 10px 18px;
-    border-radius: 9px;
-    cursor: pointer;
-    font-size: 14px;
-    box-shadow: 3px 3px 0 #020202;
-    transition: .15s;
-}
-.share-btn:hover { background: #1c1c1c; color: #fff; }
 
-.related-heading {
-    margin: 35px 0 20px;
-    font-size: 18px;
-    color: #e1e1e1;
-    font-weight: 700;
+.share-btn {
+    padding: 9px 18px;
+    background: #141414;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    color: #cccccc;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+    flex-shrink: 0;
 }
+
+.share-btn:hover { background: #202020; color: #ffffff; }
+
+/* RELATED SECTION */
+.related-section {
+    margin-top: 48px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #dddddd;
+    margin-bottom: 20px;
+    letter-spacing: -.3px;
+}
+
 .grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px 16px;
 }
+
 .card {
     min-width: 0;
     cursor: pointer;
+    transition: transform .2s ease;
     text-decoration: none;
     display: block;
-    transition: transform .2s ease;
 }
+
 .card:hover { transform: translateY(-4px); }
+
 .thumbnail {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 10;
     overflow: hidden;
-    background: #111;
-    border: 1px solid #222;
-    border-radius: 9px;
-    box-shadow: 3px 4px 0 #020202;
+    background: #0f0f0f;
+    border: 1px solid #222222;
+    border-radius: 10px;
+    box-shadow: 4px 5px 0 #020202;
 }
+
 .thumbnail img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    display: block;
     object-fit: cover;
     opacity: .9;
+    transition: transform .35s ease, opacity .2s ease;
 }
+
+.card:hover .thumbnail img { transform: scale(1.05); opacity: .75; }
+
 .title {
-    padding: 8px 2px 0;
-    color: #ccc;
-    font-size: 12px;
+    padding: 10px 2px 0;
+    color: #cfcfcf;
+    font-size: 13px;
     font-weight: 600;
-    line-height: 1.35;
+    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.loader-small {
-    text-align: center;
-    padding: 20px;
-    color: #555;
-    font-size: 13px;
-    display: none;
-}
+.card:hover .title { color: #eeeeee; }
 
+/* TOAST NOTIFICATION */
 .toast {
     position: fixed;
+    bottom: 30px;
     left: 50%;
-    bottom: 24px;
-    transform: translate(-50%, 20px);
-    background: #101010;
-    color: #ccc;
-    padding: 10px 18px;
-    border: 1px solid #292929;
-    border-radius: 10px;
+    transform: translateX(-50%) translateY(100px);
+    background: #181818;
+    color: #ffffff;
+    border: 1px solid #333333;
+    padding: 10px 20px;
+    border-radius: 20px;
     font-size: 13px;
-    box-shadow: 4px 5px 0 #000000;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
     opacity: 0;
-    pointer-events: none;
-    transition: .2s ease;
-    z-index: 2000;
+    transition: all .25s ease;
+    z-index: 300;
 }
-.toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-@media(max-width: 900px) {
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+@media (max-width:900px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width:650px) {
     .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .video-title { font-size: 16px; }
+    .search-form-wrapper { order: 3; flex-basis: 100%; }
 }
 </style>
 </head>
@@ -503,7 +571,7 @@ body {
             <img src="https://firebasestorage.googleapis.com/v0/b/counter-ea7c8.firebasestorage.app/o/sf%2F10c2d1be-e912-4443-be9a-0341e2f98808.jpeg?alt=media&token=2b4a2e40-1e85-4d36-b00d-bd910f120d0f" alt="Sick Fetish">
         </div>
 
-        <form id="searchForm" class="search-form-wrapper" onsubmit="return false;">
+        <form id="searchForm" class="search-form-wrapper" action="#" onsubmit="return false;">
             <div id="searchWrapper" class="search-wrapper">
                 <input id="search" class="search" type="search" placeholder="Search videos..." autocomplete="off">
                 <button id="searchCancel" class="search-cancel" type="button">×</button>
@@ -515,13 +583,19 @@ body {
         <button id="randomButton" class="random-button" type="button" title="Random video">⤨</button>
     </div>
 
-    <!-- POPULAR CATEGORIES ROW -->
     <div class="header-nav">
         <div class="header-nav-inner">
             <button id="openDrawerBtn" class="drawer-toggle-btn" type="button">
                 <span>☰</span> All Categories
             </button>
             <div id="popularCategories" class="popular-categories"></div>
+        </div>
+
+        <div id="recentSearchesRow" class="recent-searches-row">
+            <div class="recent-searches-inner">
+                <span class="recent-label">Recent</span>
+                <div id="recentSearchesContainer" class="recent-searches-container"></div>
+            </div>
         </div>
     </div>
 </header>
@@ -536,24 +610,24 @@ body {
     <div id="drawerContent" class="drawer-content"></div>
 </aside>
 
-<main class="watch-container">
-    <div class="player-box">
-        <iframe id="videoIframe" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>
+<main class="container">
+    <div class="player-wrapper">
+        <iframe id="videoIframe" allowfullscreen src="about:blank"></iframe>
     </div>
 
-    <div class="info-bar">
-        <h1 class="video-title" id="videoTitle">Loading video...</h1>
-        <button id="shareBtn" class="share-btn" type="button">↗ Share Video</button>
+    <div class="video-info">
+        <h1 id="videoTitle" class="video-title">Loading video details...</h1>
+        <button id="shareBtn" class="share-btn" type="button">🔗 Share Link</button>
     </div>
 
-    <h2 class="related-heading">More Videos</h2>
-    <div id="relatedGrid" class="grid"></div>
-    <div id="infiniteLoader" class="loader-small">Loading more videos...</div>
+    <section class="related-section">
+        <h2 class="section-title">More Like This</h2>
+        <div id="grid" class="grid"></div>
+    </section>
 </main>
 
-<div id="toast" class="toast">Link copied to clipboard</div>
+<div id="toast" class="toast">Link copied to clipboard!</div>
 
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 <script>
 const CSV_URL = "./links.csv";
 const CATEGORIES = [
@@ -572,34 +646,43 @@ const CATEGORIES = [
 const videoIframe = document.getElementById("videoIframe");
 const videoTitle = document.getElementById("videoTitle");
 const shareBtn = document.getElementById("shareBtn");
-const relatedGrid = document.getElementById("relatedGrid");
-const infiniteLoader = document.getElementById("infiniteLoader");
+const grid = document.getElementById("grid");
 const toast = document.getElementById("toast");
-
 const logo = document.getElementById("logo");
+const randomButton = document.getElementById("randomButton");
+
 const searchForm = document.getElementById("searchForm");
 const search = document.getElementById("search");
-const searchFormWrapper = document.getElementById("searchFormWrapper");
+const searchFormWrapper = document.getElementById("searchWrapper");
 const searchCancel = document.getElementById("searchCancel");
 const searchSuggestions = document.getElementById("searchSuggestions");
-const randomButton = document.getElementById("randomButton");
 
 const openDrawerBtn = document.getElementById("openDrawerBtn");
 const closeDrawerBtn = document.getElementById("closeDrawerBtn");
 const sidebarDrawer = document.getElementById("sidebarDrawer");
 const drawerBackdrop = document.getElementById("drawerBackdrop");
 const popularCategoriesBar = document.getElementById("popularCategories");
+const recentSearchesRow = document.getElementById("recentSearchesRow");
+const recentSearchesContainer = document.getElementById("recentSearchesContainer");
 const drawerContent = document.getElementById("drawerContent");
 
-let allVideosCache = [];
-let allOtherVideos = [];
-let isLoadingMore = false;
-let fuseInstance = null;
+let allVideos = [];
+let recommendedQueue = [];
+let loadedCount = 0;
+
+function shuffle(array) {
+    const res = [...array];
+    for (let i = res.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [res[i], res[j]] = [res[j], res[i]];
+    }
+    return res;
+}
 
 function showToast(msg) {
     toast.textContent = msg;
     toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 2200);
+    setTimeout(() => toast.classList.remove("show"), 2500);
 }
 
 function getRecentSearches() {
@@ -607,26 +690,6 @@ function getRecentSearches() {
         return JSON.parse(localStorage.getItem('sf_recent_searches') || '[]');
     } catch (_) {
         return [];
-    }
-}
-
-function recordWatchHistory(title) {
-    const titleLower = title.toLowerCase();
-    let detectedCategory = null;
-
-    for (const cat of CATEGORIES) {
-        if (cat.keywords.some(kw => titleLower.includes(kw))) {
-            detectedCategory = cat.name;
-            break;
-        }
-    }
-
-    if (detectedCategory) {
-        try {
-            let history = JSON.parse(localStorage.getItem('sf_watch_history') || '[]');
-            history.unshift(detectedCategory);
-            localStorage.setItem('sf_watch_history', JSON.stringify(history.slice(0, 15)));
-        } catch (_) {}
     }
 }
 
@@ -639,54 +702,75 @@ openDrawerBtn.addEventListener("click", () => toggleDrawer(true));
 closeDrawerBtn.addEventListener("click", () => toggleDrawer(false));
 drawerBackdrop.addEventListener("click", () => toggleDrawer(false));
 
+function navigateToArchive(query, cat) {
+    if (query) {
+        window.location.href = `videos.html?q=${encodeURIComponent(query)}`;
+    } else if (cat && cat !== "All") {
+        window.location.href = `videos.html?cat=${encodeURIComponent(cat)}`;
+    } else {
+        window.location.href = `videos.html`;
+    }
+}
+
 function renderCategoryNavs() {
+    const params = new URLSearchParams(window.location.search);
+    const activeFromCat = params.get("from_cat") || "";
+    const activeFromQ = params.get("from_q") || "";
+
     popularCategoriesBar.innerHTML = "";
     CATEGORIES.filter(c => c.popular).forEach(cat => {
         const pill = document.createElement("button");
-        pill.className = "cat-pill";
+        const isActive = (!activeFromQ && activeFromCat === cat.name);
+        pill.className = "cat-pill" + (isActive ? " active" : "");
         pill.textContent = cat.name;
         pill.type = "button";
-        pill.addEventListener("click", () => {
-            window.location.href = `videos.html?cat=${encodeURIComponent(cat.name)}`;
+        pill.addEventListener("click", (e) => {
+            e.preventDefault();
+            navigateToArchive(null, cat.name);
         });
         popularCategoriesBar.appendChild(pill);
     });
 
     const recentSearches = getRecentSearches();
+    recentSearchesContainer.innerHTML = "";
     if (recentSearches.length > 0) {
-        const divider = document.createElement("div");
-        divider.className = "cat-divider";
-        popularCategoriesBar.appendChild(divider);
-
+        recentSearchesRow.classList.add("visible");
         recentSearches.forEach(query => {
             const pill = document.createElement("button");
-            pill.className = "cat-pill temp";
+            const isActive = (activeFromQ === query);
+            pill.className = "cat-pill temp" + (isActive ? " active" : "");
             pill.textContent = `🔍 ${query}`;
             pill.type = "button";
             pill.title = query;
-            pill.addEventListener("click", () => {
-                window.location.href = `videos.html?search=${encodeURIComponent(query)}`;
+            pill.addEventListener("click", (e) => {
+                e.preventDefault();
+                navigateToArchive(query, null);
             });
-            popularCategoriesBar.appendChild(pill);
+            recentSearchesContainer.appendChild(pill);
         });
+    } else {
+        recentSearchesRow.classList.remove("visible");
     }
 
     drawerContent.innerHTML = "";
     CATEGORIES.forEach(cat => {
         const btn = document.createElement("button");
-        btn.className = "drawer-item";
+        const isActive = (!activeFromQ && activeFromCat === cat.name);
+        btn.className = "drawer-item" + (isActive ? " active" : "");
         btn.type = "button";
 
-        let matchCount = allVideosCache.length;
+        let matchCount = allVideos.length;
         if (cat.keywords.length > 0) {
-            matchCount = allVideosCache.filter(v => 
+            matchCount = allVideos.filter(v => 
                 cat.keywords.some(kw => v.title.toLowerCase().includes(kw))
             ).length;
         }
 
         btn.innerHTML = `<span>${cat.name}</span> <span class="drawer-item-count">${matchCount}</span>`;
-        btn.addEventListener("click", () => {
-            window.location.href = `videos.html?cat=${encodeURIComponent(cat.name)}`;
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            navigateToArchive(null, cat.name);
+            toggleDrawer(false);
         });
         drawerContent.appendChild(btn);
     });
@@ -699,17 +783,41 @@ function renderCategoryNavs() {
 
         recentSearches.forEach(query => {
             const btn = document.createElement("button");
-            btn.className = "drawer-item temp";
+            const isActive = (activeFromQ === query);
+            btn.className = "drawer-item" + (isActive ? " active" : "");
             btn.type = "button";
-            const matchCount = allVideosCache.filter(v => v.title.toLowerCase().includes(query.toLowerCase())).length;
+
+            const matchCount = allVideos.filter(v => v.title.toLowerCase().includes(query.toLowerCase())).length;
 
             btn.innerHTML = `<span>🔍 ${query}</span> <span class="drawer-item-count">${matchCount}</span>`;
-            btn.addEventListener("click", () => {
-                window.location.href = `videos.html?search=${encodeURIComponent(query)}`;
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                navigateToArchive(query, null);
+                toggleDrawer(false);
             });
             drawerContent.appendChild(btn);
         });
     }
+}
+
+function recordWatchHistory(title) {
+    if (!title) return;
+    try {
+        const titleLower = title.toLowerCase();
+        let matchedCat = null;
+        for (const cat of CATEGORIES) {
+            if (cat.keywords.some(kw => titleLower.includes(kw))) {
+                matchedCat = cat.name;
+                break;
+            }
+        }
+        if (matchedCat) {
+            let history = JSON.parse(localStorage.getItem('sf_watch_history') || '[]');
+            history.push(matchedCat);
+            if (history.length > 50) history.shift();
+            localStorage.setItem('sf_watch_history', JSON.stringify(history));
+        }
+    } catch (_) {}
 }
 
 function formatTitle(slug) {
@@ -762,17 +870,60 @@ function parseVideoUrl(rawUrl) {
     return null;
 }
 
-function appendMoreVideos(count = 8) {
-    if (allOtherVideos.length === 0 || isLoadingMore) return;
-    isLoadingMore = true;
-    infiniteLoader.style.display = "block";
+function buildHybridRecommendations(currentVideo, videoList) {
+    const titleWords = currentVideo.title.toLowerCase().split(" ").filter(w => w.length > 3);
+    
+    const relevantMatches = [];
+    const randomOthers = [];
 
-    const batch = [...allOtherVideos].sort(() => 0.5 - Math.random()).slice(0, count);
+    videoList.forEach(v => {
+        if (v.id === currentVideo.id) return;
+        const lowerTitle = v.title.toLowerCase();
+        
+        const isMatch = titleWords.some(word => lowerTitle.includes(word));
+        if (isMatch) {
+            relevantMatches.push(v);
+        } else {
+            randomOthers.push(v);
+        }
+    });
+
+    const shuffledRelevant = shuffle(relevantMatches);
+    const shuffledRandom = shuffle(randomOthers);
+
+    const blended = [];
+    let relIdx = 0;
+    let randIdx = 0;
+
+    while (relIdx < shuffledRelevant.length || randIdx < shuffledRandom.length) {
+        if (relIdx < shuffledRelevant.length) blended.push(shuffledRelevant[relIdx++]);
+        if (relIdx < shuffledRelevant.length) blended.push(shuffledRelevant[relIdx++]);
+        if (randIdx < shuffledRandom.length) blended.push(shuffledRandom[randIdx++]);
+    }
+
+    return blended;
+}
+
+function appendMoreVideos(count) {
+    const batch = recommendedQueue.slice(loadedCount, loadedCount + count);
+    if (batch.length === 0) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const fromQ = params.get("from_q");
+    const fromCat = params.get("from_cat");
 
     batch.forEach(video => {
         const a = document.createElement("a");
         a.className = "card";
-        a.href = `second.html?id=${encodeURIComponent(video.id)}`;
+        
+        let targetHref = `second.html?id=${encodeURIComponent(video.id)}`;
+        if (fromQ) {
+            targetHref += `&from_q=${encodeURIComponent(fromQ)}`;
+        } else if (fromCat) {
+            targetHref += `&from_cat=${encodeURIComponent(fromCat)}`;
+        }
+
+        a.href = targetHref;
 
         const thumb = document.createElement("div");
         thumb.className = "thumbnail";
@@ -790,16 +941,21 @@ function appendMoreVideos(count = 8) {
 
         a.appendChild(thumb);
         a.appendChild(titleDiv);
-        relatedGrid.appendChild(a);
+        grid.appendChild(a);
     });
 
-    isLoadingMore = false;
-    infiniteLoader.style.display = "none";
+    loadedCount += batch.length;
 }
 
 async function initWatchPage() {
     const params = new URLSearchParams(window.location.search);
     const videoId = params.get("id");
+    const fromQ = params.get("from_q");
+
+    if (fromQ) {
+        search.value = fromQ;
+        searchFormWrapper.classList.add("has-text");
+    }
 
     if (!videoId) {
         videoTitle.textContent = "Video not found.";
@@ -807,11 +963,12 @@ async function initWatchPage() {
     }
 
     try {
-        const response = await fetch(CSV_URL);
+        const response = await fetch(CSV_URL, { cache: "no-cache" });
+        if (!response.ok) throw new Error("HTTP " + response.status);
         const text = await response.text();
         const urls = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
 
-        const allVideos = [];
+        const list = [];
         const seen = new Set();
         let targetVideo = null;
 
@@ -819,53 +976,45 @@ async function initWatchPage() {
             const video = parseVideoUrl(rawUrl);
             if (video && !seen.has(video.embedUrl)) {
                 seen.add(video.embedUrl);
-                allVideos.push(video);
                 if (video.id === videoId) {
                     targetVideo = video;
                 }
+                list.push(video);
             }
         }
 
-        allVideosCache = allVideos;
+        allVideos = list;
         renderCategoryNavs();
 
-        fuseInstance = new Fuse(allVideos, {
-            keys: [{ name: 'title', weight: 0.8 }, { name: 'id', weight: 0.2 }],
-            includeScore: true,
-            threshold: 0.2,
-            distance: 100,
-            minMatchCharLength: 2,
-            ignoreLocation: true
+        if (!targetVideo) {
+            videoTitle.textContent = "Video not found in archive.";
+            return;
+        }
+
+        document.title = `${targetVideo.title} - Sick Fetish`;
+        videoTitle.textContent = targetVideo.title;
+        videoIframe.src = targetVideo.embedUrl;
+
+        recordWatchHistory(targetVideo.title);
+
+        shareBtn.addEventListener("click", () => {
+            const shareUrl = window.location.href;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareUrl).then(() => showToast("Link copied to clipboard!"));
+            } else {
+                showToast("Failed to copy link");
+            }
         });
 
-        if (targetVideo) {
-            document.title = `${targetVideo.title} - Sick Fetish`;
-            videoTitle.textContent = targetVideo.title;
-            videoIframe.src = targetVideo.embedUrl;
+        recommendedQueue = buildHybridRecommendations(targetVideo, allVideos);
+        appendMoreVideos(12);
 
-            recordWatchHistory(targetVideo.title);
+        window.addEventListener("scroll", () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 600) {
+                appendMoreVideos(8);
+            }
+        });
 
-            shareBtn.addEventListener("click", () => {
-                const shareUrl = window.location.href;
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(shareUrl).then(() => showToast("Link copied to clipboard"));
-                } else {
-                    showToast("Failed to copy link");
-                }
-            });
-
-            allOtherVideos = allVideos.filter(v => v.id !== videoId);
-            appendMoreVideos(12);
-
-            window.addEventListener("scroll", () => {
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 600) {
-                    appendMoreVideos(8);
-                }
-            });
-
-        } else {
-            videoTitle.textContent = "Video not found in archive.";
-        }
     } catch (err) {
         videoTitle.textContent = "Error loading video details.";
     }
@@ -874,9 +1023,9 @@ async function initWatchPage() {
 search.addEventListener("input", (e) => {
     const q = e.target.value.trim().toLowerCase();
     searchFormWrapper.classList.toggle("has-text", q.length > 0);
-    if (!q) { searchSuggestions.classList.remove("open"); return; }
+    if (!q || !allVideos.length) { searchSuggestions.classList.remove("open"); return; }
     
-    const matches = allVideosCache.filter(v => v.title.toLowerCase().includes(q)).slice(0, 6);
+    const matches = allVideos.filter(v => v.title.toLowerCase().includes(q)).slice(0, 6);
     if (!matches.length) { searchSuggestions.classList.remove("open"); return; }
 
     searchSuggestions.innerHTML = "";
@@ -886,7 +1035,7 @@ search.addEventListener("input", (e) => {
         item.innerHTML = `🔍 <span>${video.title}</span>`;
         item.addEventListener("mousedown", (e) => {
             e.preventDefault();
-            window.location.href = `videos.html?search=${encodeURIComponent(video.title)}`;
+            navigateToArchive(video.title, null);
         });
         searchSuggestions.appendChild(item);
     });
@@ -895,9 +1044,10 @@ search.addEventListener("input", (e) => {
 
 searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    searchSuggestions.classList.remove("open");
     const query = search.value.trim();
     if (query) {
-        window.location.href = `videos.html?search=${encodeURIComponent(query)}`;
+        navigateToArchive(query, null);
     }
 });
 
@@ -908,8 +1058,8 @@ searchCancel.addEventListener("click", () => {
 });
 
 randomButton.addEventListener("click", () => {
-    if (allVideosCache.length === 0) return;
-    const randomVideo = allVideosCache[Math.floor(Math.random() * allVideosCache.length)];
+    if (allVideos.length === 0) return;
+    const randomVideo = allVideos[Math.floor(Math.random() * allVideos.length)];
     window.location.href = `second.html?id=${encodeURIComponent(randomVideo.id)}`;
 });
 
