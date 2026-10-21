@@ -5,8 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#050505">
-<meta name="description" content="Sick Fetish video archive">
-<title>Sick Fetish</title>
+<meta name="description" content="Sick Fetish video archive - Browse curated videos and categories.">
+<link rel="canonical" href="videos.html">
+<title>Sick Fetish Video Archive</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -63,6 +64,7 @@ body {
     justify-content: center;
     cursor: pointer;
     user-select: none;
+    text-decoration: none;
 }
 
 .logo img {
@@ -152,6 +154,7 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    text-decoration: none;
 }
 
 .suggestion-item:last-child { border-bottom: 0; }
@@ -193,10 +196,12 @@ body {
 
 .random-button:hover { color: #dddddd; background: #111111; transform: rotate(8deg); }
 
-/* POPULAR CATEGORIES ROW */
+/* POPULAR CATEGORIES & RECENT SEARCHES ROWS */
 .header-nav {
     border-top: 1px solid #121212;
     background: #080808;
+    display: flex;
+    flex-direction: column;
 }
 
 .header-nav-inner {
@@ -206,6 +211,10 @@ body {
     align-items: center;
     gap: 12px;
     padding: 8px 0;
+    width: 100%;
+    max-width: 1400px;
+    padding-left: 3%;
+    padding-right: 3%;
 }
 
 .drawer-toggle-btn {
@@ -239,14 +248,48 @@ body {
 
 .popular-categories::-webkit-scrollbar { display: none; }
 
-.cat-divider {
-    width: 1px;
-    height: 20px;
-    background: #222222;
-    margin: 0 4px;
+.recent-searches-row {
+    border-top: 1px solid #101010;
+    background: #060606;
+    display: none;
+}
+.recent-searches-row.visible { display: block; }
+
+.recent-searches-inner {
+    width: min(1400px, 94%);
+    margin: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    width: 100%;
+    max-width: 1400px;
+    padding-left: 3%;
+    padding-right: 3%;
+}
+
+.recent-label {
+    font-size: 11px;
+    color: #555555;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    font-weight: 700;
     flex-shrink: 0;
 }
 
+.recent-searches-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+}
+
+.recent-searches-container::-webkit-scrollbar { display: none; }
+
+/* ANCHOR-BASED CATEGORY PILLS (SEO-FRIENDLY <a> TAGS) */
 .cat-pill {
     padding: 7px 16px;
     background: transparent;
@@ -260,6 +303,10 @@ body {
     flex-shrink: 0;
     transition: all .18s ease;
     user-select: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -355,6 +402,7 @@ body {
     justify-content: space-between;
     transition: background .15s ease, color .15s ease;
     margin-bottom: 4px;
+    text-decoration: none;
 }
 
 .drawer-item:hover { background: #141414; color: #ffffff; }
@@ -486,11 +534,11 @@ body {
 
 <header class="header">
     <div class="header-top">
-        <div id="logo" class="logo" title="Home" role="button" tabindex="0">
+        <a id="logo" href="videos.html" class="logo" title="Home">
             <img src="https://firebasestorage.googleapis.com/v0/b/counter-ea7c8.firebasestorage.app/o/sf%2F10c2d1be-e912-4443-be9a-0341e2f98808.jpeg?alt=media&token=2b4a2e40-1e85-4d36-b00d-bd910f120d0f" alt="Sick Fetish">
-        </div>
+        </a>
 
-        <form id="searchForm" class="search-form-wrapper">
+        <form id="searchForm" class="search-form-wrapper" action="#" onsubmit="return false;">
             <div id="searchWrapper" class="search-wrapper">
                 <input id="search" class="search" type="search" placeholder="Search videos..." autocomplete="off">
                 <button id="searchCancel" class="search-cancel" type="button">×</button>
@@ -502,13 +550,19 @@ body {
         <button id="randomButton" class="random-button" type="button" title="Random video">⤨</button>
     </div>
 
-    <!-- POPULAR CATEGORIES ROW -->
     <div class="header-nav">
         <div class="header-nav-inner">
             <button id="openDrawerBtn" class="drawer-toggle-btn" type="button">
                 <span>☰</span> All Categories
             </button>
             <div id="popularCategories" class="popular-categories"></div>
+        </div>
+
+        <div id="recentSearchesRow" class="recent-searches-row">
+            <div class="recent-searches-inner">
+                <span class="recent-label">Recent</span>
+                <div id="recentSearchesContainer" class="recent-searches-container"></div>
+            </div>
         </div>
     </div>
 </header>
@@ -563,7 +617,7 @@ const empty = document.getElementById("empty");
 const pagination = document.getElementById("pagination");
 const searchForm = document.getElementById("searchForm");
 const search = document.getElementById("search");
-const searchFormWrapper = document.getElementById("searchFormWrapper");
+const searchFormWrapper = document.getElementById("searchWrapper");
 const searchCancel = document.getElementById("searchCancel");
 const searchSuggestions = document.getElementById("searchSuggestions");
 const heading = document.getElementById("heading");
@@ -575,12 +629,78 @@ const closeDrawerBtn = document.getElementById("closeDrawerBtn");
 const sidebarDrawer = document.getElementById("sidebarDrawer");
 const drawerBackdrop = document.getElementById("drawerBackdrop");
 const popularCategoriesBar = document.getElementById("popularCategories");
+const recentSearchesRow = document.getElementById("recentSearchesRow");
+const recentSearchesContainer = document.getElementById("recentSearchesContainer");
 const drawerContent = document.getElementById("drawerContent");
 
 let videos = [];
 let filteredVideos = [];
 let currentPage = 1;
 let fuseInstance = null;
+let isLoaded = false;
+
+// DYNAMIC SEO ENGINE FOR SEARCH CRAWLERS AND USERS
+function applySEOForContext(catName, searchQuery) {
+    let titleText = "Sick Fetish - Video Archive";
+    let descText = "Explore thousands of HD videos in our clean, curated video archive.";
+
+    if (searchQuery) {
+        titleText = `"${searchQuery}" Videos - Sick Fetish Archive`;
+        descText = `Watch high quality free videos matching "${searchQuery}" on Sick Fetish archive.`;
+    } else if (catName && catName !== "All") {
+        titleText = `Free ${catName} Videos & Clips - Sick Fetish`;
+        descText = `Browse our collection of high-definition ${catName} videos. Updated daily on Sick Fetish archive.`;
+    }
+
+    document.title = titleText;
+
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.content = descText;
+
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+        const baseURL = window.location.origin + window.location.pathname;
+        if (searchQuery) {
+            canonical.href = `${baseURL}?q=${encodeURIComponent(searchQuery)}`;
+        } else if (catName && catName !== "All") {
+            canonical.href = `${baseURL}?cat=${encodeURIComponent(catName)}`;
+        } else {
+            canonical.href = baseURL;
+        }
+    }
+}
+
+function parseParamsFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get("q") || "";
+    const cat = params.get("cat") || "All";
+
+    activeSearchQuery = q.trim();
+    activeCategory = activeSearchQuery ? "All" : cat;
+
+    if (activeSearchQuery) {
+        search.value = activeSearchQuery;
+        searchFormWrapper.classList.add("has-text");
+    } else {
+        search.value = "";
+        searchFormWrapper.classList.remove("has-text");
+    }
+}
+
+function updateURLParams() {
+    const url = new URL(window.location.href);
+    if (activeSearchQuery) {
+        url.searchParams.set("q", activeSearchQuery);
+        url.searchParams.delete("cat");
+    } else if (activeCategory && activeCategory !== "All") {
+        url.searchParams.set("cat", activeCategory);
+        url.searchParams.delete("q");
+    } else {
+        url.searchParams.delete("q");
+        url.searchParams.delete("cat");
+    }
+    window.history.pushState({}, "", url.toString());
+}
 
 function shuffle(array) {
     const res = [...array];
@@ -650,47 +770,52 @@ openDrawerBtn.addEventListener("click", () => toggleDrawer(true));
 closeDrawerBtn.addEventListener("click", () => toggleDrawer(false));
 drawerBackdrop.addEventListener("click", () => toggleDrawer(false));
 
+// RENDER ALL CATEGORIES AND RECENT SEARCHES AS CRAWLABLE <a> ANCHOR LINKS
 function renderCategoryNavs() {
     popularCategoriesBar.innerHTML = "";
-    
     CATEGORIES.filter(c => c.popular).forEach(cat => {
-        const pill = document.createElement("button");
+        const pill = document.createElement("a");
         const isActive = (!activeSearchQuery && activeCategory === cat.name);
         pill.className = "cat-pill" + (isActive ? " active" : "");
         pill.textContent = cat.name;
-        pill.type = "button";
-        pill.addEventListener("click", () => {
+        
+        // Proper HTML href link for Search Engine Crawlers
+        pill.href = (cat.name === "All") ? "videos.html" : `videos.html?cat=${encodeURIComponent(cat.name)}`;
+        
+        pill.addEventListener("click", (e) => {
+            e.preventDefault(); // Fast client-side navigation without full reload
             selectCategory(cat.name);
         });
         popularCategoriesBar.appendChild(pill);
     });
 
     const recentSearches = getRecentSearches();
+    recentSearchesContainer.innerHTML = "";
     if (recentSearches.length > 0) {
-        const divider = document.createElement("div");
-        divider.className = "cat-divider";
-        popularCategoriesBar.appendChild(divider);
-
+        recentSearchesRow.classList.add("visible");
         recentSearches.forEach(query => {
-            const pill = document.createElement("button");
+            const pill = document.createElement("a");
             const isActive = (activeSearchQuery === query || activeCategory === query);
             pill.className = "cat-pill temp" + (isActive ? " active" : "");
             pill.textContent = `🔍 ${query}`;
-            pill.type = "button";
             pill.title = query;
-            pill.addEventListener("click", () => {
+            pill.href = `videos.html?q=${encodeURIComponent(query)}`;
+            pill.addEventListener("click", (e) => {
+                e.preventDefault();
                 triggerSearch(query);
             });
-            popularCategoriesBar.appendChild(pill);
+            recentSearchesContainer.appendChild(pill);
         });
+    } else {
+        recentSearchesRow.classList.remove("visible");
     }
 
     drawerContent.innerHTML = "";
     CATEGORIES.forEach(cat => {
-        const btn = document.createElement("button");
+        const btn = document.createElement("a");
         const isActive = (!activeSearchQuery && activeCategory === cat.name);
         btn.className = "drawer-item" + (isActive ? " active" : "");
-        btn.type = "button";
+        btn.href = (cat.name === "All") ? "videos.html" : `videos.html?cat=${encodeURIComponent(cat.name)}`;
 
         let matchCount = videos.length;
         if (cat.keywords.length > 0) {
@@ -700,7 +825,8 @@ function renderCategoryNavs() {
         }
 
         btn.innerHTML = `<span>${cat.name}</span> <span class="drawer-item-count">${matchCount}</span>`;
-        btn.addEventListener("click", () => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
             selectCategory(cat.name);
             toggleDrawer(false);
         });
@@ -714,15 +840,16 @@ function renderCategoryNavs() {
         drawerContent.appendChild(label);
 
         recentSearches.forEach(query => {
-            const btn = document.createElement("button");
+            const btn = document.createElement("a");
             const isActive = (activeSearchQuery === query || activeCategory === query);
             btn.className = "drawer-item" + (isActive ? " active" : "");
-            btn.type = "button";
+            btn.href = `videos.html?q=${encodeURIComponent(query)}`;
 
             const matchCount = videos.filter(v => v.title.toLowerCase().includes(query.toLowerCase())).length;
 
             btn.innerHTML = `<span>🔍 ${query}</span> <span class="drawer-item-count">${matchCount}</span>`;
-            btn.addEventListener("click", () => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
                 triggerSearch(query);
                 toggleDrawer(false);
             });
@@ -736,6 +863,7 @@ function selectCategory(catName) {
     activeSearchQuery = "";
     search.value = "";
     searchFormWrapper.classList.remove("has-text");
+    updateURLParams();
     applyFilters();
 }
 
@@ -746,10 +874,12 @@ function triggerSearch(query) {
     activeCategory = "All";
     search.value = cleanQ;
     searchFormWrapper.classList.add("has-text");
+    updateURLParams();
     applyFilters();
 }
 
 function applyFilters() {
+    if (!isLoaded) return;
     currentPage = 1;
     let baseList = videos;
 
@@ -760,10 +890,11 @@ function applyFilters() {
     } else if (activeCategory !== "All") {
         const selectedCat = CATEGORIES.find(c => c.name === activeCategory);
         if (selectedCat && selectedCat.keywords.length > 0) {
-            baseList = videos.filter(video => {
+            const matches = videos.filter(video => {
                 const titleLower = video.title.toLowerCase();
                 return selectedCat.keywords.some(kw => titleLower.includes(kw.toLowerCase()));
             });
+            baseList = shuffle(matches);
         }
         heading.textContent = `${activeCategory} Videos`;
     } else {
@@ -771,6 +902,7 @@ function applyFilters() {
         heading.textContent = "Recommended For You";
     }
 
+    applySEOForContext(activeCategory, activeSearchQuery);
     filteredVideos = baseList;
     renderCategoryNavs();
     status.textContent = `${filteredVideos.length} videos found`;
@@ -781,9 +913,19 @@ function applyFilters() {
 function searchVideos(query, allVideos) {
     const cleanQuery = query.trim();
     if (!cleanQuery) return shuffle(allVideos);
-    if (!fuseInstance) return allVideos;
-    const results = fuseInstance.search(cleanQuery);
-    return results.sort((a, b) => a.score - b.score).map(r => r.item);
+
+    if (fuseInstance) {
+        const results = fuseInstance.search(cleanQuery);
+        const matchedItems = results.map(r => r.item);
+
+        const topSlice = matchedItems.slice(0, 60);
+        const remainingSlice = matchedItems.slice(60);
+
+        return [...shuffle(topSlice), ...remainingSlice];
+    }
+    
+    const fallbackMatches = allVideos.filter(v => v.title.toLowerCase().includes(cleanQuery.toLowerCase()));
+    return shuffle(fallbackMatches);
 }
 
 function formatTitle(slug) {
@@ -855,22 +997,26 @@ async function loadVideos() {
         }
 
         videos = results;
+        isLoaded = true;
 
-        fuseInstance = new Fuse(videos, {
-            keys: [
-                { name: 'title', weight: 0.8 },
-                { name: 'id', weight: 0.2 }
-            ],
-            includeScore: true,
-            threshold: 0.2,
-            distance: 100,
-            minMatchCharLength: 2,
-            ignoreLocation: true
-        });
+        if (typeof Fuse !== "undefined") {
+            fuseInstance = new Fuse(videos, {
+                keys: [
+                    { name: 'title', weight: 0.8 },
+                    { name: 'id', weight: 0.2 }
+                ],
+                includeScore: true,
+                threshold: 0.3,
+                distance: 100,
+                minMatchCharLength: 2,
+                ignoreLocation: true
+            });
+        }
 
         loader.style.display = "none";
         status.textContent = `${videos.length} videos loaded`;
 
+        parseParamsFromURL();
         applyFilters();
 
     } catch (err) {
@@ -894,7 +1040,15 @@ function renderGrid() {
     pageVideos.forEach(video => {
         const a = document.createElement("a");
         a.className = "card";
-        a.href = `second.html?id=${encodeURIComponent(video.id)}`;
+        
+        let targetHref = `second.html?id=${encodeURIComponent(video.id)}`;
+        if (activeSearchQuery) {
+            targetHref += `&from_q=${encodeURIComponent(activeSearchQuery)}`;
+        } else if (activeCategory && activeCategory !== "All") {
+            targetHref += `&from_cat=${encodeURIComponent(activeCategory)}`;
+        }
+        
+        a.href = targetHref;
 
         const thumb = document.createElement("div");
         thumb.className = "thumbnail";
@@ -937,20 +1091,26 @@ function renderPagination() {
     }
 }
 
+window.addEventListener("popstate", () => {
+    parseParamsFromURL();
+    applyFilters();
+});
+
 search.addEventListener("input", (e) => {
     const q = e.target.value.trim().toLowerCase();
     searchFormWrapper.classList.toggle("has-text", q.length > 0);
-    if (!q) { searchSuggestions.classList.remove("open"); return; }
+    if (!q || !isLoaded) { searchSuggestions.classList.remove("open"); return; }
     
     const matches = videos.filter(v => v.title.toLowerCase().includes(q)).slice(0, 6);
     if (!matches.length) { searchSuggestions.classList.remove("open"); return; }
 
     searchSuggestions.innerHTML = "";
     matches.forEach(video => {
-        const item = document.createElement("div");
+        const item = document.createElement("a");
         item.className = "suggestion-item";
+        item.href = `videos.html?q=${encodeURIComponent(video.title)}`;
         item.innerHTML = `🔍 <span>${video.title}</span>`;
-        item.addEventListener("mousedown", (e) => {
+        item.addEventListener("click", (e) => {
             e.preventDefault();
             triggerSearch(video.title);
             searchSuggestions.classList.remove("open");
@@ -979,8 +1139,6 @@ randomButton.addEventListener("click", () => {
     const randomVideo = videos[Math.floor(Math.random() * videos.length)];
     window.location.href = `second.html?id=${encodeURIComponent(randomVideo.id)}`;
 });
-
-logo.addEventListener("click", () => { window.location.href = "videos.html"; });
 
 loadVideos();
 </script>
