@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniStream - Video Sharing Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0f0f0f',
+                            800: '#1f1f1f',
+                            700: '#272727',
+                            600: '#3f3f3f',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1f1f1f; }
+        ::-webkit-scrollbar-thumb { background: #3f3f3f; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-100 min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-40 bg-dark-800 border-b border-dark-600 px-4 lg:px-6 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center space-x-4">
+            <button id="sidebar-toggle" onclick="toggleSidebar()" class="text-gray-300 hover:text-white p-2 rounded-lg hover:bg-dark-700 transition">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="navigateToHome()">
+                <div class="bg-red-600 text-white p-2 rounded-xl flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-play text-sm"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">MiniStream</span>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="flex-1 max-w-xl mx-4 hidden md:flex items-center">
+            <div class="relative w-full flex">
+                <input type="text" id="search-input" placeholder="Search videos by title, tag, or description..." 
+                    class="w-full bg-dark-900 border border-dark-600 rounded-l-full px-5 py-2 text-sm focus:outline-none focus:border-red-500 text-white placeholder-gray-500 transition">
+                <button onclick="handleSearch()" class="bg-dark-700 border border-l-0 border-dark-600 px-5 rounded-r-full hover:bg-dark-600 text-gray-300 transition">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Action Controls (Auth UI dynamically updated) -->
+        <div class="flex items-center space-x-3">
+            <button onclick="openUploadModal()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full font-medium text-sm transition shadow-lg hover:shadow-red-600/30 flex items-center space-x-2">
+                <i class="fa-solid fa-video"></i>
+                <span class="hidden sm:inline">Upload</span>
+            </button>
+            <div id="auth-container">
+                <button onclick="loginWithGoogle()" class="bg-white hover:bg-gray-200 text-dark-900 px-4 py-2 rounded-full font-bold text-sm transition shadow-md flex items-center space-x-2">
+                    <i class="fa-brands fa-google text-red-600"></i>
+                    <span>Sign In</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main App Container (Switches between Feed and Watch Views) -->
+    <div class="flex flex-1 overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-dark-800 border-r border-dark-600 flex-shrink-0 flex flex-col transition-all duration-300 z-30 hidden md:flex">
+            <div class="p-4 space-y-1">
+                <button onclick="switchView('home')" id="nav-home" class="w-full flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-dark-700 font-medium text-gray-300 hover:text-white transition">
+                    <i class="fa-solid fa-house w-5 text-center text-red-500"></i>
+                    <span>Home</span>
+                </button>
+                <button onclick="switchView('trending')" id="nav-trending" class="w-full flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-dark-700 font-medium text-gray-300 hover:text-white transition">
+                    <i class="fa-solid fa-fire w-5 text-center text-orange-500"></i>
+                    <span>Trending</span>
+                </button>
+                <button onclick="switchView('subscriptions')" id="nav-subscriptions" class="w-full flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-dark-700 font-medium text-gray-300 hover:text-white transition">
+                    <i class="fa-solid fa-clapperboard w-5 text-center text-blue-500"></i>
+                    <span>Subscriptions</span>
+                </button>
+            </div>
+            <hr class="border-dark-600 mx-4 my-2">
+            <div class="p-4 space-y-1">
+                <div class="px-4 py-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">Library</div>
+                <button onclick="switchView('history')" id="nav-history" class="w-full flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-dark-700 font-medium text-gray-300 hover:text-white transition">
+                    <i class="fa-solid fa-history w-5 text-center text-yellow-500"></i>
+                    <span>History</span>
+                </button>
+                <button onclick="switchView('liked')" id="nav-liked" class="w-full flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-dark-700 font-medium text-gray-300 hover:text-white transition">
+                    <i class="fa-solid fa-thumbs-up w-5 text-center text-green-500"></i>
+                    <span>Liked Videos</span>
+                </button>
+                <button onclick="switchView('my-videos')" id="nav-my-videos" class="w-full flex items-center space-x-4 px-4 py-3 rounded-xl hover:bg-dark-700 font-medium text-gray-300 hover:text-white transition">
+                    <i class="fa-solid fa-user-shield w-5 text-center text-purple-500"></i>
+                    <span>My Studio</span>
+                </button>
+            </div>
+            <div class="mt-auto p-4 border-t border-dark-600 text-xs text-gray-500 text-center">
+                MiniStream v4.0 &bull; Google Auth Enabled
+            </div>
+        </aside>
+
+        <!-- Dynamic Content Router View -->
+        <main id="app-view" class="flex-1 overflow-y-auto p-4 lg:p-8 bg-dark-900">
+            <!-- Rendered dynamically -->
+        </main>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="upload-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-dark-800 border border-dark-600 rounded-2xl max-w-xl w-full p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center mb-6">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-red-600/20 text-red-500 p-2.5 rounded-xl">
+                        <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-bold">Upload Video Studio</h3>
+                </div>
+                <button onclick="closeUploadModal()" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-dark-700 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="upload-form" class="space-y-4">
+                <div id="drop-zone" class="border-2 border-dashed border-dark-600 hover:border-red-500 rounded-xl p-6 text-center cursor-pointer transition bg-dark-900/50 relative">
+                    <input type="file" id="video-file" accept="video/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full" required onchange="handleFileSelected(this)">
+                    <div id="drop-prompt" class="space-y-2">
+                        <i class="fa-solid fa-film text-3xl text-red-500 mb-2"></i>
+                        <h4 class="font-bold text-base">Drag and drop video file to upload</h4>
+                        <p class="text-xs text-gray-400">MP4, WebM, MOV or OGG up to 500MB</p>
+                        <button type="button" class="mt-2 bg-dark-700 hover:bg-dark-600 text-gray-200 px-4 py-1.5 rounded-lg text-xs font-semibold border border-dark-600">Select File</button>
+                    </div>
+                    <div id="file-selected-info" class="hidden space-y-1">
+                        <i class="fa-solid fa-circle-check text-green-500 text-2xl mb-1"></i>
+                        <p id="file-name-display" class="font-bold text-sm text-green-400 truncate"></p>
+                        <p class="text-xs text-gray-400">Ready to upload</p>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Video Title</label>
+                    <input type="text" id="video-title" placeholder="Give your video a catchy title..." required class="w-full bg-dark-900 border border-dark-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 text-white">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Category</label>
+                        <select id="video-category" class="w-full bg-dark-900 border border-dark-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 text-white">
+                            <option value="Gaming">Gaming</option>
+                            <option value="Tech">Tech</option>
+                            <option value="Vlogs">Vlogs</option>
+                            <option value="Education">Education</option>
+                            <option value="Music">Music</option>
+                            <option value="Entertainment">Entertainment</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Tags (comma separated)</label>
+                        <input type="text" id="video-tags" placeholder="gaming, tutorial, vlogs" class="w-full bg-dark-900 border border-dark-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 text-white">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Description</label>
+                    <textarea id="video-desc" rows="3" placeholder="Tell viewers about your video..." class="w-full bg-dark-900 border border-dark-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 text-white"></textarea>
+                </div>
+
+                <div id="progress-container" class="hidden space-y-2 bg-dark-900 p-4 rounded-xl border border-dark-600">
+                    <div class="flex justify-between text-xs font-medium text-gray-300">
+                        <span id="progress-status-text">Uploading video...</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="w-full bg-dark-700 rounded-full h-2 overflow-hidden">
+                        <div id="progress-bar" class="bg-red-600 h-full rounded-full transition-all duration-200" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-3">
+                    <button type="button" onclick="closeUploadModal()" class="bg-dark-700 hover:bg-dark-600 text-gray-300 px-5 py-2.5 rounded-xl font-medium text-sm">Cancel</button>
+                    <button type="submit" id="submit-upload-btn" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg transition">Publish Video</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase App & Logic Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_rZQ0-PTcw2u--0AjybYOBtWnoh2XxDk",
+            authDomain: "counter-ea7c8.firebaseapp.com",
+            projectId: "counter-ea7c8",
+            storageBucket: "counter-ea7c8.firebasestorage.app",
+            messagingSenderId: "976604631332",
+            appId: "1:976604631332:web:fc0929d3231ac63a67a3b1"
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ministream-default-app';
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        const VIDEO_COLLECTION = "stream_videos";
+        const STORAGE_FOLDER = "user_videos/";
+
+        let currentUser = null;
+        let allVideos = [];
+        let currentView = 'home';
+        let currentCategory = 'All';
+        let currentSearchQuery = '';
+        let currentWatchVideoId = null;
+        let profileTargetUserId = null;
+
+        // Toast Notification Helper
+        window.showToast = function(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto px-4 py-3 rounded-xl shadow-xl border text-sm font-medium flex items-center space-x-3 transition transform translate-y-2 opacity-0 animate-in ${
+                type === 'success' ? 'bg-dark-800 border-green-500/50 text-green-400' : 'bg-dark-800 border-red-500/50 text-red-400'
+            }`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-green-500' : 'fa-triangle-exclamation text-red-500'}"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Firebase Auth Observer
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            updateAuthNavbarUI();
+            if (user && !user.isAnonymous) {
+                try {
+                    const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
+                    await setDoc(userDocRef, {
+                        displayName: user.displayName || "Google User",
+                        email: user.email || "",
+                        photoURL: user.photoURL || "https://placehold.co/100x100/3f3f3f/ffffff?text=U",
+                        lastLogin: serverTimestamp()
+                    }, { merge: true });
+                } catch(e) {
+                    console.error("Error saving profile:", e);
+                }
+            }
+            loadVideosFromFirestore();
+        });
+
+        async function initAuthSession() {
+            try {
+                if (!auth.currentUser) {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                }
+            } catch (err) {
+                console.error("Auth session error:", err);
+            }
+        }
+
+        window.loginWithGoogle = async function() {
+            try {
+                await signInWithPopup(auth, googleProvider);
+                showToast("Successfully signed in with Google!");
+            } catch (error) {
+                console.error("Google sign-in error:", error);
+                showToast("Google sign in failed: " + error.message, "error");
+            }
+        }
+
+        window.logoutUser = async function() {
+            try {
+                await signOut(auth);
+                await signInAnonymously(auth);
+                showToast("Signed out successfully.");
+            } catch (error) {
+                console.error("Sign out error:", error);
+                showToast("Sign out failed.", "error");
+            }
+        }
+
+        function updateAuthNavbarUI() {
+            const authContainer = document.getElementById('auth-container');
+            if (currentUser && !currentUser.isAnonymous && currentUser.displayName) {
+                const photo = currentUser.photoURL || "https://placehold.co/40x40/3f3f3f/ffffff?text=U";
+                authContainer.innerHTML = `
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 bg-dark-800 hover:bg-dark-700 border border-dark-600 px-3 py-1.5 rounded-full transition">
+                            <img src="${photo}" alt="Avatar" class="w-7 h-7 rounded-full object-cover">
+                            <span class="text-xs font-bold text-white max-w-[100px] truncate hidden sm:inline">${escapeHtml(currentUser.displayName.split(' ')[0])}</span>
+                            <i class="fa-solid fa-chevron-down text-[10px] text-gray-400"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-dark-800 border border-dark-600 rounded-2xl shadow-2xl py-2 hidden group-hover:block z-50">
+                            <div class="px-4 py-2 border-b border-dark-700">
+                                <p class="text-xs font-bold text-white truncate">${escapeHtml(currentUser.displayName)}</p>
+                                <p class="text-[10px] text-gray-400 truncate">${escapeHtml(currentUser.email || '')}</p>
+                            </div>
+                            <button onclick="viewCreatorProfile('${currentUser.uid}')" class="w-full text-left px-4 py-2 text-xs text-gray-300 hover:bg-dark-700 hover:text-white flex items-center space-x-2">
+                                <i class="fa-solid fa-user text-red-500 w-4"></i>
+                                <span>My Channel</span>
+                            </button>
+                            <button onclick="logoutUser()" class="w-full text-left px-4 py-2 text-xs text-red-400 hover:bg-dark-700 hover:text-red-300 flex items-center space-x-2">
+                                <i class="fa-solid fa-right-from-bracket w-4"></i>
+                                <span>Sign Out</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                authContainer.innerHTML = `
+                    <button onclick="loginWithGoogle()" class="bg-white hover:bg-gray-200 text-dark-900 px-4 py-2 rounded-full font-bold text-sm transition shadow-md flex items-center space-x-2">
+                        <i class="fa-brands fa-google text-red-600"></i>
+                        <span>Sign In</span>
+                    </button>
+                `;
+            }
+        }
+
+        // Fetch Videos from Firestore
+        window.loadVideosFromFirestore = async function() {
+            try {
+                const querySnapshot = await getDocs(collection(db, VIDEO_COLLECTION));
+                allVideos = [];
+                querySnapshot.forEach((docSnap) => {
+                    allVideos.push({ id: docSnap.id, ...docSnap.data() });
+                });
+
+                allVideos.sort((a, b) => {
+                    const timeA = a.createdAt?.seconds || 0;
+                    const timeB = b.createdAt?.seconds || 0;
+                    return timeB - timeA;
+                });
+
+                handleRouteChange();
+            } catch (error) {
+                console.error("Error loading videos:", error);
+            }
+        }
+
+        // Router handler based on URL Hash (#watch?id=... or #channel=... or standard views)
+        window.addEventListener('hashchange', handleRouteChange);
+
+        function handleRouteChange() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#watch?id=')) {
+                const videoId = hash.replace('#watch?id=', '');
+                renderWatchView(videoId);
+            } else if (hash.startsWith('#channel=')) {
+                const uId = hash.replace('#channel=', '');
+                currentView = 'channel';
+                profileTargetUserId = uId;
+                renderFeedView();
+            } else {
+                if (hash === '#trending') currentView = 'trending';
+                else if (hash === '#subscriptions') currentView = 'subscriptions';
+                else if (hash === '#history') currentView = 'history';
+                else if (hash === '#liked') currentView = 'liked';
+                else if (hash === '#studio') currentView = 'my-videos';
+                else currentView = 'home';
+                
+                profileTargetUserId = null;
+                renderFeedView();
+            }
+        }
+
+        window.switchView = function(view) {
+            currentView = view;
+            currentCategory = 'All';
+            profileTargetUserId = null;
+            if (view === 'home') window.location.hash = '#home';
+            else if (view === 'trending') window.location.hash = '#trending';
+            else if (view === 'subscriptions') window.location.hash = '#subscriptions';
+            else if (view === 'history') window.location.hash = '#history';
+            else if (view === 'liked') window.location.hash = '#liked';
+            else if (view === 'my-videos') window.location.hash = '#studio';
+        }
+
+        window.navigateToHome = function() {
+            window.location.hash = '#home';
+        }
+
+        window.viewCreatorProfile = function(uploaderId) {
+            if (!uploaderId) return;
+            window.location.hash = '#channel=' + uploaderId;
+        }
+
+        window.openWatchPage = function(videoId) {
+            window.location.hash = '#watch?id=' + videoId;
+        }
+
+        // Render Feed View
+        function renderFeedView() {
+            const appView = document.getElementById('app-view');
+            
+            let headerTitle = "Explore Videos";
+            let headerSubtitle = "Discover and stream amazing community videos";
+
+            if (currentView === 'trending') {
+                headerTitle = "Trending Videos";
+                headerSubtitle = "Most popular videos right now";
+            } else if (currentView === 'subscriptions') {
+                headerTitle = "Subscriptions Feed";
+                headerSubtitle = "Latest videos from creators you follow";
+            } else if (currentView === 'history') {
+                headerTitle = "Watch History";
+                headerSubtitle = "Videos you have watched recently";
+            } else if (currentView === 'liked') {
+                headerTitle = "Liked Videos";
+                headerSubtitle = "Videos you've given a thumbs up";
+            } else if (currentView === 'my-videos') {
+                headerTitle = "Creator Studio";
+                headerSubtitle = "Manage your uploaded videos";
+            } else if (currentView === 'channel') {
+                headerTitle = "Creator Channel";
+                headerSubtitle = "Videos published by this creator";
+            }
+
+            let channelHeaderHtml = '';
+            if (currentView === 'channel' && profileTargetUserId) {
+                const sampleVid = allVideos.find(v => v.uploaderId === profileTargetUserId);
+                const cName = sampleVid ? sampleVid.uploaderName : "Creator Channel";
+                const cPhoto = sampleVid ? sampleVid.uploaderPhoto : "https://placehold.co/100x100/3f3f3f/ffffff?text=C";
+                const vCount = allVideos.filter(v => v.uploaderId === profileTargetUserId).length;
+
+                channelHeaderHtml = `
+                    <div class="bg-dark-800 border border-dark-600 rounded-3xl p-6 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 shadow-xl mb-6">
+                        <img src="${cPhoto}" alt="Channel" class="w-20 h-20 rounded-full object-cover border-2 border-red-500 shadow-md">
+                        <div class="text-center sm:text-left flex-1">
+                            <h2 class="text-2xl font-bold text-white">${escapeHtml(cName)}</h2>
+                            <p class="text-xs text-gray-400 font-mono mt-1">ID: ${profileTargetUserId}</p>
+                            <div class="flex items-center justify-center sm:justify-start space-x-6 mt-3 text-xs text-gray-300">
+                                <span><strong class="text-white">${vCount}</strong> Uploads</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button id="channel-subscribe-btn" onclick="toggleChannelSubscribe('${profileTargetUserId}')" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-lg transition">Subscribe</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            appView.innerHTML = `
+                <div class="max-w-7xl mx-auto space-y-6">
+                    ${channelHeaderHtml}
+
+                    ${currentView === 'home' ? `
+                    <div class="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none">
+                        ${['All', 'Gaming', 'Tech', 'Vlogs', 'Education', 'Music', 'Entertainment'].map(cat => `
+                            <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition ${
+                                currentCategory === cat ? 'bg-white text-dark-900 shadow-lg' : 'bg-dark-800 hover:bg-dark-700 text-gray-300 border border-dark-600'
+                            }">${cat}</button>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+
+                    ${currentView !== 'channel' ? `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-dark-600">
+                        <div>
+                            <h2 class="text-xl lg:text-2xl font-bold tracking-tight text-white">${headerTitle}</h2>
+                            <p class="text-xs text-gray-400">${headerSubtitle}</p>
+                        </div>
+                        ${currentSearchQuery ? `
+                        <div class="flex items-center space-x-2 bg-dark-800 border border-dark-600 px-3 py-1.5 rounded-xl text-xs">
+                            <span class="text-gray-400">Search: <strong class="text-white">"${escapeHtml(currentSearchQuery)}"</strong></span>
+                            <button onclick="clearSearch()" class="text-red-400 hover:text-red-300 font-bold ml-2">&times; Clear</button>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ` : ''}
+
+                    <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                </div>
+            `;
+
+            if (currentView === 'channel') {
+                updateChannelSubscribeButtonState(profileTargetUserId);
+            }
+
+            document.querySelectorAll('aside button').forEach(btn => btn.classList.remove('bg-dark-700', 'text-white'));
+            const activeBtn = document.getElementById(`nav-${currentView}`);
+            if (activeBtn) activeBtn.classList.add('bg-dark-700', 'text-white');
+
+            renderFeedCards();
+        }
+
+        function renderFeedCards() {
+            const videoGrid = document.getElementById('video-grid');
+            if (!videoGrid) return;
+
+            let filtered = [...allVideos];
+
+            if (currentSearchQuery) {
+                const q = currentSearchQuery.toLowerCase();
+                filtered = filtered.filter(v => 
+                    (v.title && v.title.toLowerCase().includes(q)) || 
+                    (v.description && v.description.toLowerCase().includes(q)) ||
+                    (v.tags && v.tags.toLowerCase().includes(q))
+                );
+            }
+
+            if (currentView === 'home' && currentCategory !== 'All') {
+                filtered = filtered.filter(v => v.category === currentCategory);
+            }
+
+            if (currentView === 'trending') {
+                filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
+            } else if (currentView === 'liked') {
+                const likedIds = JSON.parse(localStorage.getItem('ministream_liked_ids') || '[]');
+                filtered = filtered.filter(v => likedIds.includes(v.id));
+            } else if (currentView === 'history') {
+                const historyIds = JSON.parse(localStorage.getItem('ministream_history_ids') || '[]');
+                filtered = historyIds.map(id => filtered.find(v => v.id === id)).filter(Boolean);
+            } else if (currentView === 'my-videos') {
+                if (currentUser && !currentUser.isAnonymous) {
+                    filtered = filtered.filter(v => v.uploaderId === currentUser.uid);
+                } else {
+                    filtered = [];
+                }
+            } else if (currentView === 'subscriptions') {
+                const subs = JSON.parse(localStorage.getItem('ministream_subscriptions') || '[]');
+                filtered = filtered.filter(v => subs.includes(v.uploaderId));
+            } else if (currentView === 'channel' && profileTargetUserId) {
+                filtered = filtered.filter(v => v.uploaderId === profileTargetUserId);
+            }
+
+            if (filtered.length === 0) {
+                videoGrid.innerHTML = `
+                    <div class="col-span-full bg-dark-800/50 border border-dark-600 rounded-2xl p-12 text-center space-y-3">
+                        <i class="fa-solid fa-film text-4xl text-gray-600 mb-1"></i>
+                        <h3 class="font-bold text-lg text-white">No videos found</h3>
+                        <p class="text-xs text-gray-400">${currentView === 'my-videos' && (!currentUser || currentUser.isAnonymous) ? 'Please sign in with Google to view your uploaded videos.' : 'Try adjusting your filters or search query.'}</p>
+                        ${currentView === 'my-videos' && (!currentUser || currentUser.isAnonymous) ? `<button onclick="loginWithGoogle()" class="bg-white text-dark-900 px-5 py-2 rounded-xl text-xs font-bold mt-2 shadow-lg transition">Sign In with Google</button>` : `<button onclick="openUploadModal()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl text-xs font-bold mt-2 shadow-lg transition">Upload Video</button>`}
+                    </div>
+                `;
+                return;
+            }
+
+            videoGrid.innerHTML = '';
+            filtered.forEach(video => {
+                const card = document.createElement('div');
+                card.className = "bg-dark-800 border border-dark-600 rounded-2xl overflow-hidden shadow-lg hover:border-red-500/50 transition duration-300 flex flex-col justify-between group cursor-pointer";
+                card.onclick = () => openWatchPage(video.id);
+
+                const uploaderName = video.uploaderName || 'Creator';
+                const uploaderPhoto = video.uploaderPhoto || 'https://placehold.co/32x32/3f3f3f/ffffff?text=C';
+                const dateStr = video.createdAt ? timeAgo(video.createdAt.seconds * 1000) : 'Recently';
+
+                card.innerHTML = `
+                    <div class="relative aspect-video bg-black overflow-hidden">
+                        <video src="${video.videoUrl}" preload="metadata" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 pointer-events-none"></video>
+                        <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded backdrop-blur-sm">${video.category || 'General'}</span>
+                    </div>
+                    <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-sm text-white line-clamp-2 group-hover:text-red-400 transition">${escapeHtml(video.title)}</h3>
+                        </div>
+                        <div class="flex items-center space-x-2 pt-2 border-t border-dark-700" onclick="event.stopPropagation(); viewCreatorProfile('${video.uploaderId}')">
+                            <img src="${uploaderPhoto}" alt="Avatar" class="w-7 h-7 rounded-full object-cover border border-dark-600">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-bold text-gray-300 hover:text-white truncate">${escapeHtml(uploaderName)}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-gray-500">
+                            <span><i class="fa-solid fa-eye mr-1"></i>${video.views || 0} views</span>
+                            <span>${dateStr}</span>
+                        </div>
+                    </div>
+                `;
+                videoGrid.appendChild(card);
+            });
+        }
+
+        window.filterCategory = function(cat) {
+            currentCategory = cat;
+            renderFeedCards();
+        }
+
+        window.handleSearch = function() {
+            const input = document.getElementById('search-input');
+            if (input) {
+                currentSearchQuery = input.value.trim();
+                renderFeedView();
+            }
+        }
+
+        window.clearSearch = function() {
+            currentSearchQuery = '';
+            const input = document.getElementById('search-input');
+            if (input) input.value = '';
+            renderFeedView();
+        }
+
+        // Render Dedicated Watch View
+        async function renderWatchView(videoId) {
+            const appView = document.getElementById('app-view');
+            const video = allVideos.find(v => v.id === videoId);
+
+            if (!video) {
+                appView.innerHTML = `
+                    <div class="max-w-2xl mx-auto py-20 text-center space-y-4">
+                        <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500"></i>
+                        <h2 class="text-xl font-bold text-white">Video not found</h2>
+                        <p class="text-xs text-gray-400">The video you are trying to watch may have been deleted or doesn't exist.</p>
+                        <button onclick="navigateToHome()" class="bg-red-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold">Back to Home</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Increment view count in Firebase once per session
+            try {
+                const docRef = doc(db, VIDEO_COLLECTION, video.id);
+                await updateDoc(docRef, { views: (video.views || 0) + 1 });
+                video.views = (video.views || 0) + 1;
+            } catch (e) {
+                console.error("View increment error:", e);
+            }
+
+            // Update watch history
+            let history = JSON.parse(localStorage.getItem('ministream_history_ids') || '[]');
+            history = history.filter(id => id !== video.id);
+            history.unshift(video.id);
+            if (history.length > 50) history.pop();
+            localStorage.setItem('ministream_history_ids', JSON.stringify(history));
+
+            appView.innerHTML = `
+                <div class="max-w-7xl mx-auto space-y-6">
+                    <button onclick="window.history.back()" class="bg-dark-800 hover:bg-dark-700 text-gray-300 px-4 py-2 rounded-xl text-xs font-semibold transition flex items-center space-x-2 border border-dark-600 w-fit">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Back</span>
+                    </button>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Main Video & Info Column -->
+                        <div class="lg:col-span-2 space-y-4">
+                            <div class="w-full bg-black rounded-2xl overflow-hidden shadow-2xl border border-dark-600 aspect-video flex items-center justify-center">
+                                <video id="active-watch-player" controls autoplay class="w-full h-full object-contain">
+                                    <source src="${video.videoUrl}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+
+                            <h1 class="text-xl lg:text-2xl font-bold text-white tracking-tight">${escapeHtml(video.title)}</h1>
+
+                            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-dark-600">
+                                <div class="flex items-center space-x-3 cursor-pointer group" onclick="viewCreatorProfile('${video.uploaderId}')">
+                                    <img src="${video.uploaderPhoto || 'https://placehold.co/100x100/3f3f3f/ffffff?text=C'}" alt="Avatar" class="w-12 h-12 rounded-full object-cover border border-dark-600 group-hover:border-red-500 transition">
+                                    <div>
+                                        <h4 class="font-bold text-white hover:text-red-400 transition">${escapeHtml(video.uploaderName || 'Creator')}</h4>
+                                        <p class="text-xs text-gray-400">Creator Channel</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <button id="watch-subscribe-btn" onclick="toggleChannelSubscribe('${video.uploaderId}')" class="bg-white hover:bg-gray-200 text-dark-900 px-5 py-2.5 rounded-full font-bold text-sm transition shadow-md">
+                                        Subscribe
+                                    </button>
+                                    <div class="flex items-center bg-dark-800 border border-dark-600 rounded-full overflow-hidden">
+                                        <button id="watch-like-btn" onclick="handleLikeVideo('${video.id}')" class="px-4 py-2.5 hover:bg-dark-700 text-gray-300 transition flex items-center space-x-2 border-r border-dark-600">
+                                            <i class="fa-solid fa-thumbs-up"></i>
+                                            <span id="watch-like-count">${video.likes || 0}</span>
+                                        </button>
+                                        <button id="watch-dislike-btn" onclick="handleDislikeVideo('${video.id}')" class="px-4 py-2.5 hover:bg-dark-700 text-gray-300 transition flex items-center space-x-2">
+                                            <i class="fa-solid fa-thumbs-down"></i>
+                                            <span id="watch-dislike-count">${video.dislikes || 0}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-dark-800 border border-dark-600 rounded-2xl p-4 text-sm text-gray-300 space-y-2">
+                                <div class="flex items-center space-x-4 text-xs font-semibold text-gray-400">
+                                    <span>${video.views || 0} views</span>
+                                    <span>${video.createdAt ? timeAgo(video.createdAt.seconds * 1000) : 'Recently'}</span>
+                                    <span class="bg-red-600/20 text-red-400 px-2.5 py-0.5 rounded-md">${video.category || 'General'}</span>
+                                </div>
+                                <p class="whitespace-pre-line leading-relaxed text-gray-200">${escapeHtml(video.description || "No description provided.")}</p>
+                            </div>
+
+                            <!-- Comments Section -->
+                            <div class="space-y-4 pt-4">
+                                <h3 class="text-lg font-bold flex items-center space-x-2">
+                                    <i class="fa-solid fa-comments text-red-500"></i>
+                                    <span>Comments</span>
+                                    <span id="comment-count-badge" class="text-xs bg-dark-700 px-2 py-0.5 rounded-full text-gray-400">0</span>
+                                </h3>
+                                <div class="flex space-x-3">
+                                    <img src="${currentUser && currentUser.photoURL ? currentUser.photoURL : 'https://placehold.co/40x40/3f3f3f/ffffff?text=U'}" alt="User" class="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-dark-600">
+                                    <div class="flex-1 space-y-2">
+                                        <input type="text" id="comment-input" placeholder="Add a public comment..." class="w-full bg-dark-800 border border-dark-600 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 text-white placeholder-gray-500">
+                                        <div class="flex justify-end space-x-2">
+                                            <button onclick="document.getElementById('comment-input').value=''" class="px-4 py-1.5 text-sm rounded-lg hover:bg-dark-700 text-gray-400 font-medium">Cancel</button>
+                                            <button onclick="postComment('${video.id}')" class="bg-red-600 hover:bg-red-700 text-white px-5 py-1.5 rounded-lg text-sm font-semibold transition">Comment</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="comments-list" class="space-y-3 pt-2">
+                                    <!-- Loaded via async -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Up Next / Related Videos Column -->
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-lg">Up Next</h3>
+                            <div id="related-videos-list" class="space-y-3"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            updateWatchInteractionStates(video);
+            loadComments(video.id);
+            renderRelatedVideos(video.id);
+        }
+
+        // Likes & Dislikes Logic
+        window.handleLikeVideo = async function(videoId) {
+            const video = allVideos.find(v => v.id === videoId);
+            if (!video) return;
+
+            let likedIds = JSON.parse(localStorage.getItem('ministream_liked_ids') || '[]');
+            let dislikedIds = JSON.parse(localStorage.getItem('ministream_disliked_ids') || '[]');
+
+            const isLiked = likedIds.includes(videoId);
+            const isDisliked = dislikedIds.includes(videoId);
+
+            let newLikes = video.likes || 0;
+            let newDislikes = video.dislikes || 0;
+
+            if (isLiked) {
+                likedIds = likedIds.filter(id => id !== videoId);
+                newLikes = Math.max(0, newLikes - 1);
+                showToast("Removed like");
+            } else {
+                likedIds.push(videoId);
+                newLikes += 1;
+                if (isDisliked) {
+                    dislikedIds = dislikedIds.filter(id => id !== videoId);
+                    newDislikes = Math.max(0, newDislikes - 1);
+                }
+                showToast("Added to liked videos!");
+            }
+
+            localStorage.setItem('ministream_liked_ids', JSON.stringify(likedIds));
+            localStorage.setItem('ministream_disliked_ids', JSON.stringify(dislikedIds));
+
+            video.likes = newLikes;
+            video.dislikes = newDislikes;
+            updateWatchInteractionStates(video);
+
+            try {
+                await updateDoc(doc(db, VIDEO_COLLECTION, videoId), { likes: newLikes, dislikes: newDislikes });
+            } catch (e) {
+                console.error("Error updating likes in Firestore:", e);
+            }
+        }
+
+        window.handleDislikeVideo = async function(videoId) {
+            const video = allVideos.find(v => v.id === videoId);
+            if (!video) return;
+
+            let likedIds = JSON.parse(localStorage.getItem('ministream_liked_ids') || '[]');
+            let dislikedIds = JSON.parse(localStorage.getItem('ministream_disliked_ids') || '[]');
+
+            const isLiked = likedIds.includes(videoId);
+            const isDisliked = dislikedIds.includes(videoId);
+
+            let newLikes = video.likes || 0;
+            let newDislikes = video.dislikes || 0;
+
+            if (isDisliked) {
+                dislikedIds = dislikedIds.filter(id => id !== videoId);
+                newDislikes = Math.max(0, newDislikes - 1);
+                showToast("Removed dislike");
+            } else {
+                dislikedIds.push(videoId);
+                newDislikes += 1;
+                if (isLiked) {
+                    likedIds = likedIds.filter(id => id !== videoId);
+                    newLikes = Math.max(0, newLikes - 1);
+                }
+                showToast("Disliked video recorded");
+            }
+
+            localStorage.setItem('ministream_liked_ids', JSON.stringify(likedIds));
+            localStorage.setItem('ministream_disliked_ids', JSON.stringify(dislikedIds));
+
+            video.likes = newLikes;
+            video.dislikes = newDislikes;
+            updateWatchInteractionStates(video);
+
+            try {
+                await updateDoc(doc(db, VIDEO_COLLECTION, videoId), { likes: newLikes, dislikes: newDislikes });
+            } catch (e) {
+                console.error("Error updating dislikes in Firestore:", e);
+            }
+        }
+
+        function updateWatchInteractionStates(video) {
+            const likedIds = JSON.parse(localStorage.getItem('ministream_liked_ids') || '[]');
+            const dislikedIds = JSON.parse(localStorage.getItem('ministream_disliked_ids') || '[]');
+            const subs = JSON.parse(localStorage.getItem('ministream_subscriptions') || '[]');
+
+            const isLiked = likedIds.includes(video.id);
+            const isDisliked = dislikedIds.includes(video.id);
+            const isSubbed = subs.includes(video.uploaderId);
+
+            document.getElementById('watch-like-count').innerText = video.likes || 0;
+            document.getElementById('watch-dislike-count').innerText = video.dislikes || 0;
+
+            const likeBtn = document.getElementById('watch-like-btn');
+            const dislikeBtn = document.getElementById('watch-dislike-btn');
+            const subBtn = document.getElementById('watch-subscribe-btn');
+
+            if (isLiked) likeBtn.classList.add('text-red-500');
+            else likeBtn.classList.remove('text-red-500');
+
+            if (isDisliked) dislikeBtn.classList.add('text-red-500');
+            else dislikeBtn.classList.remove('text-red-500');
+
+            if (isSubbed) {
+                subBtn.innerText = "Subscribed";
+                subBtn.className = "bg-dark-700 hover:bg-dark-600 text-gray-200 border border-dark-600 px-5 py-2.5 rounded-full font-bold text-sm transition";
+            } else {
+                subBtn.innerText = "Subscribe";
+                subBtn.className = "bg-white hover:bg-gray-200 text-dark-900 px-5 py-2.5 rounded-full font-bold text-sm transition shadow-md";
+            }
+        }
+
+        window.toggleChannelSubscribe = function(uploaderId) {
+            if (!uploaderId) return;
+            let subs = JSON.parse(localStorage.getItem('ministream_subscriptions') || '[]');
+            const index = subs.indexOf(uploaderId);
+
+            if (index > -1) {
+                subs.splice(index, 1);
+                showToast("Unsubscribed from creator");
+            } else {
+                subs.push(uploaderId);
+                showToast("Subscribed to creator!");
+            }
+            localStorage.setItem('ministream_subscriptions', JSON.stringify(subs));
+            
+            const sampleVid = allVideos.find(v => v.uploaderId === uploaderId);
+            if (sampleVid) updateWatchInteractionStates(sampleVid);
+            updateChannelSubscribeButtonState(uploaderId);
+        }
+
+        function updateChannelSubscribeButtonState(uploaderId) {
+            const btn = document.getElementById('channel-subscribe-btn');
+            if (!btn) return;
+            const subs = JSON.parse(localStorage.getItem('ministream_subscriptions') || '[]');
+            const isSubbed = subs.includes(uploaderId);
+            if (isSubbed) {
+                btn.innerText = "Subscribed";
+                btn.className = "bg-dark-700 hover:bg-dark-600 text-gray-200 border border-dark-600 px-6 py-2.5 rounded-full font-bold text-sm transition";
+            } else {
+                btn.innerText = "Subscribe";
+                btn.className = "bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-lg transition";
+            }
+        }
+
+        // Comments System
+        window.postComment = async function(videoId) {
+            if (!currentUser || currentUser.isAnonymous) {
+                showToast("Please Sign In with Google to comment.", "error");
+                loginWithGoogle();
+                return;
+            }
+            const input = document.getElementById('comment-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            try {
+                const commentsCol = collection(db, VIDEO_COLLECTION, videoId, 'comments');
+                await addDoc(commentsCol, {
+                    text: text,
+                    userId: currentUser.uid,
+                    userName: currentUser.displayName || "Google User",
+                    userPhoto: currentUser.photoURL || "https://placehold.co/40x40/3f3f3f/ffffff?text=U",
+                    createdAt: serverTimestamp()
+                });
+
+                input.value = '';
+                showToast("Comment posted!");
+                loadComments(videoId);
+            } catch (err) {
+                console.error("Error posting comment:", err);
+                showToast("Failed to post comment.", "error");
+            }
+        }
+
+        async function loadComments(videoId) {
+            const list = document.getElementById('comments-list');
+            if (!list) return;
+            list.innerHTML = `<p class="text-xs text-gray-500 py-2">Loading comments...</p>`;
+            try {
+                const commentsCol = collection(db, VIDEO_COLLECTION, videoId, 'comments');
+                const snapshot = await getDocs(commentsCol);
+                let comments = [];
+                snapshot.forEach(docSnap => comments.push({ id: docSnap.id, ...docSnap.data() }));
+
+                comments.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                document.getElementById('comment-count-badge').innerText = comments.length;
+
+                if (comments.length === 0) {
+                    list.innerHTML = `<p class="text-xs text-gray-500 py-2">No comments yet. Be the first to comment!</p>`;
+                    return;
+                }
+
+                list.innerHTML = '';
+                comments.forEach(c => {
+                    const item = document.createElement('div');
+                    item.className = "flex space-x-3 bg-dark-800/60 border border-dark-600/50 p-3 rounded-xl";
+                    const timeStr = c.createdAt ? timeAgo(c.createdAt.seconds * 1000) : 'Just now';
+                    const userPhoto = c.userPhoto || 'https://placehold.co/32x32/3f3f3f/ffffff?text=U';
+                    item.innerHTML = `
+                        <img src="${userPhoto}" alt="Avatar" class="w-8 h-8 rounded-full object-cover border border-dark-600 flex-shrink-0 cursor-pointer" onclick="viewCreatorProfile('${c.userId}')">
+                        <div class="flex-1 space-y-1">
+                            <div class="flex items-center justify-between">
+                                <span class="font-bold text-xs text-gray-200 cursor-pointer hover:underline" onclick="viewCreatorProfile('${c.userId}')">${escapeHtml(c.userName || 'User')}</span>
+                                <span class="text-[10px] text-gray-500">${timeStr}</span>
+                            </div>
+                            <p class="text-xs text-gray-300">${escapeHtml(c.text)}</p>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch (e) {
+                console.error("Error loading comments:", e);
+                list.innerHTML = `<p class="text-xs text-red-400 py-2">Could not load comments.</p>`;
+            }
+        }
+
+        function renderRelatedVideos(currentId) {
+            const container = document.getElementById('related-videos-list');
+            if (!container) return;
+            const related = allVideos.filter(v => v.id !== currentId).slice(0, 6);
+
+            if (related.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500">No related videos available.</p>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            related.forEach(v => {
+                const el = document.createElement('div');
+                el.className = "flex space-x-3 cursor-pointer bg-dark-800 hover:bg-dark-700 p-2 rounded-xl border border-dark-600 transition";
+                el.onclick = () => openWatchPage(v.id);
+                el.innerHTML = `
+                    <div class="w-28 aspect-video bg-black rounded-lg overflow-hidden flex-shrink-0 relative">
+                        <video src="${v.videoUrl}" class="w-full h-full object-cover pointer-events-none"></video>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-xs text-white truncate">${escapeHtml(v.title)}</h4>
+                        <p class="text-[11px] text-gray-400 mt-1">${escapeHtml(v.uploaderName || 'Creator')}</p>
+                        <p class="text-[10px] text-gray-500 mt-0.5">${v.views || 0} views</p>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        // Upload Form & Modal
+        window.openUploadModal = function() {
+            if (!currentUser || currentUser.isAnonymous) {
+                showToast("Please Sign In with Google to upload videos.", "error");
+                loginWithGoogle();
+                return;
+            }
+            document.getElementById('upload-modal').classList.remove('hidden');
+        }
+
+        window.closeUploadModal = function() {
+            document.getElementById('upload-modal').classList.add('hidden');
+        }
+
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        window.handleFileSelected = function(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                document.getElementById('drop-prompt').classList.add('hidden');
+                const info = document.getElementById('file-selected-info');
+                info.classList.remove('hidden');
+                document.getElementById('file-name-display').innerText = file.name;
+                
+                const titleInput = document.getElementById('video-title');
+                if (!titleInput.value) {
+                    let nameWithoutExt = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                    titleInput.value = nameWithoutExt.replace(/[-_]/g, ' ');
+                }
+            }
+        }
+
+        const uploadForm = document.getElementById('upload-form');
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser || currentUser.isAnonymous) {
+                showToast("Please Sign In with Google before uploading.", "error");
+                closeUploadModal();
+                loginWithGoogle();
+                return;
+            }
+
+            const title = document.getElementById('video-title').value.trim();
+            const description = document.getElementById('video-desc').value.trim();
+            const category = document.getElementById('video-category').value;
+            const tags = document.getElementById('video-tags').value.trim();
+            const fileInput = document.getElementById('video-file');
+            const file = fileInput.files[0];
+
+            if (!file) return;
+
+            const submitBtn = document.getElementById('submit-upload-btn');
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
+            const progressPercent = document.getElementById('progress-percent');
+            const progressStatusText = document.getElementById('progress-status-text');
+
+            submitBtn.disabled = true;
+            progressContainer.classList.remove('hidden');
+
+            const uniqueFileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+            const storageRef = ref(storage, STORAGE_FOLDER + uniqueFileName);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed', 
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    const percentRounded = Math.round(progress);
+                    progressBar.style.width = percentRounded + "%";
+                    progressPercent.innerText = percentRounded + "%";
+                    if (percentRounded === 100) progressStatusText.innerText = "Processing video on cloud...";
+                }, 
+                (error) => {
+                    console.error("Upload error:", error);
+                    showToast("Upload failed: " + error.message, "error");
+                    submitBtn.disabled = false;
+                    progressContainer.classList.add('hidden');
+                }, 
+                async () => {
+                    try {
+                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+                        const docRef = await addDoc(collection(db, VIDEO_COLLECTION), {
+                            title: title,
+                            description: description,
+                            category: category,
+                            tags: tags,
+                            videoUrl: downloadURL,
+                            uploaderId: currentUser.uid,
+                            uploaderName: currentUser.displayName || "Google Creator",
+                            uploaderPhoto: currentUser.photoURL || "https://placehold.co/100x100/3f3f3f/ffffff?text=U",
+                            views: 0,
+                            likes: 0,
+                            dislikes: 0,
+                            createdAt: serverTimestamp()
+                        });
+
+                        showToast("Video published successfully!");
+                        closeUploadModal();
+                        uploadForm.reset();
+                        document.getElementById('drop-prompt').classList.remove('hidden');
+                        document.getElementById('file-selected-info').classList.add('hidden');
+                        progressContainer.classList.add('hidden');
+                        progressBar.style.width = "0%";
+                        submitBtn.disabled = false;
+
+                        await loadVideosFromFirestore();
+                        openWatchPage(docRef.id);
+                    } catch (err) {
+                        console.error("Metadata error:", err);
+                        showToast("Failed to save metadata.", "error");
+                        submitBtn.disabled = false;
+                        progressContainer.classList.add('hidden');
+                    }
+                }
+            );
+        });
+
+        function timeAgo(dateMS) {
+            const seconds = Math.floor((Date.now() - dateMS) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return "Just now";
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        window.onload = async function() {
+            await initAuthSession();
+        }
+    </script>
+</body>
+</html>
