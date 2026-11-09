@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Siddhi ♡</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(145deg,#fff6f1,#fce4e9,#fff0e6);
+    color: #754d55;
+    font-family: 'DM Sans',sans-serif;
+    overflow-x: hidden;
+}
+
+.petals {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.petal {
+    position: absolute;
+    top: -30px;
+    color: #e9a7b8;
+    animation: fall linear infinite;
+    opacity: .65;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(720deg);
+    }
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+.card {
+    width: 100%;
+    max-width: 440px;
+    padding: 42px 25px;
+    background: rgba(255,255,255,.73);
+    border: 1px solid rgba(255,255,255,.9);
+    border-radius: 28px;
+    text-align: center;
+    box-shadow: 0 20px 70px rgba(164,103,120,.13);
+    backdrop-filter: blur(15px);
+}
+
+.small {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #c58b9c;
+}
+
+h1 {
+    font-family: 'Playfair Display',serif;
+    font-size: 43px;
+    font-weight: 500;
+    margin: 18px 0 12px;
+    color: #895766;
+}
+
+.subtitle {
+    font-size: 14px;
+    line-height: 1.9;
+    color: #987681;
+}
+
+.heart {
+    font-size: 48px;
+    margin: 22px 0;
+    animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+    50% { transform: scale(1.15); }
+}
+
+button {
+    border: none;
+    padding: 15px 30px;
+    border-radius: 40px;
+    background: #c9879b;
+    color: white;
+    font-size: 14px;
+    letter-spacing: .5px;
+    cursor: pointer;
+    margin-top: 25px;
+    box-shadow: 0 8px 22px #c9879b45;
+    transition: .3s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    background: #ad6e83;
+}
+
+#gift {
+    display: none;
+    animation: appear 1s ease;
+}
+
+@keyframes appear {
+    from {opacity:0;transform:translateY(20px);}
+    to {opacity:1;transform:translateY(0);}
+}
+
+.bouquet {
+    font-size: 85px;
+    margin: 25px 0;
+    animation: sway 3s ease-in-out infinite;
+}
+
+@keyframes sway {
+    0%,100% {transform:rotate(-4deg);}
+    50% {transform:rotate(4deg);}
+}
+
+.message {
+    font-family: 'Playfair Display',serif;
+    font-size: 19px;
+    line-height: 1.9;
+    color: #895766;
+    margin-top: 20px;
+}
+
+.divider {
+    color: #d8a0ae;
+    letter-spacing: 8px;
+    margin: 23px 0;
+}
+
+.signature {
+    font-family: 'Playfair Display',serif;
+    font-style: italic;
+    color: #ba8294;
+    font-size: 18px;
+    margin-top: 25px;
+}
+
+.footer {
+    font-size: 11px;
+    color: #c19aa4;
+    margin-top: 30px;
+}
+
+.hidden {
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="petals" id="petals"></div>
+
+<div class="container">
+    <div class="card">
+
+        <div id="intro">
+            <div class="small">A little something for you</div>
+
+            <h1>Dear Siddhi,</h1>
+
+            <p class="subtitle">
+                Some things are easier to express<br>
+                through a little gesture.
+            </p>
+
+            <div class="heart">♡</div>
+
+            <p class="subtitle">
+                I have something for you.
+            </p>
+
+            <button onclick="openGift()">
+                Open your little gift ♡
+            </button>
+
+            <div class="footer">
+                Made with a little love and sincerity.
+            </div>
+        </div>
+
+        <div id="gift">
+
+            <div class="small">Just for you, Siddhi</div>
+
+            <h1>I'm Sorry.</h1>
+
+            <div class="bouquet">💐</div>
+
+            <div class="divider">✿ ✿ ✿</div>
+
+            <div class="message">
+                I know flowers can't undo<br>
+                everything, and neither can<br>
+                a simple apology.
+
+                <br><br>
+
+                But I genuinely want you to know<br>
+                that I'm sorry if I hurt you.<br>
+                That was never what I wanted.
+
+                <br><br>
+
+                You deserve kindness, happiness,<br>
+                and all the beautiful things<br>
+                this world has to offer.
+
+                <br><br>
+
+                So here's a little bouquet<br>
+                to brighten your day. 🌷
+            </div>
+
+            <div class="signature">
+                With a sincere apology ♡
+            </div>
+
+            <button onclick="forgive()">
+                A little smile? 🌸
+            </button>
+
+            <p id="ending" class="hidden message">
+                Whatever happens,<br>
+                I hope you have a beautiful day. ♡
+            </p>
+
+            <div class="footer">
+                A little page, just for Siddhi.
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function openGift() {
+    document.getElementById('intro').style.display = 'none';
+    document.getElementById('gift').style.display = 'block';
+    window.scrollTo(0,0);
+}
+
+function forgive() {
+    document.getElementById('ending').classList.remove('hidden');
+    document.getElementById('ending').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+    });
+}
+
+// Falling petals
+const petals = document.getElementById('petals');
+
+for(let i=0; i<28; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.innerHTML = ['✿','❀','♡','🌸'][Math.floor(Math.random()*4)];
+    p.style.left = Math.random()*100+'%';
+    p.style.animationDuration = (6+Math.random()*10)+'s';
+    p.style.animationDelay = Math.random()*10+'s';
+    p.style.fontSize = (12+Math.random()*15)+'px';
+    petals.appendChild(p);
+}
+</script>
+
+</body>
+</html>
