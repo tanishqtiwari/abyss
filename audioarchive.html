@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AudioWave</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+    --primary:#6366f1;
+    --bg-color:#0f172a;
+    --card-bg:#1e293b;
+    --text-main:#f8fafc;
+    --text-muted:#94a3b8;
+    --border:#334155;
+}
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Inter,sans-serif;
+}
+body {
+    background:var(--bg-color);
+    color:var(--text-main);
+    display:flex;
+    justify-content:center;
+    padding:40px 20px;
+    min-height:100vh;
+}
+.container {
+    width:100%;
+    max-width:650px;
+}
+header {
+    text-align:center;
+    margin-bottom:30px;
+}
+header h1 {
+    font-size:2.2rem;
+    color:var(--primary);
+    margin-bottom:8px;
+}
+header p {
+    color:var(--text-muted);
+}
+.upload-card,.feed-section {
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:24px;
+    margin-bottom:30px;
+}
+h2 {
+    font-size:1.25rem;
+    margin-bottom:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+.input-group {
+    margin-bottom:16px;
+}
+.input-group label {
+    display:block;
+    font-size:.875rem;
+    margin-bottom:6px;
+    color:var(--text-muted);
+}
+.input-group input {
+    width:100%;
+    padding:8px;
+    background:#0f172a;
+    border:1px solid var(--border);
+    border-radius:8px;
+    color:white;
+}
+.btn-primary {
+    width:100%;
+    background:var(--primary);
+    color:white;
+    border:none;
+    padding:12px;
+    border-radius:8px;
+    font-weight:600;
+    font-size:1rem;
+    cursor:pointer;
+}
+.btn-primary:disabled {
+    opacity:.6;
+    cursor:not-allowed;
+}
+#progressContainer {
+    margin-top:15px;
+    background:#0f172a;
+    border-radius:6px;
+    overflow:hidden;
+    position:relative;
+    height:24px;
+}
+#progressBar {
+    width:0%;
+    height:100%;
+    background:var(--primary);
+    transition:width .1s linear;
+}
+#progressText {
+    position:absolute;
+    width:100%;
+    top:0;
+    left:0;
+    text-align:center;
+    font-size:.75rem;
+    line-height:24px;
+}
+.hidden {
+    display:none;
+}
+.spinner {
+    text-align:center;
+    color:var(--text-muted);
+    padding:20px;
+}
+.audio-list {
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+.audio-card {
+    background:#0f172a;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+.audio-info h3 {
+    font-size:1rem;
+    margin-bottom:4px;
+    word-break:break-word;
+}
+.audio-info small {
+    color:var(--text-muted);
+    font-size:.75rem;
+}
+audio {
+    width:100%;
+    height:36px;
+}
+.empty-state {
+    text-align:center;
+    color:var(--text-muted);
+    padding:20px 0;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+    <h1><i class="fa-solid fa-waveform"></i> AudioWave</h1>
+    <p>Sequential Chronological Stream</p>
+</header>
+<section class="upload-card">
+<h2><i class="fa-solid fa-cloud-arrow-up"></i> Bulk Upload Audio</h2>
+<form id="uploadForm">
+<div class="input-group">
+<label>Select Audio Files</label>
+<input type="file" id="audioFiles"
+accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.flac"
+multiple required>
+</div>
+<button type="submit" id="uploadBtn" class="btn-primary">
+<i class="fa-solid fa-upload"></i> Upload Selected Tracks
+</button>
+</form>
+<div id="progressContainer" class="hidden">
+<div id="progressBar"></div>
+<span id="progressText">Uploading... 0%</span>
+</div>
+</section>
+<section class="feed-section">
+<h2><i class="fa-solid fa-list"></i> Timeline Stream</h2>
+<div id="loadingSpinner" class="spinner">
+<i class="fa-solid fa-spinner fa-spin"></i> Loading tracks...
+</div>
+<div id="audioList" class="audio-list"></div>
+</section>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+const firebaseConfig = {
+    apiKey: "AIzaSyB_rZQ0-PTcw2u--0AjybYOBtWnoh2XxDk",
+    authDomain: "counter-ea7c8.firebaseapp.com",
+    projectId: "counter-ea7c8",
+    storageBucket: "counter-ea7c8.firebasestorage.app",
+    messagingSenderId: "976604631332",
+    appId: "1:976604631332:web:fc0929d3231ac63a67a3b1"
+};
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+const db = getFirestore(app);
+const uploadForm = document.getElementById("uploadForm");
+const audioFilesInput = document.getElementById("audioFiles");
+const uploadBtn = document.getElementById("uploadBtn");
+const progressContainer = document.getElementById("progressContainer");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+const audioList = document.getElementById("audioList");
+const loadingSpinner = document.getElementById("loadingSpinner");
+// ============================================
+// CORRECT FILENAME PARSER
+// ============================================
+function parseFilenameMetadata(filename) {
+    // Remove extension
+    const name = filename.replace(/\.[^.]+$/, "");
+    /*
+       Supported examples:
+       AUDIO-2025-10-28-21-09-03 3
+       AUDIO-2025-10-28-21-09-03 6
+       AUDIO-2025-10-28-22-13-48
+       AUDIO-2025-10-28-22-13-48 2
+       Also supports:
+       2025-10-28-21-09-03-1
+       2025-10-28-21-09-03_2
+    */
+    const match = name.match(
+        /^(?:AUDIO[-_\s]*)?(\d{4})-(\d{2})-(\d{2})-(\d{2})-(\d{2})-(\d{2})(?:[-_\s]+(\d+))?$/i
+    );
+    if (!match) {
+        return {
+            valid:false,
+            timestamp:0,
+            sequence:1
+        };
+    }
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+    const hour = Number(match[4]);
+    const minute = Number(match[5]);
+    const second = Number(match[6]);
+    // NO suffix = sequence 1
+    const sequence = match[7] !== undefined
+        ? Number(match[7])
+        : 1;
+    const date = new Date(
+        year,
+        month - 1,
+        day,
+        hour,
+        minute,
+        second
+    );
+    // Validate date
+    if (
+        date.getFullYear() !== year ||
+        date.getMonth() !== month - 1 ||
+        date.getDate() !== day ||
+        date.getHours() !== hour ||
+        date.getMinutes() !== minute ||
+        date.getSeconds() !== second
+    ) {
+        return {
+            valid:false,
+            timestamp:0,
+            sequence:1
+        };
+    }
+    return {
+        valid:true,
+        timestamp:date.getTime(),
+        sequence:sequence
+    };
+}
+// ============================================
+// BULK UPLOAD
+// ============================================
+uploadForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const files = Array.from(audioFilesInput.files);
+    if (!files.length) {
+        alert("Select audio files first!");
+        return;
+    }
+    uploadBtn.disabled = true;
+    progressContainer.classList.remove("hidden");
+    let completed = 0;
+    try {
+        // Sort files before uploading
+        files.sort((a,b) => {
+            const A = parseFilenameMetadata(a.name);
+            const B = parseFilenameMetadata(b.name);
+            if (A.valid && B.valid) {
+                return A.timestamp - B.timestamp ||
+                       A.sequence - B.sequence;
+            }
+            return a.name.localeCompare(b.name, undefined, {
+                numeric:true
+            });
+        });
+        for (const file of files) {
+            const meta = parseFilenameMetadata(file.name);
+            progressText.innerText =
+                `Uploading ${completed+1}/${files.length}: ${file.name}`;
+            const storageRef = ref(
+                storage,
+                `audio_uploads/${Date.now()}_${crypto.randomUUID()}_${file.name}`
+            );
+            const snapshot = await uploadBytes(storageRef,file);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            await addDoc(collection(db,"audios"),{
+                title:file.name,
+                url:downloadURL,
+                sortTimestamp:meta.timestamp,
+                sequenceNum:meta.sequence,
+                filenameTimestampValid:meta.valid
+            });
+            completed++;
+            progressBar.style.width =
+                (completed/files.length*100)+"%";
+        }
+        alert(`Successfully uploaded ${completed} tracks!`);
+        uploadForm.reset();
+        await loadAudioFeed();
+    } catch(error) {
+        console.error(error);
+        alert("Upload error: "+error.message);
+    } finally {
+        uploadBtn.disabled = false;
+        progressContainer.classList.add("hidden");
+        progressBar.style.width = "0%";
+    }
+});
+// ============================================
+// LOAD AND SORT AUDIO
+// ============================================
+async function loadAudioFeed() {
+    loadingSpinner.style.display = "block";
+    audioList.innerHTML = "";
+    try {
+        const snapshot = await getDocs(collection(db,"audios"));
+        loadingSpinner.style.display = "none";
+        if (snapshot.empty) {
+            audioList.innerHTML =
+                '<p class="empty-state">No audio tracks uploaded yet.</p>';
+            return;
+        }
+        const tracks = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            // ALWAYS parse original filename first
+            const meta = parseFilenameMetadata(data.title || "");
+            let timestamp;
+            let sequence;
+            if (meta.valid) {
+                // Correct filename metadata takes priority
+                timestamp = meta.timestamp;
+                sequence = meta.sequence;
+            } else {
+                // Fallback for filenames that don't match the pattern
+                timestamp = Number(data.sortTimestamp || 0);
+                sequence = data.sequenceNum !== undefined
+                    ? Number(data.sequenceNum)
+                    : 1;
+            }
+            tracks.push({
+                id:doc.id,
+                title:data.title || "Untitled",
+                url:data.url,
+                timestamp:timestamp,
+                sequence:sequence
+            });
+        });
+        // ========================================
+        // FINAL SORTING
+        // ========================================
+        tracks.sort((a,b) => {
+            // FIRST: Chronological timestamp
+            if (a.timestamp !== b.timestamp) {
+                return a.timestamp - b.timestamp;
+            }
+            // SECOND: Sequence number
+            if (a.sequence !== b.sequence) {
+                return a.sequence - b.sequence;
+            }
+            // THIRD: Alphabetical fallback
+            return a.title.localeCompare(b.title, undefined, {
+                numeric:true,
+                sensitivity:"base"
+            });
+        });
+        // ========================================
+        // DISPLAY
+        // ========================================
+        tracks.forEach(data => {
+            const card = document.createElement("div");
+            card.className = "audio-card";
+            const info = document.createElement("div");
+            info.className = "audio-info";
+            const title = document.createElement("h3");
+            title.textContent = data.title;
+            const date = document.createElement("small");
+            date.innerHTML =
+                '<i class="fa-regular fa-clock"></i> ' +
+                new Date(data.timestamp).toLocaleString() +
+                ' (Part ' + data.sequence + ')';
+            const player = document.createElement("audio");
+            player.controls = true;
+            player.preload = "none";
+            player.src = data.url;
+            info.appendChild(title);
+            info.appendChild(date);
+            card.appendChild(info);
+            card.appendChild(player);
+            audioList.appendChild(card);
+        });
+    } catch(error) {
+        console.error("Feed error:",error);
+        loadingSpinner.style.display = "none";
+        audioList.innerHTML =
+            '<p class="empty-state">Error loading audio tracks.</p>';
+    }
+}
+loadAudioFeed();
+</script>
+</body>
+</html>
