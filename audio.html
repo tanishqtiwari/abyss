@@ -3,252 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b0b0d">
 <title>Audio Archive</title>
 
 <style>
 *{box-sizing:border-box}
-
-body{
- margin:0;
- background:#0b0b0d;
- color:#eee;
- font-family:Arial,sans-serif;
-}
-
-.container{
- max-width:850px;
- margin:auto;
- padding:30px 20px;
-}
-
-header{
- display:flex;
- justify-content:space-between;
- align-items:center;
- border-bottom:1px solid #29292d;
- padding-bottom:22px;
-}
-
-.logo{
- color:#d7ff64;
- font-size:12px;
- letter-spacing:3px;
- text-transform:uppercase;
-}
-
-button{
- cursor:pointer;
- border:0;
- border-radius:8px;
- padding:11px 16px;
- font-weight:bold;
-}
-
-.adminBtn{
- background:#d7ff64;
- color:#111;
-}
-
-.secondary{
- background:#29292d;
- color:white;
-}
-
-h1{
- font-size:clamp(38px,8vw,58px);
- letter-spacing:-3px;
- margin:40px 0 8px;
-}
-
-.subtitle{
- color:#888;
- font-size:13px;
-}
-
-.section{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin:40px 0 15px;
-}
-
-.section h2{
- font-size:19px;
-}
-
-#count{
- color:#888;
- font-size:12px;
-}
-
-.recording{
- background:#151518;
- border:1px solid #29292d;
- border-radius:13px;
- padding:19px;
- margin-bottom:12px;
-}
-
-.title{
- font-size:16px;
- font-weight:bold;
- overflow-wrap:anywhere;
-}
-
-.description{
- color:#999;
- font-size:12px;
- margin-top:7px;
-}
-
-.date{
- color:#777;
- font-size:11px;
- margin-top:10px;
-}
-
-audio{
- width:100%;
- margin-top:15px;
- height:38px;
-}
-
-.empty{
- text-align:center;
- padding:55px 10px;
- color:#777;
-}
-
-footer{
- margin-top:50px;
- padding-top:20px;
- border-top:1px solid #29292d;
- color:#555;
- font-size:11px;
- letter-spacing:2px;
-}
-
-/* ADMIN PANEL */
-
-.overlay{
- position:fixed;
- inset:0;
- background:rgba(0,0,0,.85);
- display:none;
- align-items:center;
- justify-content:center;
- padding:18px;
- z-index:10;
- overflow-y:auto;
-}
-
-.modal{
- width:100%;
- max-width:480px;
- background:#17171b;
- border:1px solid #333;
- border-radius:15px;
- padding:25px;
- margin:auto;
-}
-
-.modal h2{
- margin-top:0;
-}
-
-label{
- display:block;
- color:#aaa;
- font-size:12px;
- margin:15px 0 7px;
-}
-
-input{
- width:100%;
- padding:13px;
- background:#0b0b0d;
- border:1px solid #333;
- color:white;
- border-radius:8px;
- outline:none;
-}
-
-input:focus{
- border-color:#d7ff64;
-}
-
-.full{
- width:100%;
- margin-top:17px;
-}
-
-.message{
- font-size:12px;
- color:#d7ff64;
- margin-top:12px;
-}
-
-.error{
- color:#ff8585;
-}
-
-.hidden{
- display:none!important;
-}
-
-.adminPanel{
- background:#151518;
- border:1px solid #333;
- border-radius:13px;
- padding:20px;
- margin:25px 0;
-}
-
-.adminRecord{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:10px;
- padding:14px 0;
- border-bottom:1px solid #333;
-}
-
-.adminRecord:last-child{
- border:0;
-}
-
-.adminRecordTitle{
- font-size:13px;
- font-weight:bold;
- overflow-wrap:anywhere;
-}
-
-.adminRecordDate{
- color:#888;
- font-size:10px;
- margin-top:5px;
-}
-
-.deleteBtn{
- background:#451e25;
- color:#ff9ca7;
- font-size:11px;
- padding:9px 12px;
- flex-shrink:0;
-}
-
-.progress{
- font-size:12px;
- color:#d7ff64;
- margin-top:12px;
-}
-
-@media(max-width:550px){
- .container{padding:22px 15px}
- h1{letter-spacing:-2px}
- .adminRecord{gap:7px}
-}
+body{margin:0;background:#0b0b0d;color:#eee;font-family:Arial,sans-serif}
+.container{max-width:850px;margin:auto;padding:25px 18px}
+header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #29292d;padding-bottom:22px}
+.logo{color:#d7ff64;font-size:12px;letter-spacing:3px}
+button{cursor:pointer;border:0;border-radius:8px;padding:11px 16px;font-weight:bold}
+.adminBtn{background:#d7ff64;color:#111}
+.secondary{background:#29292d;color:white}
+h1{font-size:clamp(38px,8vw,58px);letter-spacing:-3px;margin:40px 0 8px}
+.subtitle{color:#888;font-size:13px}
+.section{display:flex;justify-content:space-between;align-items:center;margin:40px 0 15px}
+.section h2{font-size:19px}
+#count{color:#888;font-size:12px}
+.recording{background:#151518;border:1px solid #29292d;border-radius:13px;padding:19px;margin-bottom:12px}
+.title{font-size:16px;font-weight:bold;overflow-wrap:anywhere}
+.description{color:#999;font-size:12px;margin-top:7px}
+.date{color:#777;font-size:11px;margin-top:10px}
+audio{width:100%;margin-top:15px;height:38px}
+.empty{text-align:center;padding:55px 10px;color:#777}
+footer{margin-top:50px;padding-top:20px;border-top:1px solid #29292d;color:#555;font-size:11px;letter-spacing:2px}
+.overlay{position:fixed;inset:0;background:#000d;display:none;align-items:center;justify-content:center;padding:18px;z-index:10}
+.modal{width:100%;max-width:420px;background:#17171b;border:1px solid #333;border-radius:15px;padding:25px}
+label{display:block;color:#aaa;font-size:12px;margin:15px 0 7px}
+input{width:100%;padding:13px;background:#0b0b0d;border:1px solid #333;color:white;border-radius:8px}
+.full{width:100%;margin-top:17px}
+.message{font-size:12px;color:#d7ff64;margin-top:12px}
+.error{color:#ff8585}
+.hidden{display:none!important}
+.adminPanel{background:#151518;border:1px solid #333;border-radius:13px;padding:20px;margin:25px 0}
+.adminRecord{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid #333}
+.deleteBtn{background:#451e25;color:#ff9ca7;font-size:11px;padding:9px 12px}
+.progress{font-size:12px;color:#d7ff64;margin-top:12px}
+@media(max-width:550px){.container{padding:22px 15px}h1{letter-spacing:-2px}}
 </style>
 </head>
 
@@ -257,22 +47,12 @@ input:focus{
 <div class="container">
 
 <header>
-
- <div class="logo">Personal Collection</div>
-
- <button class="adminBtn" id="adminOpen">
- Admin Login
- </button>
-
+ <div class="logo">PERSONAL COLLECTION</div>
+ <button class="adminBtn" id="adminOpen">Admin Login</button>
 </header>
 
 <h1>Audio Archive.</h1>
-
-<div class="subtitle">
- A collection of recordings.
-</div>
-
-<!-- ADMIN DASHBOARD -->
+<div class="subtitle">A collection of recordings.</div>
 
 <div id="dashboard" class="hidden">
 
@@ -286,58 +66,42 @@ input:focus{
   <form id="uploadForm">
 
    <label>Recording title</label>
-   <input id="title" required maxlength="120"
-   placeholder="Recording name">
+   <input id="title" required maxlength="120" placeholder="Recording name">
 
    <label>Description</label>
-   <input id="description" maxlength="300"
-   placeholder="Optional description">
+   <input id="description" maxlength="300" placeholder="Optional description">
 
    <label>Audio file</label>
-   <input id="audioFile" type="file"
-   accept="audio/*" required>
+   <input id="audioFile" type="file" accept="audio/*" required>
 
    <div id="progress" class="progress"></div>
 
-   <button class="adminBtn full" id="uploadBtn">
-    Upload Recording
-   </button>
+   <button class="adminBtn full" id="uploadBtn">Upload Recording</button>
 
    <div id="uploadMessage" class="message"></div>
 
   </form>
 
  </div>
-
 </div>
 
-<!-- PUBLIC LIBRARY -->
-
 <div class="section">
-
  <h2>All recordings</h2>
-
  <span id="count">Loading...</span>
-
 </div>
 
 <div id="recordings">
-
  <div class="empty">Loading recordings...</div>
-
 </div>
 
-<footer>
- AUDIO ARCHIVE · EST. 2026
-</footer>
+<footer>AUDIO ARCHIVE · EST. 2026</footer>
 
 </div>
 
 
-<!-- LOGIN MODAL -->
+<!-- LOGIN -->
 
 <div class="overlay" id="loginOverlay">
-
  <div class="modal">
 
   <div style="display:flex;justify-content:space-between">
@@ -346,39 +110,23 @@ input:focus{
   </div>
 
   <label>Username</label>
-  <input id="username" placeholder="Tanishq"
-  autocomplete="username">
+  <input id="username" placeholder="Tanishq">
 
   <label>Password</label>
-  <input id="password" type="password"
-  placeholder="Password"
-  autocomplete="current-password">
+  <input id="password" type="password" placeholder="Password">
 
-  <button class="adminBtn full" id="loginBtn">
-   Login
-  </button>
+  <button class="adminBtn full" id="loginBtn">Login</button>
 
   <div id="loginMessage" class="message"></div>
 
  </div>
-
 </div>
 
 
 <script type="module">
 
-// FIREBASE IMPORTS
-
 import {initializeApp}
 from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-
-import {
- getAuth,
- signInWithEmailAndPassword,
- onAuthStateChanged,
- signOut
-}
-from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
 
 import {
  getFirestore,
@@ -403,283 +151,199 @@ import {
 from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
 
 
-// FIREBASE CONFIGURATION
+// FIREBASE
 
 const firebaseConfig = {
-
- apiKey: "AIzaSyB_rZQ0-PTcw2u--0AjybYOBtWnoh2XxDk",
-
- authDomain: "counter-ea7c8.firebaseapp.com",
-
- projectId: "counter-ea7c8",
-
- storageBucket: "counter-ea7c8.firebasestorage.app",
-
- messagingSenderId: "976604631332",
-
- appId: "1:976604631332:web:fc0929d3231ac63a67a3b1"
-
+ apiKey:"AIzaSyB_rZQ0-PTcw2u--0AjybYOBtWnoh2XxDk",
+ authDomain:"counter-ea7c8.firebaseapp.com",
+ projectId:"counter-ea7c8",
+ storageBucket:"counter-ea7c8.firebasestorage.app",
+ messagingSenderId:"976604631332",
+ appId:"1:976604631332:web:fc0929d3231ac63a67a3b1"
 };
 
-
-// INITIALIZATION
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const db = getFirestore(app);
-
-const storage = getStorage(app);
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const storage=getStorage(app);
 
 
-// ADMIN CONFIGURATION
+// ADMIN CREDENTIALS
 
-const ADMIN_USERNAME = "tanishq";
+const ADMIN_USERNAME="Tanishq";
+const ADMIN_PASSWORD="ssssss";
 
-const ADMIN_EMAIL =
-"tanishq@counter-ea7c8.firebaseapp.com";
+let currentAdmin=false;
 
-// REPLACE THIS WITH YOUR FIREBASE AUTH UID
-
-const ADMIN_UID = "REPLACE_WITH_YOUR_FIREBASE_AUTH_UID";
-
-
-// ELEMENTS
-
-const $ = id => document.getElementById(id);
-
-let currentAdmin = false;
-let unsubscribe = null;
+const $=id=>document.getElementById(id);
 
 
 // LOGIN MODAL
 
-$("adminOpen").onclick = () => {
+$("adminOpen").onclick=()=>{
 
  if(currentAdmin){
   $("dashboard").classList.toggle("hidden");
-  return;
+ }else{
+  $("loginOverlay").style.display="flex";
  }
-
- $("loginOverlay").style.display = "flex";
 
 };
 
-$("closeLogin").onclick = () => {
- $("loginOverlay").style.display = "none";
+$("closeLogin").onclick=()=>{
+ $("loginOverlay").style.display="none";
 };
 
-$("loginOverlay").onclick = e => {
- if(e.target === $("loginOverlay")){
-  $("loginOverlay").style.display = "none";
+$("loginOverlay").onclick=e=>{
+ if(e.target===$("loginOverlay")){
+  $("loginOverlay").style.display="none";
  }
 };
 
 
-// ADMIN LOGIN
+// LOGIN
 
-$("loginBtn").onclick = async () => {
+$("loginBtn").onclick=()=>{
 
- const username =
- $("username").value.trim().toLowerCase();
+ const username=$("username").value.trim();
+ const password=$("password").value;
 
- const password = $("password").value;
+ if(username===ADMIN_USERNAME && password===ADMIN_PASSWORD){
 
- if(username !== ADMIN_USERNAME){
+  currentAdmin=true;
 
-  $("loginMessage").textContent =
-  "Incorrect username or password.";
+  $("loginOverlay").style.display="none";
+  $("dashboard").classList.remove("hidden");
+  $("adminOpen").textContent="Admin Dashboard";
 
-  $("loginMessage").className = "message error";
+  renderRecordings();
 
-  return;
- }
+ }else{
 
- $("loginBtn").disabled = true;
-
- try{
-
-  await signInWithEmailAndPassword(
-   auth,
-   ADMIN_EMAIL,
-   password
-  );
-
- }catch(error){
-
-  console.error(error);
-
-  $("loginMessage").textContent =
-  "Login failed. Check your credentials.";
-
-  $("loginMessage").className =
-  "message error";
-
- }finally{
-
-  $("loginBtn").disabled = false;
+  $("loginMessage").textContent="Incorrect username or password.";
+  $("loginMessage").className="message error";
 
  }
 
 };
 
 $("password").addEventListener("keydown",e=>{
- if(e.key === "Enter") $("loginBtn").click();
-});
-
-
-// AUTHENTICATION STATE
-
-onAuthStateChanged(auth,user=>{
-
- currentAdmin = !!user && user.uid === ADMIN_UID;
-
- if(user && !currentAdmin){
-  signOut(auth);
-  return;
- }
-
- if(currentAdmin){
-
-  $("loginOverlay").style.display = "none";
-
-  $("dashboard").classList.remove("hidden");
-
-  $("adminOpen").textContent = "Admin Dashboard";
-
- }else{
-
-  $("dashboard").classList.add("hidden");
-
-  $("adminOpen").textContent = "Admin Login";
-
- }
-
+ if(e.key==="Enter") $("loginBtn").click();
 });
 
 
 // LOGOUT
 
-$("logout").onclick = async () => {
+$("logout").onclick=()=>{
 
- await signOut(auth);
+ currentAdmin=false;
 
- $("username").value = "";
- $("password").value = "";
+ $("dashboard").classList.add("hidden");
+ $("adminOpen").textContent="Admin Login";
+
+ renderRecordings();
 
 };
 
 
-// PUBLIC AUDIO LIBRARY
+// LOAD PUBLIC RECORDINGS
 
-const recordings = $("recordings");
+let allRecords=[];
 
-const q = query(
+const q=query(
  collection(db,"audio_recordings"),
  orderBy("timestamp","desc")
 );
 
 onSnapshot(q,snapshot=>{
 
- $("count").textContent =
- snapshot.size + " recordings";
+ allRecords=snapshot.docs.map(d=>({
+  id:d.id,
+  ...d.data()
+ }));
 
- recordings.innerHTML = "";
+ renderRecordings();
 
- if(snapshot.empty){
+},error=>{
 
-  recordings.innerHTML =
+ console.error(error);
+
+ $("recordings").innerHTML=
+ '<div class="empty">Unable to load recordings.</div>';
+
+});
+
+
+// RENDER RECORDINGS
+
+function renderRecordings(){
+
+ $("count").textContent=allRecords.length+" recordings";
+
+ const container=$("recordings");
+
+ container.innerHTML="";
+
+ if(!allRecords.length){
+
+  container.innerHTML=
   '<div class="empty">No recordings available yet.</div>';
 
   return;
  }
 
- snapshot.forEach(document=>{
+ allRecords.forEach(data=>{
 
-  const data = document.data();
+  const card=document.createElement("div");
+  card.className="recording";
 
-  const card = document.createElement("div");
+  const title=document.createElement("div");
+  title.className="title";
+  title.textContent=data.title||"Untitled";
 
-  card.className = "recording";
+  const description=document.createElement("div");
+  description.className="description";
+  description.textContent=data.description||"";
 
-  const title = document.createElement("div");
+  const date=document.createElement("div");
+  date.className="date";
 
-  title.className = "title";
+  date.textContent=data.timestamp?.toDate()
+   ?data.timestamp.toDate().toLocaleString()
+   :"Date unavailable";
 
-  title.textContent = data.title || "Untitled";
+  const player=document.createElement("audio");
+  player.controls=true;
+  player.preload="none";
+  player.src=data.audioUrl;
 
-  const description = document.createElement("div");
-
-  description.className = "description";
-
-  description.textContent = data.description || "";
-
-  const date = document.createElement("div");
-
-  date.className = "date";
-
-  const timestamp = data.timestamp?.toDate();
-
-  date.textContent = timestamp
-   ? timestamp.toLocaleString()
-   : "Date unavailable";
-
-  const player = document.createElement("audio");
-
-  player.controls = true;
-
-  player.preload = "none";
-
-  player.src = data.audioUrl;
-
-  card.append(
-   title,
-   description,
-   date,
-   player
-  );
-
-  // DELETE BUTTON ONLY FOR ADMIN
+  card.append(title,description,date,player);
 
   if(currentAdmin){
 
-   const del = document.createElement("button");
+   const del=document.createElement("button");
+   del.className="deleteBtn";
+   del.textContent="Delete";
+   del.style.marginTop="12px";
 
-   del.className = "deleteBtn";
+   del.onclick=async()=>{
 
-   del.textContent = "Delete";
+    if(!confirm("Delete this recording permanently?"))return;
 
-   del.style.marginTop = "12px";
-
-   del.onclick = async ()=>{
-
-    if(!confirm("Permanently delete this recording?"))
-     return;
-
-    del.disabled = true;
+    del.disabled=true;
 
     try{
 
      if(data.storagePath){
-
-      await deleteObject(
-       ref(storage,data.storagePath)
-      );
-
+      await deleteObject(ref(storage,data.storagePath));
      }
 
-     await deleteDoc(
-      doc(db,"audio_recordings",document.id)
-     );
+     await deleteDoc(doc(db,"audio_recordings",data.id));
 
     }catch(error){
 
      console.error(error);
-
-     alert("Deletion failed. Check Firebase rules.");
-
-     del.disabled = false;
+     alert("Delete failed. Check Firebase permissions.");
+     del.disabled=false;
 
     }
 
@@ -689,86 +353,58 @@ onSnapshot(q,snapshot=>{
 
   }
 
-  recordings.appendChild(card);
+  container.appendChild(card);
 
  });
 
-},error=>{
-
- console.error(error);
-
- recordings.innerHTML =
- '<div class="empty">Unable to load recordings.</div>';
-
-});
+}
 
 
-// ADMIN UPLOAD
+// UPLOAD
 
-$("uploadForm").onsubmit = async e=>{
+$("uploadForm").onsubmit=async e=>{
 
  e.preventDefault();
 
- if(!currentAdmin ||
-    auth.currentUser?.uid !== ADMIN_UID){
-
-  alert("Administrator access required.");
-
+ if(!currentAdmin){
+  alert("Admin login required.");
   return;
  }
 
- const file = $("audioFile").files[0];
+ const file=$("audioFile").files[0];
+ const title=$("title").value.trim();
+ const description=$("description").value.trim();
 
- const title = $("title").value.trim();
-
- const description =
- $("description").value.trim();
-
- if(!file || !title) return;
+ if(!file||!title)return;
 
  if(!file.type.startsWith("audio/")){
-
-  $("uploadMessage").textContent =
-  "Please select a valid audio file.";
-
-  $("uploadMessage").className =
-  "message error";
-
+  $("uploadMessage").textContent="Select an audio file.";
+  $("uploadMessage").className="message error";
   return;
  }
 
- $("uploadBtn").disabled = true;
+ $("uploadBtn").disabled=true;
 
- $("progress").textContent = "Starting upload...";
+ const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
 
- $("uploadMessage").textContent = "";
+ const storagePath=
+ `audio/${Date.now()}_${safeName}`;
 
- const safeName = file.name.replace(
-  /[^a-zA-Z0-9._-]/g,"_"
- );
+ const fileRef=ref(storage,storagePath);
 
- const storagePath =
- `audio/${auth.currentUser.uid}/${Date.now()}_${safeName}`;
-
- const fileRef = ref(storage,storagePath);
-
- const task = uploadBytesResumable(
-  fileRef,
-  file,
-  {contentType:file.type}
- );
+ const task=uploadBytesResumable(fileRef,file,{
+  contentType:file.type
+ });
 
  task.on("state_changed",
 
  snapshot=>{
 
-  const percent = Math.round(
-   snapshot.bytesTransferred /
-   snapshot.totalBytes * 100
+  const percent=Math.round(
+   snapshot.bytesTransferred/snapshot.totalBytes*100
   );
 
-  $("progress").textContent =
-  percent + "% uploaded";
+  $("progress").textContent=percent+"% uploaded";
 
  },
 
@@ -776,68 +412,48 @@ $("uploadForm").onsubmit = async e=>{
 
   console.error(error);
 
-  $("uploadMessage").textContent =
-  "Upload failed. Check Storage rules.";
+  $("uploadMessage").textContent="Upload failed.";
+  $("uploadMessage").className="message error";
 
-  $("uploadMessage").className =
-  "message error";
-
-  $("uploadBtn").disabled = false;
+  $("uploadBtn").disabled=false;
 
  },
 
- async ()=>{
+ async()=>{
 
   try{
 
-   const audioUrl =
-   await getDownloadURL(task.snapshot.ref);
+   const audioUrl=await getDownloadURL(task.snapshot.ref);
 
-   await addDoc(
-    collection(db,"audio_recordings"),
-    {
+   await addDoc(collection(db,"audio_recordings"),{
 
-     title:title,
+    title,
+    description,
+    audioUrl,
+    storagePath,
+    fileName:file.name,
+    contentType:file.type,
+    size:file.size,
+    timestamp:serverTimestamp()
 
-     description:description,
-
-     audioUrl:audioUrl,
-
-     storagePath:storagePath,
-
-     fileName:file.name,
-
-     contentType:file.type,
-
-     size:file.size,
-
-     timestamp:serverTimestamp(),
-
-     ownerUid:auth.currentUser.uid
-
-    }
-   );
+   });
 
    $("uploadForm").reset();
 
-   $("progress").textContent = "";
+   $("progress").textContent="";
 
-   $("uploadMessage").textContent =
-   "Recording uploaded successfully!";
+   $("uploadMessage").textContent="Upload successful!";
 
   }catch(error){
 
    console.error(error);
 
-   $("uploadMessage").textContent =
-   "Upload completed but database save failed.";
-
-   $("uploadMessage").className =
-   "message error";
+   $("uploadMessage").textContent="Database save failed.";
+   $("uploadMessage").className="message error";
 
   }finally{
 
-   $("uploadBtn").disabled = false;
+   $("uploadBtn").disabled=false;
 
   }
 
